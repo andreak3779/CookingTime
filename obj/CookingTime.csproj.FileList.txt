@@ -1,0 +1,10 @@
+obj\Debug\CookingTime.exe
+obj\Debug\CookingTime.pdb
+obj\Release\ResolveAssemblyReference.cache
+obj\Release\CookingTime.ComCookingTime.resources
+obj\Release\CookingTime.CookingTime.resources
+obj\Release\CookingTime.frmAbout.resources
+obj\Release\CookingTime.frmCookingTime.resources
+obj\Release\CookingTime.csproj.GenerateResource.Cache
+obj\Release\CookingTime.exe
+bin\Release\CookingTime.exe

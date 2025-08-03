@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?><?xml-stylesheet type='text/xsl' href='_UpgradeReport_Files/UpgradeReport.xslt'?><UpgradeLog>
+<Properties><Property Name="Solution" Value="CookingTime">
+</Property><Property Name="Solution File" Value="Z:\Documents\Visual Studio 2008\Projects\CookingTime\CookingTime.sln">
+</Property><Property Name="User Options File" Value="Z:\Documents\Visual Studio 2008\Projects\CookingTime\CookingTime.suo">
+</Property><Property Name="Date" Value="January 12, 2008">
+</Property><Property Name="Time" Value="21:01 PM">
+</Property><Property Name="Log Number" Value="2">
+</Property></Properties><Event ErrorLevel="0" Project="" Source="CookingTime.sln" Description="File successfully backed up as Z:\Documents\Visual Studio 2008\Projects\CookingTime\Backup\CookingTime.sln">
+</Event><Event ErrorLevel="0" Project="" Source="CookingTime.suo" Description="File successfully backed up as Z:\Documents\Visual Studio 2008\Projects\CookingTime\Backup\CookingTime.suo">
+</Event><Event ErrorLevel="0" Project="CookingTime" Source="CookingTime.csproj" Description="Project file successfully backed up as Z:\Documents\Visual Studio 2008\Projects\CookingTime\Backup\CookingTime.csproj">
+</Event><Event ErrorLevel="0" Project="CookingTime" Source="CookingTime.csproj.user" Description="Project user file successfully backed up as Z:\Documents\Visual Studio 2008\Projects\CookingTime\Backup\CookingTime.csproj.user">
+</Event><Event ErrorLevel="0" Project="CookingTime" Source="AssemblyInfo.cs" Description="File successfully backed up as Z:\Documents\Visual Studio 2008\Projects\CookingTime\Backup\AssemblyInfo.cs">
+</Event><Event ErrorLevel="0" Project="CookingTime" Source="ComCookingTime.cs" Description="File successfully backed up as Z:\Documents\Visual Studio 2008\Projects\CookingTime\Backup\ComCookingTime.cs">
+</Event><Event ErrorLevel="0" Project="CookingTime" Source="frmAbout.cs" Description="File successfully backed up as Z:\Documents\Visual Studio 2008\Projects\CookingTime\Backup\frmAbout.cs">
+</Event><Event ErrorLevel="0" Project="CookingTime" Source="frmCookingTime.cs" Description="File successfully backed up as Z:\Documents\Visual Studio 2008\Projects\CookingTime\Backup\frmCookingTime.cs">
+</Event><Event ErrorLevel="0" Project="CookingTime" Source="App.ico" Description="File successfully backed up as Z:\Documents\Visual Studio 2008\Projects\CookingTime\Backup\App.ico">
+</Event><Event ErrorLevel="0" Project="CookingTime" Source="ComCookingTime.resx" Description="File successfully backed up as Z:\Documents\Visual Studio 2008\Projects\CookingTime\Backup\ComCookingTime.resx">
+</Event><Event ErrorLevel="0" Project="CookingTime" Source="CookingTime.resx" Description="File successfully backed up as Z:\Documents\Visual Studio 2008\Projects\CookingTime\Backup\CookingTime.resx">
+</Event><Event ErrorLevel="0" Project="CookingTime" Source="frmAbout.resx" Description="File successfully backed up as Z:\Documents\Visual Studio 2008\Projects\CookingTime\Backup\frmAbout.resx">
+</Event><Event ErrorLevel="0" Project="CookingTime" Source="frmCookingTime.resx" Description="File successfully backed up as Z:\Documents\Visual Studio 2008\Projects\CookingTime\Backup\frmCookingTime.resx">
+</Event><Event ErrorLevel="0" Project="CookingTime" Source="CookingTime.csproj" Description="Project converted successfully">
+</Event><Event ErrorLevel="3" Project="CookingTime" Source="CookingTime.csproj" Description="Converted">
+</Event><Event ErrorLevel="0" Project="" Source="CookingTime.sln" Description="Solution converted successfully">
+</Event><Event ErrorLevel="3" Project="" Source="CookingTime.sln" Description="Converted">
+</Event><Event ErrorLevel="0" Project="CookingTime" Source="CookingTime.csproj" Description="Scan complete: Upgrade not required for project files.">
+</Event></UpgradeLog>

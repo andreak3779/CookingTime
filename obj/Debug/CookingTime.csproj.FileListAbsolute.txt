@@ -1,0 +1,15 @@
+Z:\Documents\Visual Studio 2008\Projects\CookingTime\bin\Debug\CookingTime.exe
+Z:\Documents\Visual Studio 2008\Projects\CookingTime\bin\Debug\CookingTime.pdb
+Z:\Documents\Visual Studio 2008\Projects\CookingTime\obj\Debug\ResolveAssemblyReference.cache
+Z:\Documents\Visual Studio 2008\Projects\CookingTime\obj\Debug\CookingTime.ComCookingTime.resources
+Z:\Documents\Visual Studio 2008\Projects\CookingTime\obj\Debug\CookingTime.CookingTime.resources
+Z:\Documents\Visual Studio 2008\Projects\CookingTime\obj\Debug\CookingTime.frmAbout.resources
+Z:\Documents\Visual Studio 2008\Projects\CookingTime\obj\Debug\CookingTime.frmCookingTime.resources
+Z:\Documents\Visual Studio 2008\Projects\CookingTime\obj\Debug\CookingTime.csproj.GenerateResource.Cache
+Z:\Documents\Visual Studio 2008\Projects\CookingTime\obj\Debug\CookingTime.exe
+Z:\Documents\Visual Studio 2008\Projects\CookingTime\obj\Debug\CookingTime.pdb
+Z:\Documents\Visual Studio 2008\Projects\CookingTime\bin\Debug\CookingTime.exe.manifest
+Z:\Documents\Visual Studio 2008\Projects\CookingTime\bin\Debug\CookingTime.application
+Z:\Documents\Visual Studio 2008\Projects\CookingTime\obj\Debug\CookingTime.TrustInfo.xml
+Z:\Documents\Visual Studio 2008\Projects\CookingTime\obj\Debug\CookingTime.exe.manifest
+Z:\Documents\Visual Studio 2008\Projects\CookingTime\obj\Debug\CookingTime.application
