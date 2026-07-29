@@ -31,5 +31,22 @@ public sealed class MealTypeRegistry
         return false;
     }
 
+    /// <summary>
+    /// Materialize every registered factory. Throws
+    /// <see cref="InvalidOperationException"/> if any factory returns null.
+    /// Order matches the registration order (dictionary enumeration order).
+    /// </summary>
+    public IReadOnlyList<IMeal> CreateAll()
+    {
+        var result = new List<IMeal>(_factories.Count);
+        foreach (var (kind, factory) in _factories)
+        {
+            var instance = factory()
+                ?? throw new InvalidOperationException($"Factory for {kind} returned null.");
+            result.Add(instance);
+        }
+        return result;
+    }
+
     public IReadOnlyCollection<MealKind> RegisteredKinds => _factories.Keys;
 }
