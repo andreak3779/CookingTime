@@ -56,4 +56,34 @@ public sealed class MealTypeRegistryTests
         var act = () => registry.Register(MealKind.Chicken, null!);
         act.Should().Throw<ArgumentNullException>();
     }
+
+    [Fact]
+    public void CreateAll_ReturnsEveryRegisteredMeal()
+    {
+        var registry = new MealTypeRegistry();
+        registry.Register(MealKind.Chicken, () => new ChickenMeal());
+        registry.Register(MealKind.Turkey, () => new TurkeyMeal());
+
+        var meals = registry.CreateAll();
+
+        meals.Should().HaveCount(2);
+        meals.Select(m => m.Kind).Should().BeEquivalentTo(new[] { MealKind.Chicken, MealKind.Turkey });
+    }
+
+    [Fact]
+    public void CreateAll_FactoryReturnsNull_Throws()
+    {
+        var registry = new MealTypeRegistry();
+        registry.Register(MealKind.Chicken, () => null!);
+
+        var act = () => registry.CreateAll();
+        act.Should().Throw<InvalidOperationException>();
+    }
+
+    [Fact]
+    public void CreateAll_EmptyRegistry_ReturnsEmptyList()
+    {
+        var registry = new MealTypeRegistry();
+        registry.CreateAll().Should().BeEmpty();
+    }
 }

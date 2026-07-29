@@ -36,7 +36,12 @@
     <Compile Include="Program.cs" />
     <Compile Include="Domain\**\*.cs" />
     <Compile Include="Infrastructure\**\*.cs" />
+    <Compile Include="Application\**\*.cs" />
   </ItemGroup>
+
+  <!-- appsettings.json is auto-included as Content by the SDK; we don't
+       need to add it explicitly. The default CopyToOutputDirectory for
+       Content is PreserveNewest, which is what we want. -->
 
   <ItemGroup>
     <RazorComponent Include="App.razor" />
