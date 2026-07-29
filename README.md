@@ -10,7 +10,7 @@ A cooking-time calculator. Upgrading from a legacy .NET Framework WinForms app t
 | 1 | Blazor host | ✅ Done |
 | 2 | Domain layer | ✅ Done |
 | 3 | Application + config | ✅ Done |
-| 4 | Razor UI | ⏳ Pending |
+| 4 | Razor UI | ✅ Done |
 | 5 | Integration + feature tests | ⏳ Pending |
 | 6 | Cleanup | ⏳ Pending |
 | 7 | CI gate | ⏳ Pending |
