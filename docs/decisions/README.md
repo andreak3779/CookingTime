@@ -10,6 +10,7 @@ Append-only. Never overwrite an old ADR — supersede with a new one that links 
 | 0002 | [Branch-per-phase with checkpoint commits](0002-branch-per-phase.md) | Phase 0 | Accepted |
 | 0003 | [Docs as code](0003-docs-as-code.md) | Phase 0 | Accepted |
 | 0004 | [SOLID + design-patterns expectations](0004-solid-and-patterns.md) | Phase 0 | Accepted |
+| 0005 | [Test host entry-point naming (`TestHost.Main`, not `Program.Main`)](0005-test-host-entry-point-naming.md) | Phase 5 | Accepted |
 
 ## Format
 
