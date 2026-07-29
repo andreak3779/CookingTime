@@ -60,7 +60,7 @@ Establish the `docs/` directory as the canonical home for project documentation,
 
 ## Follow-ups (applied in this branch as a second commit)
 
-This phase's checkpoint was committed as `b904e8f`. The follow-up commit (`<hash below>`) adds the supporting-but-non-domain files so we ship them now instead of leaking them into later phases:
+This phase's checkpoint was committed as `b904e8f`. The follow-up commit (`70a1185`) adds the supporting-but-non-domain files so we ship them now instead of leaking them into later phases:
 
 - **`AGENTS.md`** (repo root) — standing rules for any AI agent working here. Mirror of ADR 0004 plus project-specific conventions (nullable, file-scoped namespaces, sealed, name-of). Any future agent reads this before touching code.
 - **`.gitignore`** — standard .NET ignore (`bin/`, `obj/`, `*.csproj.user`, `.vs/`, test/coverage artifacts), Blazor additions (`appsettings.*.Local.json`), and OS noise (`.DS_Store`, `Thumbs.db`). Makes the worktree clean for builds.
