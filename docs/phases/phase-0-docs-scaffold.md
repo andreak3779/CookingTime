@@ -58,7 +58,14 @@ Establish the `docs/` directory as the canonical home for project documentation,
 - Production code, tests, CI workflow. All of those arrive in subsequent phases.
 - Renaming the on-disk folder layout (`src/` vs root) — that's a Phase 1 decision once we rewrite the csproj.
 
-## Follow-ups
+## Follow-ups (applied in this branch as a second commit)
 
-- **AGENTS.md authoring** is a candidate for a tiny `chore/agents-md` branch after Phase 0 lands, anchored to the docs pattern just established.
-- Skills (`modernize-legacy-dotnet`, `phase-execution`) live outside the repo and are not part of any phase branch.
+This phase's checkpoint was committed as `b904e8f`. The follow-up commit (`<hash below>`) adds the supporting-but-non-domain files so we ship them now instead of leaking them into later phases:
+
+- **`AGENTS.md`** (repo root) — standing rules for any AI agent working here. Mirror of ADR 0004 plus project-specific conventions (nullable, file-scoped namespaces, sealed, name-of). Any future agent reads this before touching code.
+- **`.gitignore`** — standard .NET ignore (`bin/`, `obj/`, `*.csproj.user`, `.vs/`, test/coverage artifacts), Blazor additions (`appsettings.*.Local.json`), and OS noise (`.DS_Store`, `Thumbs.db`). Makes the worktree clean for builds.
+- **`.editorconfig`** — utf-8, LF, 4-space indent for C#, file-scoped-namespaces hint matching AGENTS.md.
+
+**Not applied in this branch (deferred):**
+
+- Skills (`modernize-legacy-dotnet`, `phase-execution`) live outside the repo at `/home/andreak/.agents/skills/` and are not part of any phase branch — they belong to the user's agent environment, not this project's git history.
