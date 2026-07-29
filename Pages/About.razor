@@ -2,10 +2,25 @@
 
 @page "/about"
 
-<PageTitle>About</PageTitle>
+@inject IOptions<ProductInfoOptions> Options
 
-<h1>About</h1>
+<PageTitle>About @ProductInfo.Name</PageTitle>
 
-<p>CookingTime — rebuilt on ASP.NET Core Blazor WebAssembly (.NET 10).</p>
+<h1>About @ProductInfo.Name</h1>
 
-<p>See <a href="docs/plan.md">docs/plan.md</a> for the upgrade plan.</p>
+<p>@ProductInfo.Name @ProductInfo.Version</p>
+<p>@ProductInfo.Company</p>
+<p>@ProductInfo.CopyrightYear</p>
+
+@if (!string.IsNullOrWhiteSpace(ProductInfo.ResumeUrl))
+{
+    <p><a href="@ProductInfo.ResumeUrl" target="_blank" rel="noopener">Resume</a></p>
+}
+@if (!string.IsNullOrWhiteSpace(ProductInfo.Email))
+{
+    <p><a href="mailto:@ProductInfo.Email">Email @ProductInfo.Email</a></p>
+}
+
+@code {
+    private ProductInfoOptions ProductInfo => Options.Value;
+}
