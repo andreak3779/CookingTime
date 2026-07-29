@@ -1,0 +1,16 @@
+@* filepath: _Imports.razor
+ * Implicit usings for Razor components.
+ *
+ * Note: do NOT add `@using CookingTime` here. With RootNamespace=CookingTime,
+ * the generated `App` component lives in a type namespace called `CookingTime`,
+ * which makes `@using CookingTime` ambiguous with the type itself. Razor's
+ * built-in component discovery resolves cross-namespace references via the
+ * @page attribute, so the explicit using is unnecessary.
+ *@
+
+@using System.Net.Http
+@using System.Net.Http.Json
+@using Microsoft.AspNetCore.Components.Forms
+@using Microsoft.AspNetCore.Components.Routing
+@using Microsoft.AspNetCore.Components.Web
+@using Microsoft.AspNetCore.Components.WebAssembly.Http
