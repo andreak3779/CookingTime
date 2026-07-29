@@ -8,7 +8,7 @@ A cooking-time calculator. Upgrading from a legacy .NET Framework WinForms app t
 | --- | --- | --- |
 | 0 | Docs scaffold | ✅ Done |
 | 1 | Blazor host | ✅ Done |
-| 2 | Domain layer | ⏳ Pending |
+| 2 | Domain layer | ✅ Done |
 | 3 | Application + config | ⏳ Pending |
 | 4 | Razor UI | ⏳ Pending |
 | 5 | Integration + feature tests | ⏳ Pending |
@@ -31,8 +31,10 @@ Project documentation lives in [docs/](docs/README.md):
 dotnet restore
 dotnet build -c Release
 dotnet test                          # runs every test project that exists
-dotnet run --project src/CookingTime  # boots the Blazor app
+dotnet run                           # boots the Blazor app (Phase 1 host; placeholder UI)
 ```
+
+> Phase 4 will swap the placeholder Cooking Time / About pages for the real `EditForm`-backed calculator wired to the Phase 2 domain through the Phase 3 application service. Until then, `/cooking-time` and `/about` show "Coming in Phase N" placeholders.
 
 ## Legacy code
 
