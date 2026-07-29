@@ -34,6 +34,8 @@
        Razor targets will pick up <RazorComponent> items. -->
   <ItemGroup>
     <Compile Include="Program.cs" />
+    <Compile Include="Domain\**\*.cs" />
+    <Compile Include="Infrastructure\**\*.cs" />
   </ItemGroup>
 
   <ItemGroup>
