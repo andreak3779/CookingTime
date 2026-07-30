@@ -1,0 +1,8 @@
+# CODEOWNERS — auto-assigns reviewers on PRs.
+# One maintainer for now; expand per-area as the team grows.
+
+# Default: no required reviewers.
+# /docs/      @andreak3779
+# /Application/  @andreak3779
+# /Domain/      @andreak3779
+# /Infrastructure/  @andreak3779

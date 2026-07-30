@@ -13,7 +13,7 @@ A cooking-time calculator. Upgrading from a legacy .NET Framework WinForms app t
 | 4 | Razor UI | ✅ Done |
 | 5 | Integration + feature tests | ✅ Done |
 | 6 | Cleanup | ✅ Done |
-| 7 | CI gate | ⏳ Pending |
+| 7 | CI gate | ✅ Done |
 
 Full status: [docs/phases/README.md](docs/phases/README.md).
 
@@ -25,18 +25,27 @@ Project documentation lives in [docs/](docs/README.md):
 - **Per-phase deliverables** — [docs/phases/](docs/phases/README.md).
 - **Architecture decisions** — [docs/decisions/](docs/decisions/README.md).
 
-## Quick start (will evolve as phases land)
+## Quick start
 
 ```bash
 dotnet restore
 dotnet build -c Release
-dotnet test                          # runs every test project that exists
+dotnet test --settings coverlet.runsettings.xml
+# Optional: run the coverage gate locally
+python3 scripts/check-coverage.py \
+  "$(ls -t tests/CookingTime.UnitTests/TestResults/*/coverage.cobertura.xml | head -1)" \
+  --threshold 75
 dotnet run                           # boots the Blazor app
 ```
 
 > Phase 5 added a test-only `WebApplication` host under `tests/CookingTime.IntegrationTests/` that
 > `WebApplicationFactory<Marker>` uses to spin up an in-process TestServer. The host is **not** a
 > production deployment artifact — it lives under `tests/` and is never published.
+>
+> Phase 7 made the CI gate blocking. Pull requests to `upgrading-to-net-10` and pushes to `phase/*`
+> must build, test, and keep `CookingTime.UnitTests` line coverage on production code ≥ 75%. See
+> [docs/phases/phase-7-ci.md](docs/phases/phase-7-ci.md) for details and [docs/decisions/0006-coverage-tooling.md](docs/decisions/0006-coverage-tooling.md)
+> for the threshold policy.
 
 ## Legacy code
 

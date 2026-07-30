@@ -26,6 +26,15 @@
     <PackageReference Include="FluentAssertions" Version="6.12.1" />
     <PackageReference Include="Moq" Version="4.20.72" />
     <PackageReference Include="bunit" Version="1.40.0" />
+    <!-- Phase 7: coverlet.collector hooks into the test runner so the
+         dotnet test runner (with XPlat Code Coverage enabled) emits a
+         Cobertura XML per test project. See UnitTests.csproj for the
+         full rationale. -->
+    <PackageReference Include="coverlet.collector" Version="6.0.2" />
+    <PackageReference Include="coverlet.msbuild" Version="6.0.2">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
   </ItemGroup>
 
   <ItemGroup>
