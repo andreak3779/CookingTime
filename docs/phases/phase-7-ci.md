@@ -25,8 +25,8 @@ Shared MSBuild properties that apply to every project under the repo root. Sets 
 coverlet filter rules:
 
 - **Include**: `[CookingTime.Domain.*]`, `[CookingTime.Application.*]`, `[CookingTime.Infrastructure.*]`, `[CookingTime.Pages.*]`, `[CookingTime.Layout.*]`.
-- **Exclude**: the three test assemblies, `Backup.*`, `*.Generated*`, `*.designer.cs`.
-- **Backup/* is auto-excluded** because its namespace is just `Backup`, not `CookingTime.Backup`. The explicit `<Exclude>` is defensive.
+- **Exclude**: the three test assemblies, `OriginalSource.*`, `*.Generated*`, `*.designer.cs`.
+- **OriginalSource/* is auto-excluded** because its namespace is just `OriginalSource`, not `CookingTime.OriginalSource`. The explicit `<Exclude>` is defensive.
 
 ### 3. coverlet.collector + coverlet.msbuild added to all three test csproj files
 

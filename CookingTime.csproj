@@ -9,14 +9,15 @@
     <LangVersion>latest</LangVersion>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <InvariantGlobalization>true</InvariantGlobalization>
-    <!-- Phase 6: limit the production compile glob to the four folders
-         that ship with the app. The default Blazor SDK glob would also
-         pick up tests/**/*.cs and Bundle/Backup/*.cs.
+    <!-- Phase 6 + Phase 8: limit the production compile glob to the four
+         folders that ship with the app. The default Blazor SDK glob
+         would also pick up tests/**/*.cs and OriginalSource/*.cs.
            - tests/ lives under separate csproj data and includes
              xUnit/FluentAssertions attributes that aren't valid in the
              production assembly.
-           - Backup/ is the historical reference project and is
-             intentionally not built. -->
+           - OriginalSource/ is the historical reference project
+             (renamed from Backup/ in Phase 8) and is intentionally not
+             built. -->
     <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
     <EnableDefaultEmbeddedResourceItems>false</EnableDefaultEmbeddedResourceItems>
   </PropertyGroup>

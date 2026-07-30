@@ -19,7 +19,7 @@ import xml.etree.ElementTree as ET
 from pathlib import Path
 
 # Folder prefixes that count as "production code". Anything else (tests,
-# Backup, generated) is excluded. Mirrors the <Include> filters in
+# OriginalSource, generated) is excluded. Mirrors the <Include> filters in
 # coverlet.runsettings.xml — coverlet emits relative paths like
 # "Domain/Meals/ChickenMeal.cs" so we match on folder prefixes, not
 # full namespaces.

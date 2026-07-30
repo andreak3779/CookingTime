@@ -4,7 +4,7 @@
 
 ## Goal
 
-Refactor the legacy **.NET Framework WinForms** cooking-time calculator (`Backup/`) into a modern **ASP.NET Core Blazor WebAssembly** application on **.NET 10**, applying SOLID principles, clean architecture, and design patterns appropriate to the domain. Tests ship with code; documentation ships with code.
+Refactor the legacy **.NET Framework WinForms** cooking-time calculator (`OriginalSource/`) into a modern **ASP.NET Core Blazor WebAssembly** application on **.NET 10**, applying SOLID principles, clean architecture, and design patterns appropriate to the domain. Tests ship with code; documentation ships with code.
 
 ## Final Stack
 
@@ -49,7 +49,7 @@ tests/                                   — unit / component / integration
 - **Phase 3 — Application + config:** `CookingResult` DTO, `ICookingTimeCalculator` + impl, `MealCatalogOptions`, `ProductInfoOptions`, real `MealFactory`, populated `appsettings.json` (13 meals, corrected labels), DI wiring. Heavy Moq service tests.
 - **Phase 4 — Razor UI:** `CookingTimeViewModel`, `EditForm` + DataAnnotations, rewrite `CookingTime.razor`, bind `About.razor` to options, render `Help.razor`. bUnit component tests.
 - **Phase 5 — Integration + feature tests:** optional thin Server project; integration + feature tests against real DI.
-- **Phase 6 — Cleanup:** delete legacy `Models/*` and root `ComCookingTime.cs`; keep `Backup/` as historical reference.
+- **Phase 6 — Cleanup:** delete legacy `Models/*` and root `ComCookingTime.cs`; keep `OriginalSource/` as historical reference.
 - **Phase 7 — CI gate:** upgrade `.github/workflows/ci.yml` to a blocking CI gate; add coverage upload; document branch protection.
 
 ## Decisions
