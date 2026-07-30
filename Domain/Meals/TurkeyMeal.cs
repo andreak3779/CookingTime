@@ -7,7 +7,7 @@ namespace CookingTime.Domain.Meals;
 
 /// <summary>
 /// Turkey. Time ranges preserved verbatim from the legacy
-/// Backup/ComCookingTime.cs MealTurkey table.
+/// OriginalSource/ComCookingTime.cs MealTurkey table.
 /// </summary>
 public sealed class TurkeyMeal : IMeal
 {

@@ -49,7 +49,7 @@ dotnet run                           # boots the Blazor app
 
 ## Legacy code
 
-The original WinForms source is preserved, untouched, in [Backup/](Backup/) for historical reference. None of the upgraded code references it.
+The original WinForms source is preserved, untouched, in [OriginalSource/](OriginalSource/) for historical reference. None of the upgraded code references it.
 
 ## Contributing
 

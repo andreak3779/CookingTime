@@ -51,7 +51,7 @@ A class in `Domain/` must never `using` from `Infrastructure/` or `Application/`
 - `sealed` on classes not designed for inheritance.
 - `nameof()` over string literals.
 - No `*.designer.cs`, no `*.resx` for WinForms (this is a Blazor project).
-- No `using` legacy types from `Backup/` in new code — `Backup/` is reference only.
+- No `using` legacy types from `OriginalSource/` in new code — `OriginalSource/` is reference only.
 
 ## Testing
 
@@ -77,16 +77,16 @@ A class in `Domain/` must never `using` from `Infrastructure/` or `Application/`
 
 | Pattern | Source in legacy code | Why it bit the original project |
 | --- | --- | --- |
-| Mutable value object | `Backup/clsTime.MinimumTime` setter writes to `m_MaxTime` | Caused silent bugs in MealBasic/MealRange. |
-| Switch-on-string in factories | `Backup/MealCreator.CreateMeal` if/else chain | Adding a meal required editing the factory. |
+| Mutable value object | `OriginalSource/clsTime.MinimumTime` setter writes to `m_MaxTime` | Caused silent bugs in MealBasic/MealRange. |
+| Switch-on-string in factories | `OriginalSource/MealCreator.CreateMeal` if/else chain | Adding a meal required editing the factory. |
 | Concrete dependencies in UI | `frmCookingTime.m_MealCreator = new CT.MealCreator()` | Untestable. |
-| Domain + infrastructure + UI in one file | `Backup/ComCookingTime.cs` | 700-line file mixing 4 concerns. |
-| `using` legacy `Backup/` types | future risk | Backward dependency; defeats the upgrade. |
+| Domain + infrastructure + UI in one file | `OriginalSource/ComCookingTime.cs` | 700-line file mixing 4 concerns. |
+| `using` legacy `OriginalSource/` types | future risk | Backward dependency; defeats the upgrade. |
 
 ## What you'll see in this repo
 
 - `docs/plan.md` — locked master plan.
 - `docs/phases/phase-N-*.md` — what each phase shipped.
 - `docs/decisions/000N-*.md` — ADRs.
-- `Backup/` — historical WinForms code, do not reference.
+- `OriginalSource/` — historical WinForms code, do not reference.
 - `obj/`, `bin/`, `*.csproj.user`, `.vs/` — gitignored build artifacts.

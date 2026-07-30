@@ -4,7 +4,7 @@
 
 ## Context
 
-The legacy `Backup/ComCookingTime.cs` is a single file containing domain, infrastructure, and UI-adjacent code. It contains several SOLID violations and known bugs. We need a clear, written contract of the standards the upgraded code must hold to.
+The legacy `OriginalSource/ComCookingTime.cs` is a single file containing domain, infrastructure, and UI-adjacent code. It contains several SOLID violations and known bugs. We need a clear, written contract of the standards the upgraded code must hold to.
 
 ## Decision
 

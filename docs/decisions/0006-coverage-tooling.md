@@ -9,7 +9,7 @@ After Phase 5 we had 112 unit/component/integration facts but no machine-readabl
 ## Decision
 
 - **Coverage provider:** `coverlet.collector` 6.0.2 plus `coverlet.msbuild` 6.0.2. Hooks into `dotnet test` via the `XPlat Code Coverage` data collector and emits one Cobertura XML per test project.
-- **Filter rules:** `coverlet.runsettings.xml` at the repo root. Includes `[CookingTime.Domain.*]`, `[CookingTime.Application.*]`, `[CookingTime.Infrastructure.*]`, `[CookingTime.Pages.*]`, `[CookingTime.Layout.*]`. Excludes the three test assemblies and `Backup.*`.
+- **Filter rules:** `coverlet.runsettings.xml` at the repo root. Includes `[CookingTime.Domain.*]`, `[CookingTime.Application.*]`, `[CookingTime.Infrastructure.*]`, `[CookingTime.Pages.*]`, `[CookingTime.Layout.*]`. Excludes the three test assemblies and `OriginalSource.*`.
 - **Threshold:** **75% line coverage on production code**, gated only on `CookingTime.UnitTests`. ComponentTests and IntegrationTests publish coverage as informational artifacts; they don't drive the gate.
 - **Coverage script:** `scripts/check-coverage.py` parses Cobertura XML and exits non-zero on threshold miss. Pure Python (no external deps), runs in any `ubuntu-latest` runner.
 - **CI integration:** `.github/workflows/ci.yml` runs the test suite per project, then the coverage script. Coverage XMLs are uploaded as the `coverage-cobertura` artifact.
