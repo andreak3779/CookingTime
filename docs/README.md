@@ -4,11 +4,12 @@ This directory is the canonical home for project documentation. Code lives in th
 
 ## Contents
 
-| Folder | What's inside |
+| File / Folder | What's inside |
 | --- | --- |
 | [`plan.md`](plan.md) | Master upgrade plan. Locked after Phase 0. The single source of truth for *what we're doing*. |
 | [`phases/`](phases/README.md) | One file per phase (Phase 0 → Phase 7). Tracks what each phase shipped and how to verify it. Updated every phase. |
 | [`decisions/`](decisions/README.md) | Architecture Decision Records (ADRs). One file per material decision. Append-only. |
+| [`onboarding.md`](onboarding.md) | New-developer guide. Reading order, code tour, conventions, anti-patterns, and "how to make your first change." |
 
 ## Workflow
 
