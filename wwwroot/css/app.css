@@ -1,0 +1,70 @@
+/* filepath: wwwroot/css/app.css
+ * CookingTime — minimal Blazor host stylesheet.
+ * Application components style themselves inline for now.
+ */
+
+html, body {
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    margin: 0;
+    padding: 0;
+    background: #f8fafc;
+    color: #1f2937;
+}
+
+#app {
+    min-height: 100vh;
+}
+
+.loading-progress {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80px;
+    height: 80px;
+}
+
+.loading-progress circle {
+    fill: none;
+    stroke: #2563eb;
+    stroke-width: 6;
+    stroke-linecap: round;
+    transform-origin: 50% 50%;
+    transform: rotate(-90deg);
+    transition: stroke-dashoffset 0.3s ease;
+}
+
+.loading-progress circle:last-child {
+    stroke: #cbd5e1;
+    stroke-dasharray: 1 200;
+    stroke-dashoffset: 0;
+}
+
+.loading-progress-text {
+    position: fixed;
+    top: calc(50% + 60px);
+    left: 50%;
+    transform: translateX(-50%);
+    color: #6b7280;
+    font-size: 0.875rem;
+}
+
+#blazor-error-ui {
+    background: #fee2e2;
+    color: #991b1b;
+    bottom: 0;
+    box-shadow: 0 -1px 2px rgba(0, 0, 0, 0.2);
+    display: none;
+    left: 0;
+    padding: 0.75rem 1rem;
+    position: fixed;
+    width: 100%;
+    z-index: 1000;
+}
+
+#blazor-error-ui .dismiss {
+    cursor: pointer;
+    position: absolute;
+    right: 0.75rem;
+    top: 0.5rem;
+}

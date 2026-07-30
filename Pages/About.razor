@@ -1,0 +1,26 @@
+@* filepath: Pages/About.razor *@
+
+@page "/about"
+
+@inject IOptions<ProductInfoOptions> Options
+
+<PageTitle>About @ProductInfo.Name</PageTitle>
+
+<h1>About @ProductInfo.Name</h1>
+
+<p>@ProductInfo.Name @ProductInfo.Version</p>
+<p>@ProductInfo.Company</p>
+<p>@ProductInfo.CopyrightYear</p>
+
+@if (!string.IsNullOrWhiteSpace(ProductInfo.ResumeUrl))
+{
+    <p><a href="@ProductInfo.ResumeUrl" target="_blank" rel="noopener">Resume</a></p>
+}
+@if (!string.IsNullOrWhiteSpace(ProductInfo.Email))
+{
+    <p><a href="mailto:@ProductInfo.Email">Email @ProductInfo.Email</a></p>
+}
+
+@code {
+    private ProductInfoOptions ProductInfo => Options.Value;
+}

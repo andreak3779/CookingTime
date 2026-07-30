@@ -1,0 +1,112 @@
+@* filepath: Pages/CookingTime.razor *@
+
+@page "/cooking-time"
+
+@inject ICookingTimeCalculator Calculator
+@inject IMealFactory MealFactory
+
+<PageTitle>Cooking Time Calculator</PageTitle>
+
+<h1>Cooking Time Calculator</h1>
+
+<EditForm Model="@_model" OnValidSubmit="@HandleSubmit" FormName="cooking-time">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div>
+        <label for="meal">Cooking Type:</label>
+        <InputSelect id="meal" @bind-Value="_model.Meal" TValue="string">
+            <option value="">Select a meal...</option>
+            @foreach (var meal in _meals)
+            {
+                <option value="@meal.Name">@meal.Name</option>
+            }
+        </InputSelect>
+        <ValidationMessage For="() => _model.Meal" />
+    </div>
+
+    <div>
+        <label for="weight">Cooking Weight:</label>
+        <InputNumber id="weight" @bind-Value="_model.Weight" TValue="decimal" />
+        <ValidationMessage For="() => _model.Weight" />
+    </div>
+
+    <div>
+        <label>Units:</label>
+        <InputRadioGroup Name="unit" @bind-Value="_model.Unit">
+            <label><InputRadio Name="unit" Value="@WeightUnit.Pounds" /> Pounds</label>
+            <label><InputRadio Name="unit" Value="@WeightUnit.Kilograms" /> Kilograms</label>
+        </InputRadioGroup>
+    </div>
+
+    <button type="submit">Calculate</button>
+    <button type="button" @onclick="Reset">Reset</button>
+</EditForm>
+
+@if (_result is not null)
+{
+    <section>
+        <h2>Cooking Time</h2>
+        <p>@_result.FormattedDuration</p>
+
+        <h3>Cooking Instructions</h3>
+        <p>@_result.Instructions</p>
+
+        @if (!_result.IsSuccess)
+        {
+            <ul class="validation-errors">
+                @foreach (var error in _result.ValidationErrors)
+                {
+                    <li>@error</li>
+                }
+            </ul>
+        }
+    </section>
+}
+
+@code {
+    private CookingTimeViewModel _model = new();
+    private IReadOnlyList<IMeal> _meals = Array.Empty<IMeal>();
+    private CookingResult? _result;
+
+    /// <summary>
+    /// Optional initial model state. Used by component tests to pre-fill the form
+    /// and avoid flaky bUnit input-binding timing. Production code does not set this.
+    /// </summary>
+    [Parameter] public CookingTimeViewModel? InitialModel { get; set; }
+
+    protected override void OnInitialized()
+    {
+        if (InitialModel is not null)
+            _model = InitialModel;
+        _meals = MealFactory.CreateAll()
+            .OrderBy(m => m.Name, StringComparer.Ordinal)
+            .ToList();
+    }
+
+    public async Task SubmitAsync() => await HandleSubmit();
+
+    private async Task HandleSubmit()
+    {
+        _result = await Calculator.CalculateAsync(_model.Meal, _model.Weight, _model.Unit);
+    }
+
+    private void Reset()
+    {
+        _model.Meal = "";
+        _model.Weight = 1M;
+        _model.Unit = WeightUnit.Pounds;
+        _result = null;
+    }
+
+    public sealed class CookingTimeViewModel
+    {
+        [Required(ErrorMessage = "Please select a meal.")]
+        public string Meal { get; set; } = "";
+
+        [Range(0.01, 999.0, ErrorMessage = "Please enter a weight between 0.01 and 999.")]
+        public decimal Weight { get; set; } = 1M;
+
+        public WeightUnit Unit { get; set; } = WeightUnit.Pounds;
+    }
+}
