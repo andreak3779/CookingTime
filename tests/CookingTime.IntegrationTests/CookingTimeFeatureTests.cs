@@ -2,6 +2,7 @@
 using Bunit;
 using CookingTime.Application;
 using CookingTime.Application.Abstractions;
+using CookingTime.Domain.Abstractions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using CookingTimePage = CookingTime.Pages.CookingTime;
@@ -65,5 +66,37 @@ public sealed class CookingTimeFeatureTests : TestContext
             because: "the calculator rejects the empty Meal default");
         component.Markup.Should().Contain("validation-errors",
             because: "the failure result renders the validation-errors list");
+    }
+
+    [Fact]
+    public void MealCatalog_FromProductionConfig_IncludesEveryConfiguredMeal()
+    {
+        // Regression test: MealTypeRegistry used to key factories by MealKind,
+        // so every configured MealKind.Range meal but the last one silently
+        // overwrote its predecessor. This resolves the real appsettings.json
+        // through the production composition root and asserts all of them
+        // (not just the last-registered one) survive into the catalog.
+        using var provider = Services.BuildServiceProvider();
+        var mealFactory = provider.GetRequiredService<IMealFactory>();
+
+        var meals = mealFactory.CreateAll();
+
+        meals.Should().HaveCount(12,
+            because: "2 code-baked meals (Chicken, Turkey) + 10 Range meals configured in appsettings.json");
+        meals.Select(m => m.Name).Should().BeEquivalentTo(new[]
+        {
+            "Chicken",
+            "Turkey",
+            "Pork Roast Loin, Leg, Butt",
+            "Beef Roast Standing Rib - Rare",
+            "Beef Roast Standing Rib - Medium",
+            "Beef Roast Rolled - Rare",
+            "Beef Roast Rolled - Medium",
+            "Beef Roast Round or Rump - Rare",
+            "Beef Roast Round or Rump - Medium",
+            "Smoked Ham - Whole",
+            "Smoked Ham - Half",
+            "Pork - Smoked Picnic Shoulder",
+        });
     }
 }
