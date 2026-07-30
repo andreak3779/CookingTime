@@ -43,6 +43,49 @@ public sealed class MealFactoryTests
     }
 
     [Fact]
+    public void CreateAll_MultipleRangeMealsInConfig_ReturnsAllOfThem()
+    {
+        // Regression test: every configured roast/ham shares MealKind.Range, so
+        // the registry must not let later registrations overwrite earlier ones.
+        var options = new MealCatalogOptions
+        {
+            Catalog =
+            {
+                new MealDefinition
+                {
+                    Kind = MealKind.Range,
+                    Name = "Pork Roast",
+                    Instructions = "Cook it.",
+                    MinPounds = 1, MaxPounds = 24,
+                    MinMinutesPerPound = 40, MaxMinutesPerPound = 45,
+                },
+                new MealDefinition
+                {
+                    Kind = MealKind.Range,
+                    Name = "Beef Roast",
+                    Instructions = "Cook it.",
+                    MinPounds = 1, MaxPounds = 24,
+                    MinMinutesPerPound = 18, MaxMinutesPerPound = 20,
+                },
+                new MealDefinition
+                {
+                    Kind = MealKind.Range,
+                    Name = "Smoked Ham",
+                    Instructions = "Cook it.",
+                    MinPounds = 1, MaxPounds = 24,
+                    MinMinutesPerPound = 15, MaxMinutesPerPound = 18,
+                },
+            },
+        };
+        var factory = new MealFactory(Options.Create(options));
+
+        var meals = factory.CreateAll();
+
+        meals.Select(m => m.Name).Should().Contain(new[] { "Pork Roast", "Beef Roast", "Smoked Ham" });
+        meals.Count(m => m.Kind == MealKind.Range).Should().Be(3);
+    }
+
+    [Fact]
     public void CreateAll_RangeMealMissingMaxMinutes_ThrowsOnCreation()
     {
         var options = new MealCatalogOptions
