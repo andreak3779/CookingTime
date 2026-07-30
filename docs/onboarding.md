@@ -23,6 +23,7 @@ Read these, in order. Skim before you skim the code.
 | --- | --- | --- |
 | 1 | [README.md](../README.md) | Status table, quick-start commands, where the legacy code lives. |
 | 2 | [plan.md](plan.md) | The locked master plan: stack, branch model, architecture diagram. |
+| 2b | [DIAGRAMS.md](DIAGRAMS.md) | Same layering block and the rest of the diagrams, rendered. Worth opening next to plan.md on a wide screen. |
 | 3 | [phases/README.md](phases/README.md) | One row per shipped phase. Tells you what already exists so you don't re-implement it. |
 | 4 | [decisions/README.md](decisions/README.md) | ADRs. Read **0001–0004** before touching anything; **0005–0006** before touching tests or CI. |
 | 5 | [AGENTS.md](../AGENTS.md) | Standing rules for AI agents — but the SOLID + layering table applies to humans too. |
@@ -46,6 +47,12 @@ A class in `Domain/` must never `using` from `Application/` or
 `Infrastructure/`. UI must not construct concretes — DI wires them. These two
 rules are the spine of the codebase. See [ADR 0004](decisions/0004-solid-and-patterns.md)
 for the full SOLID table.
+
+> **Visual:** the same layering diagram rendered as a color PNG lives at
+> [docs/diagrams/01-architecture.png](diagrams/01-architecture.png) and is
+> embedded in the repo-root [README](../README.md). Keep that PNG open
+> alongside this file when you're reading the code — it's a faster mental map
+> than the ASCII block.
 
 ## Code reading order (≈ 90 minutes)
 

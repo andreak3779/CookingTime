@@ -1,0 +1,35 @@
+---
+title: CookingTime layered architecture
+---
+flowchart LR
+    UI["Components / Pages / Layout<br/>(Razor UI)"]
+    App["Application<br/>(services, DTOs, composition root)"]
+    Infra["Infrastructure<br/>(MealFactory, IOptions POCOs)"]
+    Dom["Domain<br/>(value objects, abstractions, meals, strategies)"]
+    Tests["tests/<br/>UnitTests / ComponentTests / IntegrationTests"]
+    Orig["OriginalSource/<br/>(historical WinForms, reference only)"]
+
+    UI  --> App
+    UI  --> Infra
+    UI  --> Dom
+    App --> Dom
+    Infra --> Dom
+    Infra --> App
+
+    Tests -. "WebApplicationFactory + bUnit" .-> UI
+    Tests -. "AddCookingTime()" .-> App
+    Orig -. "provenance comments only" .- Dom
+
+    classDef domain fill:#e6f4ff,stroke:#1f6feb,color:#0b3a66;
+    classDef app fill:#ddf4e1,stroke:#1f883d,color:#0f5132;
+    classDef infra fill:#fff4d6,stroke:#bf8700,color:#5d4500;
+    classDef ui fill:#f4dcff,stroke:#8250df,color:#4a1d70;
+    classDef tests fill:#f5f5f5,stroke:#6e6e6e,color:#333333,stroke-dasharray: 4 2;
+    classDef legacy fill:#ffebe9,stroke:#cf222e,color:#82071e,stroke-dasharray: 4 2;
+
+    class Dom domain
+    class App app
+    class Infra infra
+    class UI ui
+    class Tests tests
+    class Orig legacy
