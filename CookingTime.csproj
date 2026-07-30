@@ -9,12 +9,16 @@
     <LangVersion>latest</LangVersion>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <InvariantGlobalization>true</InvariantGlobalization>
-    <!-- Phase 1: disable the SDK's auto-globbing for compile, embedded resource, and Razor page items.
-         The Blazor csproj only needs explicit items we list below; this stops the SDK from
-         picking up the legacy WinForms .resx and .cs files sitting at the repo root. -->
+    <!-- Phase 6: limit the production compile glob to the four folders
+         that ship with the app. The default Blazor SDK glob would also
+         pick up tests/**/*.cs and Bundle/Backup/*.cs.
+           - tests/ lives under separate csproj data and includes
+             xUnit/FluentAssertions attributes that aren't valid in the
+             production assembly.
+           - Backup/ is the historical reference project and is
+             intentionally not built. -->
     <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
     <EnableDefaultEmbeddedResourceItems>false</EnableDefaultEmbeddedResourceItems>
-    <EnableDefaultRazorGenerateItems>false</EnableDefaultRazorGenerateItems>
   </PropertyGroup>
 
   <ItemGroup>
@@ -23,25 +27,17 @@
   </ItemGroup>
 
   <!-- Make the generated Program type visible to the test assembly so
-       WebApplicationFactory<Program> can find an entry point. -->
+       WebApplicationFactory tests can find an entry point. -->
   <ItemGroup>
     <InternalsVisibleTo Include="CookingTime.UnitTests" />
   </ItemGroup>
 
-  <!-- Explicit compile glob: only the Blazor app source.
-       With EnableDefaultCompileItems / EnableDefaultEmbeddedResourceItems / EnableDefaultRazorGenerateItems
-       all disabled, we must declare the .cs files and the .razor files separately. The Blazor SDK's
-       Razor targets will pick up <RazorComponent> items. -->
   <ItemGroup>
     <Compile Include="Program.cs" />
+    <Compile Include="Application\**\*.cs" />
     <Compile Include="Domain\**\*.cs" />
     <Compile Include="Infrastructure\**\*.cs" />
-    <Compile Include="Application\**\*.cs" />
   </ItemGroup>
-
-  <!-- appsettings.json is auto-included as Content by the SDK; we don't
-       need to add it explicitly. The default CopyToOutputDirectory for
-       Content is PreserveNewest, which is what we want. -->
 
   <ItemGroup>
     <RazorComponent Include="App.razor" />
@@ -51,7 +47,6 @@
     <RazorComponent Include="Pages\**\*.razor" />
   </ItemGroup>
 
-  <!-- wwwroot static assets; nothing else gets shipped to the host. -->
   <ItemGroup>
     <None Include="wwwroot\**\*" Pack="false" />
   </ItemGroup>
