@@ -93,7 +93,7 @@ Note: `dotnet new sln` in SDK 10.0.110 defaults to the new `.slnx` (XML) format.
 The following legacy WinForms-era files remain tracked for historical reference and will be removed in **Phase 6 (cleanup)**:
 
 - `App.ico`, `AssemblyInfo.cs`, `ComCookingTime.cs`/`ComCookingTime.resx`, `CookingTime.resx`, `frmAbout.cs`/`frmAbout.resx`, `frmCookingTime.cs`/`frmCookingTime.resx`, `meal.xml`, `UpgradeLog*.XML`, `_UpgradeReport_Files/`, `Models/`, `Properties/`, `Data/`
-- `Backup/CookingTime.csproj`, `Backup/CookingTime.sln`, `Backup/*.cs`/`*.resx` — these are the canonical historical reference, never built.
+- `OriginalSource/CookingTime.csproj`, `OriginalSource/CookingTime.sln`, `OriginalSource/*.cs`/`*.resx` — these are the canonical historical reference, never built.
 
 ## Verification
 

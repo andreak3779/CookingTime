@@ -7,7 +7,7 @@ namespace CookingTime.Domain.Meals;
 
 /// <summary>
 /// Chicken. Time ranges preserved verbatim from the legacy
-/// Backup/ComCookingTime.cs MealChicken table.
+/// OriginalSource/ComCookingTime.cs MealChicken table.
 /// </summary>
 public sealed class ChickenMeal : IMeal
 {
