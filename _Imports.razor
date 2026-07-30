@@ -1,0 +1,29 @@
+@* filepath: _Imports.razor
+ * Implicit usings for Razor components.
+ *
+ * Note: do NOT add `@using CookingTime` here. With RootNamespace=CookingTime,
+ * the generated `App` component lives in a type namespace called `CookingTime`,
+ * which makes `@using CookingTime` ambiguous with the type itself. Razor's
+ * built-in component discovery resolves cross-namespace references via the
+ * @page attribute, so the explicit using is unnecessary.
+ *
+ * Phase 4: also pull in Application, Domain, and Infrastructure namespaces so
+ * Razor components can use IMealFactory, ICookingTimeCalculator, ProductInfoOptions,
+ * etc., without per-file @using directives. We use `global::` to avoid the
+ * Razor generator treating `CookingTime` as a type name within the
+ * CookingTime namespace itself.
+ *@
+
+@using System.Net.Http
+@using System.Net.Http.Json
+@using System.ComponentModel.DataAnnotations
+@using Microsoft.AspNetCore.Components.Forms
+@using Microsoft.AspNetCore.Components.Routing
+@using Microsoft.AspNetCore.Components.Web
+@using Microsoft.AspNetCore.Components.WebAssembly.Http
+@using Microsoft.Extensions.Options
+@using global::CookingTime.Application.Abstractions
+@using global::CookingTime.Application.Common
+@using global::CookingTime.Domain.Abstractions
+@using global::CookingTime.Domain.ValueObjects
+@using global::CookingTime.Infrastructure.Configuration

@@ -1,0 +1,46 @@
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+indent_style = space
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+[*.{cs,csproj,sln,props,targets}]
+indent_size = 4
+
+[*.{razor,razor.cs}]
+indent_size = 4
+
+[*.{json,yml,yaml,xml}]
+indent_size = 2
+
+[*.md]
+trim_trailing_whitespace = false
+max_line_length = off
+
+# C# language conventions (matches AGENTS.md)
+[*.cs]
+# File-scoped namespaces preferred (see AGENTS.md)
+csharp_style_namespace_declarations = file_scoped:warning
+# Prefer readonly for value-object fields
+csharp_prefer_simple_using_statement = true:suggestion
+csharp_style_pattern_matching_over_is_with_cast_check = true:suggestion
+csharp_style_pattern_matching_over_as_with_null_check = true:suggestion
+# Prefer 'var' only when the type is apparent
+csharp_style_var_when_type_is_apparent = true:suggestion
+csharp_style_var_for_built_in_types = false:suggestion
+csharp_style_var_elsewhere = false:suggestion
+# Allow 'this.' only when required
+dotnet_style_qualification_for_field = false:suggestion
+dotnet_style_qualification_for_property = false:suggestion
+dotnet_style_qualification_for_method = false:suggestion
+dotnet_style_qualification_for_event = false:suggestion
+
+# Suggest nullable annotations
+dotnet_style_null_checking_indexer_arguments = true:suggestion
+dotnet_style_null_checking_method_arguments = true:suggestion
+
+[*.{csproj,props,targets}]
+indent_size = 2

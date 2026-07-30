@@ -1,0 +1,8 @@
+<Solution>
+  <Folder Name="/tests/">
+    <Project Path="tests/CookingTime.ComponentTests/CookingTime.ComponentTests.csproj" />
+    <Project Path="tests/CookingTime.IntegrationTests/CookingTime.IntegrationTests.csproj" />
+    <Project Path="tests/CookingTime.UnitTests/CookingTime.UnitTests.csproj" />
+  </Folder>
+  <Project Path="CookingTime.csproj" />
+</Solution>
