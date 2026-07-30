@@ -57,7 +57,7 @@ Both services are `Singleton` — they're stateless and Blazor WASM has no per-r
 
 ### 6. `appsettings.json` (new)
 
-Bound to `MealCatalogOptions` and `ProductInfoOptions`. Contains all 10 config-driven Range meals (Chicken/Turkey remain in code). Two bugs from the legacy `Backup/ComCookingTime.cs:GetMeals()` are **fixed on purpose**:
+Bound to `MealCatalogOptions` and `ProductInfoOptions`. Contains all 10 config-driven Range meals (Chicken/Turkey remain in code). Two bugs from the legacy `OriginalSource/ComCookingTime.cs:GetMeals()` are **fixed on purpose**:
 
 1. The two `"Beef Roast Standing Rib"` entries — both labeled `"Rare "` in the legacy code — are now correctly labeled `"Rare"` and `"Medium"`.
 2. Three legacy entries ("Smoked Ham - Half", "Pork - Smoked Picnic Shoulder") were passed only `aMin` to the factory, leaving `aMax=0`. The new catalog explicitly sets `MaxMinutesPerPound` for these (using the same value as `MinMinutesPerPound`) so the resulting duration is a single value rather than a nonsense range from `min` to `0`.

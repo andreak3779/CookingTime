@@ -12,7 +12,7 @@
 
 ## Goal
 
-Remove the legacy WinForms artifacts that were deliberately left in the repo so the upgraded code could be reviewed side-by-side with the original. The upgrade is now feature-equivalent; the legacy files are dead weight. Keep `Backup/` intact as historical reference.
+Remove the legacy WinForms artifacts that were deliberately left in the repo so the upgraded code could be reviewed side-by-side with the original. The upgrade is now feature-equivalent; the legacy files are dead weight. Keep `OriginalSource/` intact as historical reference.
 
 ## What shipped
 
@@ -48,12 +48,12 @@ The original Phase 1 csproj disabled all three default compile/embedded-resource
 
 After the cleanup, the legacy files at the root are gone — but two reasons remain to keep the workarounds:
 
-1. **`Backup/` still contains `.resx` files.** The Blazor SDK's default embedded-resource glob would pick up `Backup/ComCookingTime.resx`, `Backup/CookingTime.resx`, `Backup/frmAbout.resx`, `Backup/frmCookingTime.resx`, whose non-string resources require `System.Resources.Extensions` at runtime. Keeping `<EnableDefaultEmbeddedResourceItems>false</EnableDefaultEmbeddedResourceItems>` prevents this.
+1. **`OriginalSource/` still contains `.resx` files.** The Blazor SDK's default embedded-resource glob would pick up `OriginalSource/ComCookingTime.resx`, `OriginalSource/CookingTime.resx`, `OriginalSource/frmAbout.resx`, `OriginalSource/frmCookingTime.resx`, whose non-string resources require `System.Resources.Extensions` at runtime. Keeping `<EnableDefaultEmbeddedResourceItems>false</EnableDefaultEmbeddedResourceItems>` prevents this.
 2. **`tests/` lives under the same repo root.** The default compile glob would pick up `tests/**/*.cs` and try to compile xUnit/FluentAssertions attributes into the production assembly, breaking the build. Keeping `<EnableDefaultCompileItems>false</EnableDefaultCompileItems>` and the explicit `<Compile Include="...">` lists constrains the production build to `Program.cs`, `Application/`, `Domain/`, `Infrastructure/`.
 
 The `<EnableDefaultRazorGenerateItems>` workaround was dropped: there are no longer any `.razor` files at the root that need to be excluded, and the explicit `<RazorComponent Include="...">` list was already what was picking up the right files.
 
-The new csproj is a third shorter. The comment on each remaining workaround now points to the *actual* reason (Backup/tests coexistence) rather than the legacy-file reason.
+The new csproj is a third shorter. The comment on each remaining workaround now points to the *actual* reason (OriginalSource/tests coexistence) rather than the legacy-file reason.
 
 ### 3. ADR 0005 — test host entry-point naming
 
@@ -61,7 +61,7 @@ Committed at the start of `phase/6-cleanup` (before the file deletions) so the c
 
 ## What was deliberately **not** deleted
 
-- **`Backup/`** — preserved in full as historical reference. Per [AGENTS.md](../../AGENTS.md), "No `using` legacy types from `Backup/` in new code — `Backup/` is reference only." The two `///` comments in `Domain/Meals/TurkeyMeal.cs` and `Domain/Meals/ChickenMeal.cs` that reference `Backup/ComCookingTime.cs` are *provenance* comments, not dependencies; they stay.
+- **`OriginalSource/`** — preserved in full as historical reference. Per [AGENTS.md](../../AGENTS.md), "No `using` legacy types from `OriginalSource/` in new code — `OriginalSource/` is reference only." The two `///` comments in `Domain/Meals/TurkeyMeal.cs` and `Domain/Meals/ChickenMeal.cs` that reference `OriginalSource/ComCookingTime.cs` are *provenance* comments, not dependencies; they stay.
 - **`bin/`, `obj/`** — already `.gitignore`d. They will not appear in the commit.
 - **`.gitignore`** — unchanged. The existing entries (`bin/`, `obj/`, `*.user`, `*.suo`, `*.sln.docstates`, etc.) already cover everything that was deleted.
 
@@ -70,9 +70,9 @@ Committed at the start of `phase/6-cleanup` (before the file deletions) so the c
 | Decision | Choice | Rationale |
 | --- | --- | --- |
 | Single sweeping commit vs N smaller commits | Single commit | Easier to revert and read in `git log`; the deletions are conceptually one operation. |
-| Keep `Backup/` | Yes, untouched | The whole point of `Backup/` is "do not reference, but you can read". Gutting it would defeat the purpose. |
+| Keep `OriginalSource/` | Yes, untouched | The whole point of `OriginalSource/` is "do not reference, but you can read". Gutting it would defeat the purpose. |
 | Restore `<EnableDefaultCompileItems>` | No, still needed | `tests/` is under the same repo root; the SDK default would pick up xUnit tests. |
-| Restore `<EnableDefaultEmbeddedResourceItems>` | No, still needed | `Backup/*.resx` exists and would be auto-included. |
+| Restore `<EnableDefaultEmbeddedResourceItems>` | No, still needed | `OriginalSource/*.resx` exists and would be auto-included. |
 | Drop `<EnableDefaultRazorGenerateItems>` | Yes, no longer needed | No `.razor` files at the repo root to exclude. |
 
 ## Validation
@@ -84,6 +84,6 @@ Committed at the start of `phase/6-cleanup` (before the file deletions) so the c
 
 ## Anti-patterns to avoid
 
-- **Don't gut `Backup/`** — the comment-only references in `Domain/Meals/*.cs` are provenance, not dependencies. Removing them would break the per-domain "this came from the legacy table X" documentation.
-- **Don't re-enable the SDK defaults wholesale** — they will pick up `Backup/` and `tests/`. The two remaining `EnableDefault*Items` workarounds are durable constraints.
+- **Don't gut `OriginalSource/`** — the comment-only references in `Domain/Meals/*.cs` are provenance, not dependencies. Removing them would break the per-domain "this came from the legacy table X" documentation.
+- **Don't re-enable the SDK defaults wholesale** — they will pick up `OriginalSource/` and `tests/`. The two remaining `EnableDefault*Items` workarounds are durable constraints.
 - **Don't add a `Shared/` folder** — the WASM project layout puts shared components in `Layout/`, not `Shared/`. The empty `Shared/` dir was a leftover from the WinForms project.

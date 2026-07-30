@@ -21,7 +21,7 @@ Introduce the application domain — value objects, abstractions, strategies, co
 
 | Type | Behavior | Notes |
 | --- | --- | --- |
-| `Weight` (`readonly record struct`) | Canonical pounds. Constructed only via `FromPounds` or `FromKilograms`. Both throw on non-positive input. `ToKilograms()` inverts `FromKilograms`. | The kg→lb conversion factor (`2.20462262`) lives here and **nowhere else**. Fixes the legacy `Backup/structWeight` bug where the conversion direction was inverted. |
+| `Weight` (`readonly record struct`) | Canonical pounds. Constructed only via `FromPounds` or `FromKilograms`. Both throw on non-positive input. `ToKilograms()` inverts `FromKilograms`. | The kg→lb conversion factor (`2.20462262`) lives here and **nowhere else**. Fixes the legacy `OriginalSource/structWeight` bug where the conversion direction was inverted. |
 | `CookingDuration` (`readonly record struct`) | `(TimeSpan Minimum, TimeSpan Maximum)`. Static `Single(time)` for a point value; constructor for ranges. `Format()` reproduces the legacy `clsTime.ToString()` output verbatim. | Immutable by record-struct semantics — the legacy `clsTime.MinimumTime` setter that wrote to `m_MaxTime` is structurally impossible here. |
 
 ### 2. Abstractions (`Domain/Abstractions/`)
@@ -44,8 +44,8 @@ Introduce the application domain — value objects, abstractions, strategies, co
 
 | Type | Strategy | Notes |
 | --- | --- | --- |
-| `ChickenMeal` | `TableLookupStrategy` with the 4 rows from `Backup/ComCookingTime.cs:MealChicken`. | Min 1.5 lb, max 6 lb. |
-| `TurkeyMeal` | `TableLookupStrategy` with the 8 rows from `Backup/ComCookingTime.cs:MealTurkey`. | Min 6 lb, max 24 lb. |
+| `ChickenMeal` | `TableLookupStrategy` with the 4 rows from `OriginalSource/ComCookingTime.cs:MealChicken`. | Min 1.5 lb, max 6 lb. |
+| `TurkeyMeal` | `TableLookupStrategy` with the 8 rows from `OriginalSource/ComCookingTime.cs:MealTurkey`. | Min 6 lb, max 24 lb. |
 | `RangeMeal` | `RangeCookingStrategy`. | Used for the beef/pork/ham entries in Phase 3. Validates `minPounds`, `maxPounds`, non-blank `name`. |
 | `MealTypeRegistry` | `Dictionary<MealKind, Func<IMeal>>` populated via `Register(MealKind, Func<IMeal>)`. `TryCreate` returns false for unknown kinds; throws `InvalidOperationException` if a factory returns null. | OCP: new kinds register, they don't edit a switch. Phase 3 will add a config-driven overload. |
 
