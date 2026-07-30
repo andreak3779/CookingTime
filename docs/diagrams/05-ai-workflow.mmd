@@ -1,0 +1,48 @@
+---
+title: AI-assisted coding workflow
+---
+flowchart TD
+    subgraph Repo["Ground truth (in the repo, not in the model)"]
+        Agents["AGENTS.md<br/>standing rules"]
+        Plan["docs/plan.md<br/>locked master plan"]
+        ADR["docs/decisions/000N-*.md<br/>append-only ADRs"]
+        Phase["docs/phases/phase-N-*.md<br/>per-phase truth + verification numbers"]
+        TestsExisting["existing tests/<br/>(executable spec)"]
+    end
+
+    subgraph Skill["Local skills"]
+        PhaseEx["phase-execution<br/>(drives one phase against the plan)"]
+        Mod["modernize-legacy-dotnet<br/>(modernization patterns)"]
+    end
+
+    Agent["Local coding agent<br/>(GitHub Copilot · minimax)"]
+    Branch["git checkout -b phase/N-…"]
+    Code["edit code + tests + docs"]
+    Checkpoint["git commit<br/>'checkpoint(phase-N): …'<br/>tag v0.N-…"]
+    CI["GitHub Actions<br/>build + test + 75 % gate"]
+    Merge["git merge into<br/>upgrading-to-net-10"]
+
+    Agents --> Agent
+    Plan --> Agent
+    ADR --> Agent
+    Phase --> Agent
+    TestsExisting --> Agent
+    PhaseEx -.drives.-> Agent
+    Mod -.informs.-> Agent
+
+    Agent --> Branch
+    Branch --> Code
+    Code --> Checkpoint
+    Checkpoint --> CI
+    CI -- green --> Merge
+    CI -- red --> Code
+    Merge --> Agent
+
+    classDef ground fill:#e6f4ff,stroke:#1f6feb,color:#0b3a66;
+    classDef skills fill:#f4dcff,stroke:#8250df,color:#4a1d70;
+    classDef loop fill:#ddf4e1,stroke:#1f883d,color:#0f5132;
+    classDef agent fill:#fff4d6,stroke:#bf8700,color:#5d4500;
+    class Agents,Plan,ADR,Phase,TestsExisting ground
+    class PhaseEx,Mod skills
+    class Agent agent
+    class Branch,Code,Checkpoint,CI,Merge loop

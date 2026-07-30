@@ -1,0 +1,62 @@
+---
+title: 8-phase migration on the upgrading-to-net-10 branch
+---
+gitGraph
+    commit id: "pre-Phase-0"
+    branch upgrading-to-net-10
+    checkout upgrading-to-net-10
+    commit id: "merge-of-phase-0-prep"
+
+    branch phase/0-docs-scaffold
+    checkout phase/0-docs-scaffold
+    commit id: "docs scaffold" tag: "v0.0-docs-scaffold" type: HIGHLIGHT
+    checkout upgrading-to-net-10
+    merge phase/0-docs-scaffold
+
+    branch phase/1-blazor-host
+    checkout phase/1-blazor-host
+    commit id: "blazor host + host-build tests" tag: "v0.1-blazor-host" type: HIGHLIGHT
+    checkout upgrading-to-net-10
+    merge phase/1-blazor-host
+
+    branch phase/2-domain-layer
+    checkout phase/2-domain-layer
+    commit id: "domain + 73 unit tests" tag: "v0.2-domain" type: HIGHLIGHT
+    checkout upgrading-to-net-10
+    merge phase/2-domain-layer
+
+    branch phase/3-application-and-config
+    checkout phase/3-application-and-config
+    commit id: "calculator + appsettings + DI" tag: "v0.3-app-cfg" type: HIGHLIGHT
+    checkout upgrading-to-net-10
+    merge phase/3-application-and-config
+
+    branch phase/4-razor-ui
+    checkout phase/4-razor-ui
+    commit id: "EditForm + 9 bUnit facts" tag: "v0.4-ui" type: HIGHLIGHT
+    checkout upgrading-to-net-10
+    merge phase/4-razor-ui
+
+    branch phase/5-integration-and-feature-tests
+    checkout phase/5-integration-and-feature-tests
+    commit id: "WebApplicationFactory + feature tests" tag: "v0.5-integration" type: HIGHLIGHT
+    checkout upgrading-to-net-10
+    merge phase/5-integration-and-feature-tests
+
+    branch phase/6-cleanup
+    checkout phase/6-cleanup
+    commit id: "delete WinForms files + ADR 0005" tag: "v0.6-cleanup" type: HIGHLIGHT
+    checkout upgrading-to-net-10
+    merge phase/6-cleanup
+
+    branch phase/7-ci
+    checkout phase/7-ci
+    commit id: "blocking CI + coverlet + ADR 0006" tag: "v0.7-ci" type: HIGHLIGHT
+    checkout upgrading-to-net-10
+    merge phase/7-ci
+
+    branch phase/8-rename-original-source
+    checkout phase/8-rename-original-source
+    commit id: "rename Backup/ to OriginalSource/" tag: "v0.8-rename" type: HIGHLIGHT
+    checkout upgrading-to-net-10
+    merge phase/8-rename-original-source

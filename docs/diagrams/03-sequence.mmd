@@ -1,0 +1,30 @@
+---
+title: Request flow - Pages-CookingTime to Application to Domain
+---
+sequenceDiagram
+    autonumber
+    actor User
+    participant Page as Pages/CookingTime.razor<br/>(EditForm + DataAnnotations)
+    participant Calc as CookingTimeCalculator<br/>(ICookingTimeCalculator)
+    participant Factory as IMealFactory<br/>(MealFactory)
+    participant Meal as IMeal
+    participant Strat as ICookingStrategy
+
+    User->>Page: Pick meal, weight, unit, click Calculate
+    Page->>Page: DataAnnotationsValidator runs<br/>Meal required, Weight between 0.01 and 999
+    alt Validation fails
+        Page-->>User: ValidationSummary errors
+    else Validation passes
+        Page->>Calc: CalculateAsync(meal, weight, unit, ct)
+        Calc->>Calc: switch unit then Weight.FromPounds or FromKilograms
+        Note right of Calc: catches ArgumentOutOfRangeException<br/>surfaces as CookingResult.Failure
+        Calc->>Factory: CreateAll()
+        Factory-->>Calc: IReadOnlyList<IMeal>
+        Calc->>Meal: Calculate(weight)
+        Meal->>Strat: Calculate(weight)
+        Strat-->>Meal: CookingDuration
+        Meal-->>Calc: CookingDuration
+        Calc->>Calc: duration.Format() matches legacy string verbatim
+        Calc-->>Page: CookingResult.Success(text, instructions)
+        Page-->>User: Result + instructions rendered
+    end
