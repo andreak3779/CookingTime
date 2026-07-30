@@ -12,14 +12,16 @@ One file per phase. Updated as phases ship.
 | 5 | Integration + feature tests | `phase/5-integration-and-feature-tests` | `checkpoint(phase-5): integration + feature tests + phase doc` | ✅ Done |
 | 6 | Cleanup | `phase/6-cleanup` | `checkpoint(phase-6): remove legacy WinForms files + ADR 0005 + phase doc` | ✅ Done |
 | 7 | CI gate | `phase/7-ci` | `checkpoint(phase-7): blocking CI gate + coverage + ADR 0006 + phase doc` | ✅ Done |
+| 8 | Rename `Backup/` → `OriginalSource/` | `phase/8-rename-original-source` | `checkpoint(phase-8): rename Backup/ to OriginalSource/` | ✅ Done |
 
 ## Per-phase files
 
 - [Phase 0 — Docs scaffold](phase-0-docs-scaffold.md) ✅
-- [Phase 1 — Blazor host](phase-1-blazor-host.md) ⏳
-- [Phase 2 — Domain layer](phase-2-domain.md) ⏳
-- [Phase 3 — Application + config](phase-3-application-and-config.md) ⏳
-- [Phase 4 — Razor UI](phase-4-razor-ui.md) ⏳
+- [Phase 1 — Blazor host](phase-1-blazor-host.md) ✅
+- [Phase 2 — Domain layer](phase-2-domain.md) ✅
+- [Phase 3 — Application + config](phase-3-application-and-config.md) ✅
+- [Phase 4 — Razor UI](phase-4-razor-ui.md) ✅
 - [Phase 5 — Integration + feature tests](phase-5-integration-and-feature-tests.md) ✅
 - [Phase 6 — Cleanup](phase-6-cleanup.md) ✅
 - [Phase 7 — CI gate](phase-7-ci.md) ✅
+- [Phase 8 — Rename `Backup/` → `OriginalSource/`](phase-8-rename-original-source.md) ✅
