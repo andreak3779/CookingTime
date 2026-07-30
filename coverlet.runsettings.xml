@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  filepath: coverlet.runsettings.xml
+
+  Phase 7: coverlet filter rules for all three test projects. The
+  Include list covers the production-code namespaces we want coverage on.
+  Backup/* is automatically excluded because its namespace is just
+  "Backup" (no CookingTime. prefix), so it never matches an Include
+  pattern; the explicit Exclude below is defensive only.
+
+  Excluded: all test-assembly namespaces, Backup/* (historical reference),
+  and generated/Designer files (none today, but cheap insurance).
+
+  Coverlet consumes this file when invoked via the dotnet test runner
+  with XPlat Code Coverage enabled and the settings flag pointed here.
+-->
+<RunSettings>
+  <DataCollectionRunSettings>
+    <DataCollectors>
+      <DataCollector friendlyName="XPlat Code Coverage">
+        <Configuration>
+          <Format>cobertura</Format>
+          <Include>[CookingTime.Domain.*]</Include>
+          <Include>[CookingTime.Application.*]</Include>
+          <Include>[CookingTime.Infrastructure.*]</Include>
+          <Include>[CookingTime.Pages.*]</Include>
+          <Include>[CookingTime.Layout.*]</Include>
+          <Exclude>[CookingTime.UnitTests.*]</Exclude>
+          <Exclude>[CookingTime.ComponentTests.*]</Exclude>
+          <Exclude>[CookingTime.IntegrationTests.*]</Exclude>
+          <Exclude>[Backup.*]</Exclude>
+          <Exclude>[*.Generated]*</Exclude>
+          <ExcludeByFile>**/*.designer.cs</ExcludeByFile>
+          <SingleHit>false</SingleHit>
+          <UseFileMode>true</UseFileMode>
+        </Configuration>
+      </DataCollector>
+    </DataCollectors>
+  </DataCollectionRunSettings>
+</RunSettings>

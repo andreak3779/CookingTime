@@ -176,4 +176,55 @@ public sealed class CookingTimeCalculatorTests
         r.Instructions.Should().BeEmpty();
         r.ValidationErrors.Should().BeEquivalentTo(new[] { "err1", "err2" });
     }
+
+    // Phase 7: the three branches below push the UnitTests line coverage
+    // above the 75% production-code threshold the CI gate enforces. They
+    // target the WeightUnit switch's _ => throw default, the catch block
+    // around Weight.FromKilograms when the kilograms input is out of range,
+    // and the catch block around meal.Calculate when the meal rejects the
+    // converted weight.
+
+    [Fact]
+    public async Task CalculateAsync_InvalidWeightUnitEnum_ReturnsValidationError()
+    {
+        var meal = new TestMeal("Chicken", "x", MealKind.Chicken,
+            Weight.FromPounds(1), Weight.FromPounds(20));
+        var sut = new CookingTimeCalculator(FactoryWith(meal).Object);
+
+        var result = await sut.CalculateAsync("Chicken", 2M, (WeightUnit)999);
+
+        result.IsSuccess.Should().BeFalse();
+        result.ValidationErrors.Should().ContainSingle()
+            .Which.Should().Contain("Unknown weight unit");
+    }
+
+    [Fact]
+    public async Task CalculateAsync_NegativeKilograms_ReturnsValidationError()
+    {
+        var meal = new TestMeal("Chicken", "x", MealKind.Chicken,
+            Weight.FromPounds(1), Weight.FromPounds(20));
+        var sut = new CookingTimeCalculator(FactoryWith(meal).Object);
+
+        var result = await sut.CalculateAsync("Chicken", -1M, WeightUnit.Kilograms);
+
+        result.IsSuccess.Should().BeFalse();
+        result.ValidationErrors.Should().NotBeEmpty();
+    }
+
+    [Fact]
+    public async Task CalculateAsync_MealRejectsWeight_ReturnsValidationError()
+    {
+        // The meal's domain throws ArgumentOutOfRangeException for weights
+        // outside its range. The calculator catches and surfaces it.
+        var meal = new TestMeal("Chicken", "x", MealKind.Chicken,
+            Weight.FromPounds(5), Weight.FromPounds(10),
+            calc: _ => throw new ArgumentOutOfRangeException(nameof(Weight)));
+        var sut = new CookingTimeCalculator(FactoryWith(meal).Object);
+
+        var result = await sut.CalculateAsync("Chicken", 1M, WeightUnit.Pounds);
+
+        result.IsSuccess.Should().BeFalse();
+        result.ValidationErrors.Should().ContainSingle()
+            .Which.Should().Contain("outside the supported range");
+    }
 }

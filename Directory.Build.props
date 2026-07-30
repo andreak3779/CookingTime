@@ -1,0 +1,25 @@
+<!-- filepath: Directory.Build.props
+
+  Phase 7: shared MSBuild properties applied to every project under this
+  directory tree. Currently only the three test projects opt into coverlet
+  via <CollectCoverage>; production code (CookingTime.csproj) doesn't set
+  this flag and is unaffected.
+
+  Coverlet reads coverlet.runsettings.xml next to the repo root for the
+  include/exclude namespace filters; this file only configures the
+  output format and target folder. Test projects inherit the
+  <CollectCoverage>true</CollectCoverage> automatically when they reference
+  coverlet.collector, but we set it explicitly here so that running the
+  test runner with XPlat Code Coverage enabled works the same whether or
+  not the per-test-project csproj opts in. -->
+<Project>
+
+  <PropertyGroup>
+    <CollectCoverage>true</CollectCoverage>
+    <CoverletOutputFormat>cobertura</CoverletOutputFormat>
+    <CoverletOutput>$(MSBuildThisFileDirectory)TestResults/coverage/</CoverletOutput>
+    <IncludeTestAssembly>false</IncludeTestAssembly>
+    <UseFileMode>true</UseFileMode>
+  </PropertyGroup>
+
+</Project>

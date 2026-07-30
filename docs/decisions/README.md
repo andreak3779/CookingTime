@@ -11,6 +11,7 @@ Append-only. Never overwrite an old ADR — supersede with a new one that links 
 | 0003 | [Docs as code](0003-docs-as-code.md) | Phase 0 | Accepted |
 | 0004 | [SOLID + design-patterns expectations](0004-solid-and-patterns.md) | Phase 0 | Accepted |
 | 0005 | [Test host entry-point naming (`TestHost.Main`, not `Program.Main`)](0005-test-host-entry-point-naming.md) | Phase 5 | Accepted |
+| 0006 | [Coverage tooling (coverlet.collector + 75% threshold on UnitTests)](0006-coverage-tooling.md) | Phase 7 | Accepted |
 
 ## Format
 

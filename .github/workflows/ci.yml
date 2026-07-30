@@ -1,5 +1,11 @@
 name: CI
 
+# Phase 7: blocking CI gate.
+# - Builds + tests on every PR and every push to upgrading-to-net-10 and phase/*.
+# - Collects line coverage via coverlet.collector across all three test projects.
+# - Fails the run if CookingTime.UnitTests line coverage drops below 75%.
+# - Publishes the per-project Cobertura XMLs as a downloadable artifact.
+
 on:
   pull_request:
     branches: [upgrading-to-net-10]
@@ -8,17 +14,71 @@ on:
       - upgrading-to-net-10
       - 'phase/*'
 
+permissions:
+  contents: read
+
 jobs:
   build-and-test:
+    name: Build, test, coverage gate
     runs-on: ubuntu-latest
+    env:
+      DOTNET_VERSION: '10.0.x'
+      COVERAGE_THRESHOLD: '75'
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-dotnet@v4
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '10.0.x'
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Cache NuGet
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: nuget-${{ runner.os }}-${{ hashFiles('**/*.csproj') }}
+          restore-keys: |
+            nuget-${{ runner.os }}-
+
       - name: Restore
         run: dotnet restore
+
       - name: Build
         run: dotnet build -c Release --no-restore
-      - name: Test
-        run: dotnet test -c Release --no-build --verbosity normal
+
+      - name: Test with coverage
+        # --collect:"XPlat Code Coverage" runs coverlet.collector for each
+        # test project; coverlet.msbuild picks up the shared rules from
+        # coverlet.runsettings.xml at the repo root.
+        run: |
+          for proj in UnitTests ComponentTests IntegrationTests; do
+            echo "::group::Test CookingTime.$proj"
+            dotnet test "tests/CookingTime.$proj/CookingTime.$proj.csproj" \
+              -c Release --no-build \
+              --settings coverlet.runsettings.xml
+            echo "::endgroup::"
+          done
+
+      - name: Coverage gate
+        # Only UnitTests is gated at 75% line coverage on production code.
+        # ComponentTests and IntegrationTests publish coverage as
+        # informational artifacts.
+        run: |
+          python3 scripts/check-coverage.py \
+            "$(ls -t tests/CookingTime.UnitTests/TestResults/*/coverage.cobertura.xml | head -1)" \
+            "$(ls -t tests/CookingTime.ComponentTests/TestResults/*/coverage.cobertura.xml | head -1)" \
+            "$(ls -t tests/CookingTime.IntegrationTests/TestResults/*/coverage.cobertura.xml | head -1)" \
+            --threshold "$COVERAGE_THRESHOLD"
+
+      - name: Upload coverage report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-cobertura
+          path: |
+            tests/CookingTime.UnitTests/TestResults/*/coverage.cobertura.xml
+            tests/CookingTime.ComponentTests/TestResults/*/coverage.cobertura.xml
+            tests/CookingTime.IntegrationTests/TestResults/*/coverage.cobertura.xml
+          if-no-files-found: warn
+          retention-days: 14
