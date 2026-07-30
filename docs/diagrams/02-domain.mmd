@@ -1,0 +1,49 @@
+---
+title: Domain abstractions + strategies + the OCP meal registry
+---
+flowchart TB
+    subgraph Abstractions["Domain / Abstractions"]
+        IMeal["interface IMeal"]
+        IStrat["interface ICookingStrategy"]
+        IFactory["interface IMealFactory"]
+        Kind["enum MealKind<br/>Chicken = 1<br/>Turkey = 2<br/>Range = 3"]
+    end
+
+    subgraph Strategies["Domain / Strategies"]
+        Range["RangeCookingStrategy<br/>linear: weight times minutes per pound"]
+        Table["TableLookupStrategy<br/>ordered rows: min/max/TimeSpan"]
+    end
+
+    subgraph Meals["Domain / Meals (value-add over the abstractions)"]
+        Chicken["ChickenMeal"]
+        Turkey["TurkeyMeal"]
+        RangeMeal["RangeMeal"]
+        Reg["MealTypeRegistry<br/>Register MealKind Func IMeal"]
+    end
+
+    subgraph Infra["Infrastructure / Meals"]
+        Factory["MealFactory<br/>reads MealCatalogOptions from appsettings.json"]
+        Options[("appsettings.json<br/>13 meals")]
+    end
+
+    IStrat -.-> Range
+    IStrat -.-> Table
+    IMeal -.-> Chicken
+    IMeal -.-> Turkey
+    IMeal -.-> RangeMeal
+    Chicken --> Table
+    Turkey --> Table
+    RangeMeal --> Range
+    Reg -- "Register kind factory" --> Chicken
+    Reg -- "Register kind factory" --> Turkey
+    Reg -- "Register kind factory (N)" --> RangeMeal
+    IFactory -.-> Factory
+    Factory -- "CreateAll()" --> Reg
+    Factory -.reads.-> Options
+
+    classDef iface fill:#e6f4ff,stroke:#1f6feb,color:#0b3a66;
+    classDef value fill:#ddf4e1,stroke:#1f883d,color:#0f5132;
+    classDef cfg fill:#fff4d6,stroke:#bf8700,color:#5d4500,stroke-dasharray: 4 2;
+    class IMeal,IStrat,IFactory,Kind iface
+    class Range,Table,Chicken,Turkey,RangeMeal,Reg value
+    class Factory,Options cfg

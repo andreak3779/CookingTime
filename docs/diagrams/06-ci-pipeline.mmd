@@ -1,0 +1,23 @@
+---
+title: GitHub Actions - build, test, coverage gate
+---
+flowchart LR
+    Trigger["trigger:<br/>PR to upgrading-to-net-10<br/>or push to phase/*"]
+    Setup["setup-dotnet (10.0.x)<br/>+ NuGet cache"]
+    Build["dotnet build -c Release<br/>0 warnings or fail"]
+    Test["dotnet test<br/>--settings coverlet.runsettings.xml<br/>per test project"]
+    Cobertura["3x coverage.cobertura.xml<br/>emitted under<br/>tests/*/TestResults/{guid}/"]
+    Gate{{"python3 scripts/check-coverage.py<br/>--threshold 75<br/>on CookingTime.UnitTests"}}
+    Artifact["upload coverage-cobertura<br/>artifact (14-day retention)"]
+
+    Trigger --> Setup --> Build --> Test --> Cobertura --> Gate
+    Gate -- "at or above 75 percent" --> Artifact
+    Gate -- "below 75 percent" --> Fail["CI fails - PR blocked"]
+    Test -. "always uploads on if:always()" .-> Artifact
+
+    classDef gate fill:#fff4d6,stroke:#bf8700,color:#5d4500;
+    classDef ok fill:#ddf4e1,stroke:#1f883d,color:#0f5132;
+    classDef fail fill:#ffebe9,stroke:#cf222e,color:#82071e;
+    class Gate gate
+    class Trigger,Setup,Build,Test,Cobertura,Artifact ok
+    class Fail fail
