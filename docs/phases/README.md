@@ -10,7 +10,7 @@ One file per phase. Updated as phases ship.
 | 3 | Application + config | `phase/3-application-and-config` | `checkpoint(phase-3): application service + unit tests + phase doc` | ✅ Done |
 | 4 | Razor UI | `phase/4-razor-ui` | `checkpoint(phase-4): razor UI + component tests (bUnit) + phase doc` | ✅ Done |
 | 5 | Integration + feature tests | `phase/5-integration-and-feature-tests` | `checkpoint(phase-5): integration + feature tests + phase doc` | ✅ Done |
-| 6 | Cleanup | `phase/6-cleanup` | `checkpoint(phase-6): remove legacy port-in-progress files + phase doc` | ⏳ Pending |
+| 6 | Cleanup | `phase/6-cleanup` | `checkpoint(phase-6): remove legacy WinForms files + ADR 0005 + phase doc` | ✅ Done |
 | 7 | CI gate | `phase/7-ci` | `checkpoint(phase-7): ci gate (build + tests + coverage) + phase doc` | ⏳ Pending |
 
 ## Per-phase files
@@ -21,5 +21,5 @@ One file per phase. Updated as phases ship.
 - [Phase 3 — Application + config](phase-3-application-and-config.md) ⏳
 - [Phase 4 — Razor UI](phase-4-razor-ui.md) ⏳
 - [Phase 5 — Integration + feature tests](phase-5-integration-and-feature-tests.md) ✅
-- [Phase 6 — Cleanup](phase-6-cleanup.md) ⏳
+- [Phase 6 — Cleanup](phase-6-cleanup.md) ✅
 - [Phase 7 — CI gate](phase-7-ci.md) ⏳

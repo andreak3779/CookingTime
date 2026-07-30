@@ -12,7 +12,7 @@ A cooking-time calculator. Upgrading from a legacy .NET Framework WinForms app t
 | 3 | Application + config | ✅ Done |
 | 4 | Razor UI | ✅ Done |
 | 5 | Integration + feature tests | ✅ Done |
-| 6 | Cleanup | ⏳ Pending |
+| 6 | Cleanup | ✅ Done |
 | 7 | CI gate | ⏳ Pending |
 
 Full status: [docs/phases/README.md](docs/phases/README.md).
