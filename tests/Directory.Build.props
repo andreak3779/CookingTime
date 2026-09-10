@@ -1,0 +1,28 @@
+<!-- filepath: tests/Directory.Build.props
+
+     Belt-and-braces guard for the test projects.
+
+     The root Directory.Build.props already adds tests\** to
+     <DefaultItemExcludes> for every project in the tree, and the
+     production CookingTime.csproj uses
+     <EnableDefaultCompileItems>false</EnableDefaultCompileItems> plus
+     an explicit Compile Include list that only references Application/,
+     Domain/, and Infrastructure/ - never tests/. This shadowing props
+     file is a second layer of defence: any project whose path is at
+     or below tests/ inherits these settings even if a future tool
+     ignores the root excludes.
+
+     Each test project under tests/ has its own .csproj that lists its
+     files explicitly (or relies on the default compile glob after the
+     exclude rule above filters tests\** out for the production project).
+     We do not disable EnableDefaultCompileItems here because the test
+     projects need to pick up their own *.cs files via the default SDK
+     glob - we only want to keep them from leaking into the production
+     assembly, which the production csproj already prevents. -->
+<Project>
+
+  <PropertyGroup>
+    <DefaultItemExcludes>$(DefaultItemExcludes);OriginalSource\**;tests\**\*.csproj</DefaultItemExcludes>
+  </PropertyGroup>
+
+</Project>

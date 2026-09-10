@@ -1,0 +1,30 @@
+<!-- filepath: OriginalSource/Directory.Build.props
+
+     Belt-and-braces guard for the historical-reference folder.
+
+     The Blazor SDK already excludes OriginalSource/** from the production
+     build via <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+     and an explicit <Compile Include> list in CookingTime.csproj, and the
+     root Directory.Build.props adds OriginalSource\** to
+     <DefaultItemExcludes> for every project in the tree. This shadowing
+     props file is a second layer of defence: any project whose path is
+     at or below OriginalSource/ (e.g. the legacy OriginalSource/CookingTime.csproj)
+     inherits these settings even if a future tool ignores the root
+     excludes.
+
+     The legacy project targets .NET Framework 1.0 with System.Windows.Forms
+     and is intentionally not buildable on net10.0 / Linux; this file
+     does not attempt to make it build, only to make sure no recursive
+     SDK globbing accidentally pulls its files into another project. -->
+<Project>
+
+  <PropertyGroup>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <EnableDefaultEmbeddedResourceItems>false</EnableDefaultEmbeddedResourceItems>
+    <EnableDefaultNoneItems>false</EnableDefaultNoneItems>
+    <EnableDefaultContentItems>false</EnableDefaultContentItems>
+    <EnableDefaultPageItems>false</EnableDefaultPageItems>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+  </PropertyGroup>
+
+</Project>
