@@ -38,8 +38,10 @@ public sealed class RoutesSmokeTests : IClassFixture<CookingTimeAppFactory>
         var html = await response.Content.ReadAsStringAsync();
         html.Should().Contain("<base href=\"/\"",
             because: "the SPA shell must set the base href so deep-linking works");
-        html.Should().Contain("_framework/blazor.web.js",
-            because: "the SPA shell must reference the Blazor WASM loader");
+        html.Should().Contain("_framework/blazor.webassembly.js",
+            because: "the .NET 10 Blazor WebAssembly SDK emits blazor.webassembly.js as the boot script; referencing any other name returns 404 and the WASM payload never bootstraps");
+        html.Should().NotContain("_framework/blazor.web.js\"",
+            because: "blazor.web.js is the Blazor Server / .NET 6 boot script and is not emitted by the standalone Blazor WebAssembly SDK");
     }
 
     [Fact]
