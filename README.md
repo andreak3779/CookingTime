@@ -6,9 +6,9 @@
 | --- | --- |
 | **What it does** | Pick a meal (Whole Chicken, Beef Roast Standing Rib — Rare, Turkey, Pork, Ham …), enter a weight and a unit (lb or kg), get a cooking-time range + instructions. |
 | **Tech** | C# · .NET 10 · **Blazor WebAssembly** · xUnit · Moq · FluentAssertions · bUnit · `WebApplicationFactory` · coverlet · GitHub Actions · Python |
-| **Tests** | **118 automated facts** across unit, Razor component, and HTTP/integration tiers — all green |
+| **Tests** | **125 automated facts** across unit, Razor component, and HTTP/integration tiers — all green |
 | **Build** | `dotnet build -c Release` — **0 warnings, 0 errors** (`<TreatWarningsAsErrors>true</TreatWarningsAsErrors>`) |
-| **Coverage** | **80 % line** on `CookingTime.UnitTests` production code; CI gate at **75 %** |
+| **Coverage** | **82 % line** on `CookingTime.UnitTests` production code; CI gate at **75 %** |
 | **AI-assisted?** | **Yes** — end-to-end migration executed with an AI coding agent under the workflow documented below |
 
 ---
@@ -19,11 +19,11 @@ The **product** is a one-page form. The **engineering story** is what you'd put 
 
 1. **Inherited a ~700-line single-file WinForms app** with real bugs — a mutable value object whose setter wrote to the wrong field, an inverted kg/lb unit conversion, two `"Beef Roast Standing Rib — Rare"` entries where one of them was actually Medium, and three Range meals whose Max-minutes-per-pound was `0`.
 2. **Migrated to .NET 10 Blazor WebAssembly** across 8 disciplined phases, applying SOLID + clean architecture + Strategy/Factory/Registry/Value-Object patterns.
-3. **Wrote tests alongside the code** — 118 facts (xUnit for domain, bUnit for components, `WebApplicationFactory<Marker>` for end-to-end HTTP), all shipped with each phase.
+3. **Wrote tests alongside the code** — 125 facts (xUnit for domain, bUnit for components, `WebApplicationFactory<Marker>` for end-to-end HTTP), all shipped with each phase.
 4. **Built a blocking CI gate** — GitHub Actions runs `dotnet build` → per-project `dotnet test` with coverlet → a Python script that fails the build if `UnitTests` drops below 75 % line coverage on production code.
 5. **Recorded every meaningful decision** as an append-only ADR; onboarding for a new contributor (or AI agent) is a 30-minute read of `docs/onboarding.md`.
 
-The result is a working green build with **0 warnings, 118 tests, 80 % gated coverage**, and a documented, reproducible recipe for using an AI coding agent on a non-trivial .NET codebase.
+The result is a working green build with **0 warnings, 125 tests, 82 % gated coverage**, and a documented, reproducible recipe for using an AI coding agent on a non-trivial .NET codebase.
 
 ---
 
@@ -64,6 +64,7 @@ OriginalSource/ → historical WinForms             reference only — never ref
 | 5 | `phase/5-integration-and-feature-tests` | `WebApplicationFactory<Marker>`, shared DI, HTTP route + bUnit feature tests |
 | 6 | `phase/6-cleanup` | Legacy WinForms files deleted (kept under `OriginalSource/`); ADR 0005 |
 | 7 | `phase/7-ci` | Blocking CI gate, coverlet, Python coverage gate, ADR 0006 |
+| 7b | `phase/7b-blazor-boot-script` | One-line fix to the Blazor WASM boot `<script>` reference in `wwwroot/index.html` + 3 regression facts in `BlazorBootScriptTests` |
 
 **Branch model:** one feature branch per phase; each ends with exactly one `checkpoint(phase-N): …` commit and a tag `v0.N-<slug>`.
 
@@ -97,7 +98,7 @@ python3 scripts/check-coverage.py \
 
 The three Cobertura XMLs are uploaded as the `coverage-cobertura` artifact (14-day retention).
 
-Measured baseline: **UnitTests 80.00 %**, ComponentTests 15.00 %, IntegrationTests 63.07 % (the latter two are informational; only UnitTests drives the gate).
+Measured baseline: **UnitTests 82.24 %**, ComponentTests 15.00 %, IntegrationTests 63.07 % (the latter two are informational; only UnitTests drives the gate).
 
 ---
 
