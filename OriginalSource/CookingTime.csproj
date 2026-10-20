@@ -107,6 +107,18 @@
     </EmbeddedResource>
     <Folder Include="help" />
   </ItemGroup>
+  <!--
+    Phase 7+ guard: this is a historical .NET Framework 1.0 WinForms project
+    kept verbatim for reference (see AGENTS.md "do not reference" rule and
+    docs/phases/phase-8-rename-original-source.md). When loaded by the .NET
+    SDK MSBuild host (MSBuildRuntimeType=Core) it produces a harmless empty
+    Build target so Roslyn doesn't probe for a Mono installation. Under Mono
+    MSBuild (the intended host) the condition is false and the original
+    Microsoft.CSharp.targets import takes over unchanged.
+  -->
+  <RunAnalyzers >false</RunAnalyzers>
+  <RunCodeAnalysis >false</RunCodeAnalysis>
+  <Target Name="Build" Condition="'$(MSBuildRuntimeType)' == 'Core'" />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>

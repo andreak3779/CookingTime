@@ -9,7 +9,7 @@ using System.Runtime.CompilerServices;
 [assembly: AssemblyTitle("CookingTime1.0")]
 [assembly: AssemblyDescription("A cooking time calculator program")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Andrew")]
+[assembly: AssemblyCompany("Andrea")]
 [assembly: AssemblyProduct("CookingTime")]
 [assembly: AssemblyCopyright("2005")]
 [assembly: AssemblyTrademark("")]
