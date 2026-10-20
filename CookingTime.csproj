@@ -38,6 +38,14 @@
     <Compile Include="Application\**\*.cs" />
     <Compile Include="Domain\**\*.cs" />
     <Compile Include="Infrastructure\**\*.cs" />
+    <!-- Belt-and-suspenders: OriginalSource/ is the legacy WinForms
+         reference project (Phase 8). It must stay in git as historical
+         context, but never enter the production assembly. The
+         Directory.Build.props DefaultItemExcludes and this csproj's
+         EnableDefaultCompileItems=false already cover this; this Remove
+         is redundant but makes the intent explicit at the build rule
+         level for any future project that opts into default items. -->
+    <Compile Remove="OriginalSource\**" />
   </ItemGroup>
 
   <ItemGroup>
