@@ -82,6 +82,8 @@ A class in `Domain/` must never `using` from `Infrastructure/` or `Application/`
 | Concrete dependencies in UI | `frmCookingTime.m_MealCreator = new CT.MealCreator()` | Untestable. |
 | Domain + infrastructure + UI in one file | `OriginalSource/ComCookingTime.cs` | 700-line file mixing 4 concerns. |
 | `using` legacy `OriginalSource/` types | future risk | Backward dependency; defeats the upgrade. |
+| Reference `.razor` files under the project root | Phase 12 | The Razor SDK compiles **every** `.razor` under the project root unless `EnableDefaultRazorComponentItems=false`. A design/reference copy becomes a real component — and a duplicate route throws `InvalidOperationException` in the browser at router-boot time, while the build stays green and every server-side test passes. See [ADR 0007](docs/decisions/0007-design-package-as-reference-artifact.md). |
+| `<RazorComponent Remove="folder\**" />` as a build guard | Phase 12 | Does **not** work against the SDK's default items — they are added *inside* the `ResolveRazorComponentInputs` target, after evaluation-time `Remove` runs. Disable the default items instead. |
 
 ## What you'll see in this repo
 
@@ -89,4 +91,5 @@ A class in `Domain/` must never `using` from `Infrastructure/` or `Application/`
 - `docs/phases/phase-N-*.md` — what each phase shipped.
 - `docs/decisions/000N-*.md` — ADRs.
 - `OriginalSource/` — historical WinForms code, do not reference.
+- `docs/design/` — reference design packages (Phase 12+). **Snapshot, not a live source**: the app is updated by copying files out of here, so a change here does not change the app until someone re-applies it. Safe to keep `.razor` files here **only** because `EnableDefaultRazorComponentItems` is `false` — see [ADR 0007](docs/decisions/0007-design-package-as-reference-artifact.md).
 - `obj/`, `bin/`, `*.csproj.user`, `.vs/` — gitignored build artifacts.

@@ -1,19 +1,29 @@
 @* filepath: App.razor *@
+@* Phase 12: this used to render a second full HTML document
+   (<!DOCTYPE html><html><head><body>) inside wwwroot/index.html's
+   #app div, and referenced _framework/blazor.web.js - a file the .NET 10
+   WASM SDK does not emit (only blazor.webassembly.js exists), so that
+   script 404'd.
 
-<!DOCTYPE html>
-<html lang="en">
+   Two consequences:
+     - the browser ignored the nested <head>, so <HeadOutlet /> rendered
+       into a document head nobody reads and <PageTitle> never reached the
+       browser tab title;
+     - the nested <body> swallowed the real app markup.
 
-<head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <base href="/" />
-    <link rel="icon" type="image/x-icon" href="favicon.ico" />
-    <HeadOutlet />
-</head>
+   The host document lives in wwwroot/index.html. App.razor is now the
+   Router only - the shape the .NET 10 Blazor WASM template uses. The
+   HeadOutlet is registered as the 'head::after' root component in
+   Program.cs, so <PageTitle> now lands in the real <head>.
 
-<body>
-    <Routes />
-    <script src="_framework/blazor.web.js"></script>
-</body>
+   Routing moved here from Routes.razor, which has been removed: with a
+   single Router there is nothing for a second component to do, and two
+   Routers over the same assembly would build two route tables.
+*@
 
-</html>
+<Router AppAssembly="@typeof(App).Assembly">
+    <Found Context="routeData">
+        <RouteView RouteData="@routeData" DefaultLayout="@typeof(Layout.MainLayout)" />
+        <FocusOnNavigate RouteData="@routeData" Selector="h1" />
+    </Found>
+</Router>

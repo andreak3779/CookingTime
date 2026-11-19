@@ -1,0 +1,52 @@
+@* filepath: Layout/ThemeToggle.razor *@
+@using Microsoft.JSInterop
+@inject IJSRuntime JS
+
+@* Phase 12: dark-mode toggle.
+
+   The palette is driven by a `data-theme` attribute on <html>; see the
+   [data-theme="dark"] block in wwwroot/css/cookingtime.css.
+
+   The persisted preference is applied by wwwroot/js/theme.js, which runs as a
+   blocking script in the <head> of index.html so the theme is correct before
+   the first paint. This component therefore does NOT need to read the stored
+   preference on first render - it asks JavaScript what is currently applied,
+   which is the single source of truth for the live DOM state.
+
+   All the JS-facing logic lives in theme.js so there is exactly one
+   implementation of "what is the current theme" and "how do we change it".
+*@
+
+<button type="button"
+        class="ct-theme-toggle"
+        aria-pressed="@_isDark.ToString().ToLowerInvariant()"
+        aria-label="@(_isDark ? "Switch to light theme" : "Switch to dark theme")"
+        title="@(_isDark ? "Switch to light theme" : "Switch to dark theme")"
+        @onclick="ToggleAsync">
+    @(_isDark ? "☀" : "☾")
+</button>
+
+@code {
+    private bool _isDark;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        // Only on first render: the browser may not have parsed the theme
+        // script yet on a cold load, and the user cannot have toggled the
+        // theme before the first paint.
+        if (!firstRender)
+        {
+            return;
+        }
+
+        _isDark = await JS.InvokeAsync<bool>("cookingTimeTheme.isDark");
+        StateHasChanged();
+    }
+
+    private async Task ToggleAsync()
+    {
+        // theme.js returns the newly applied theme ('light' or 'dark').
+        var applied = await JS.InvokeAsync<string>("cookingTimeTheme.toggle");
+        _isDark = string.Equals(applied, "dark", StringComparison.OrdinalIgnoreCase);
+    }
+}

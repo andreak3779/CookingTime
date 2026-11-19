@@ -6,20 +6,22 @@
 
 <PageTitle>About @ProductInfo.Name</PageTitle>
 
-<h1>About @ProductInfo.Name</h1>
+<h1 class="ct-page-title">About @ProductInfo.Name</h1>
 
-<p>@ProductInfo.Name @ProductInfo.Version</p>
-<p>@ProductInfo.Company</p>
-<p>@ProductInfo.CopyrightYear</p>
+<div class="ct-card ct-prose">
+    <p>@ProductInfo.Name @ProductInfo.Version</p>
+    <p>@ProductInfo.Company</p>
+    <p>@ProductInfo.CopyrightYear</p>
 
-@if (!string.IsNullOrWhiteSpace(ProductInfo.ResumeUrl))
-{
-    <p><a href="@ProductInfo.ResumeUrl" target="_blank" rel="noopener">Resume</a></p>
-}
-@if (!string.IsNullOrWhiteSpace(ProductInfo.Email))
-{
-    <p><a href="mailto:@ProductInfo.Email">Email @ProductInfo.Email</a></p>
-}
+    @if (!string.IsNullOrWhiteSpace(ProductInfo.ResumeUrl))
+    {
+        <p><a href="@ProductInfo.ResumeUrl" target="_blank" rel="noopener">Resume</a></p>
+    }
+    @if (!string.IsNullOrWhiteSpace(ProductInfo.Email))
+    {
+        <p><a href="mailto:@ProductInfo.Email">Email @ProductInfo.Email</a></p>
+    }
+</div>
 
 @code {
     private ProductInfoOptions ProductInfo => Options.Value;

@@ -6,8 +6,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>CookingTime</title>
     <base href="/" />
-    <link rel="icon" type="image/x-icon" href="favicon.ico" />
-    <link href="css/app.css" rel="stylesheet" />
+    <!-- Phase 12: icon set from the cookingtime-theme design package.
+         The old markup pointed at a legacy .ico file that does not exist in
+         the repo - every page load produced a 404. The SVG icon is the primary
+         one; the PNGs cover browsers that do not render SVG favicons and
+         provide the apple-touch-icon. -->
+    <link rel="icon" type="image/svg+xml" href="icons/icon.svg" />
+    <link rel="icon" type="image/png" sizes="32x32" href="icons/icon-32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="icons/icon-16.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="icons/icon-180.png" />
+    <link href="css/cookingtime.css" rel="stylesheet" />
+    <!-- Phase 12: apply the persisted theme preference BEFORE first paint.
+         This must stay a blocking script in <head>: loading it at the end
+         of <body> would flash the light theme on every load for users who
+         chose dark mode. See wwwroot/js/theme.js. -->
+    <script src="js/theme.js"></script>
 </head>
 
 <body>

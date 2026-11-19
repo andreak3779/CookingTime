@@ -2,34 +2,19 @@
 
 @inherits LayoutComponentBase
 
-<div class="page">
-    <nav>
-        <a href="/">Home</a> |
-        <a href="/cooking-time">Cooking Time</a> |
-        <a href="/help">Help</a> |
-        <a href="/about">About</a>
+<div class="ct-shell">
+    <nav class="ct-nav" aria-label="Main">
+        <a class="ct-brand" href="/">
+            <img src="icons/icon.svg" width="36" height="36" alt="" />
+            <span>CookingTime</span>
+        </a>
+        <NavLink class="ct-nav__link" href="/" Match="NavLinkMatch.All">Home</NavLink>
+        <NavLink class="ct-nav__link" href="/cooking-time">Cooking Time</NavLink>
+        <NavLink class="ct-nav__link" href="/help">Help</NavLink>
+        <NavLink class="ct-nav__link" href="/about">About</NavLink>
+        <ThemeToggle />
     </nav>
-    <hr />
-    <main>
+    <main class="ct-main">
         @Body
     </main>
 </div>
-
-<style>
-    .page {
-        font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-        max-width: 720px;
-        margin: 2rem auto;
-        padding: 0 1rem;
-        line-height: 1.5;
-        color: #1f2937;
-    }
-    nav a {
-        text-decoration: none;
-        color: #2563eb;
-    }
-    nav a:hover {
-        text-decoration: underline;
-    }
-    h1 { margin-top: 0; }
-</style>
