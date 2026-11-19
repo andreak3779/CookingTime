@@ -142,11 +142,6 @@
         "resolved": "17.11.1",
         "contentHash": "nPJqrcA5iX+Y0kqoT3a+pD/8lrW/V7ayqnEJQsTonSoPz59J8bmoQhcSN4G8+UJ64Hkuf0zuxnfuj2lkHOq4cA=="
       },
-      "Microsoft.DotNet.HotReload.WebAssembly.Browser": {
-        "type": "Transitive",
-        "resolved": "10.0.115",
-        "contentHash": "wv++IOkJ6cKmGgBRaygfo5ftwac7eWodWs3MmgBnQWu/ELmnJMEAutQy2Z3WAG0uyRwRtgHLfKVzwQfIr2svqw=="
-      },
       "Microsoft.Extensions.DependencyModel": {
         "type": "Transitive",
         "resolved": "10.0.0",
@@ -232,8 +227,7 @@
       "cookingtime": {
         "type": "Project",
         "dependencies": {
-          "Microsoft.AspNetCore.Components.WebAssembly": "[10.0.0, )",
-          "Microsoft.DotNet.HotReload.WebAssembly.Browser": "[10.0.115, )"
+          "Microsoft.AspNetCore.Components.WebAssembly": "[10.0.0, )"
         }
       }
     }

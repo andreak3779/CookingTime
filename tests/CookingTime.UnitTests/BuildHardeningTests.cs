@@ -252,4 +252,58 @@ public sealed class BuildHardeningTests
             because: "the test projects must agree on package versions - " +
                      "a library at two versions in one solution makes test results misleading");
     }
+
+    [Fact]
+    public void ProductionProject_DisablesTheSdkHotReloadPackage()
+    {
+        // Phase 16 follow-up. The .NET SDK adds an implicit PackageReference
+        // to Microsoft.DotNet.HotReload.WebAssembly.Browser when
+        // Configuration == Debug. That makes the dependency graph
+        // CONFIGURATION-DEPENDENT, and packages.lock.json is not.
+        //
+        // The consequence was a broken CI restore:
+        //
+        //   error NU1004: The package references have changed for net10.0.
+        //   ... project's package references: Microsoft.DotNet.HotReload.WebAssembly.Browser >= 10.0.115 ...
+        //
+        // because CI restores in Debug while the committed lock file had been
+        // generated in Release.
+        //
+        // Disabling HotReload makes the graph identical in every
+        // configuration, so ONE committed lock file is valid for all of them.
+        var project = Path.Combine(RepositoryRoot(), "CookingTime.csproj");
+        var content = File.ReadAllText(project);
+
+        content.Should().Contain("<WasmEnableHotReload>false</WasmEnableHotReload>",
+            because: "the SDK's implicit HotReload package reference is added in Debug only, which " +
+                     "makes the lock file configuration-dependent and breaks the CI restore");
+    }
+
+    [Fact]
+    public void LockFiles_ContainNoConfigurationDependentPackages()
+    {
+        // The lock file must describe the SAME graph in Debug and Release.
+        // A package that appears in only one configuration is the symptom of
+        // an implicit SDK reference that has not been pinned off.
+        var configurationDependent = new[]
+        {
+            "Microsoft.DotNet.HotReload.WebAssembly.Browser",
+        };
+
+        foreach (var lockFile in Directory.GetFiles(
+                     RepositoryRoot(), "packages.lock.json", SearchOption.AllDirectories)
+                 .Where(p => !p.Contains($"{Path.DirectorySeparatorChar}bin{Path.DirectorySeparatorChar}")
+                          && !p.Contains($"{Path.DirectorySeparatorChar}obj{Path.DirectorySeparatorChar}")))
+        {
+            var content = File.ReadAllText(lockFile);
+
+            foreach (var package in configurationDependent)
+            {
+                content.Should().NotContain(package,
+                    because: $"{package} is referenced by the SDK in Debug only, so including it " +
+                             "makes the lock file differ between configurations - the CI restore " +
+                             "in Debug would then fail with NU1004");
+            }
+        }
+    }
 }

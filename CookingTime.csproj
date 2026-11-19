@@ -37,6 +37,34 @@
          See docs/decisions/0007-design-package-as-reference-artifact.md. -->
     <EnableDefaultRazorComponentItems>false</EnableDefaultRazorComponentItems>
     <EnableDefaultEmbeddedResourceItems>false</EnableDefaultEmbeddedResourceItems>
+
+    <!-- Phase 16 follow-up: disable the SDK's implicit WASM HotReload
+         package reference.
+
+         The .NET SDK adds an implicit
+         PackageReference to Microsoft.DotNet.HotReload.WebAssembly.Browser
+         when Configuration == Debug (see Sdk.targets: _WasmEnableHotReload
+         defaults to false for every non-Debug configuration). That makes the
+         dependency graph CONFIGURATION-DEPENDENT, and the packages.lock.json
+         is not: the Debug graph has one package the Release graph does not.
+
+         The consequence was a broken CI restore:
+
+             error NU1004: The package references have changed for net10.0.
+             Lock file's package references: ... Microsoft.NET.Sdk.WebAssembly.Pack:[10.0.15, ),
+             project's package references: ... Microsoft.DotNet.HotReload.WebAssembly.Browser >= 10.0.115 ...
+
+         because CI restores in Debug by default while the committed lock file
+         had been generated in Release.
+
+         Turning HotReload off makes the graph identical in every
+         configuration, so one committed lock file is valid for all of them.
+         The cost is losing the browser-side hot reload for Blazor WASM -
+         a developer convenience, not a capability the app depends on.
+
+         The property is the PUBLIC one (WasmEnableHotReload); the SDK's
+         private _WasmEnableHotReload derives from it. -->
+    <WasmEnableHotReload>false</WasmEnableHotReload>
   </PropertyGroup>
 
   <ItemGroup>

@@ -193,7 +193,7 @@ out-of-range one is Phase 14 and Phase 17 verified together.
 ```
 dotnet build -c Release   → 0 Warning(s), 0 Error(s)
 dotnet test  -c Release   → UnitTests 191 · ComponentTests 23 · IntegrationTests 34
-                             = 248 facts, 0 failed, 0 skipped   (was 241)
+                             = 250 facts, 0 failed, 0 skipped   (was 241)
 coverage gate             → UnitTests 86.01%  (gate 75%)  PASS
 ```
 

@@ -7,7 +7,7 @@
 | **Checkpoint** | `checkpoint(phase-16): pin package versions + lock files + SHA-pinned actions + publish-leak check + dependabot + phase doc` |
 | **Tag** | `v0.16-build-hardening` (after merge) |
 | **Production code** | `CookingTime.csproj` (exact versions), `Directory.Build.props` + `tests/Directory.Build.props` (lock files), `NuGet.config` (**new**), `global.json` (**new**), `.github/workflows/ci.yml` (SHA pins, locked restore, vulnerability audit, publish check), `.github/dependabot.yml` (**new**), 4 × `packages.lock.json` (**new**) |
-| **Tests** | New `tests/CookingTime.UnitTests/BuildHardeningTests.cs` (11 facts). **Total: 241 facts** (was 230) |
+| **Tests** | New `tests/CookingTime.UnitTests/BuildHardeningTests.cs` (13 facts). **Total: 250 facts** (was 230) |
 | **Docs** | This file; updated `docs/phases/README.md`; updated `README.md`; updated `AGENTS.md` |
 | **CI** | **Extended.** `dotnet restore --locked-mode` → build → test → coverage gate → **dependency audit** → **publish-output check**. Still blocking. |
 
@@ -78,6 +78,49 @@ dependencies so restore can't be run in locked mode.
 projects reference each other and their graph differs between Debug and
 Release, which would make a legitimate build fail. CI passes `--locked-mode`
 explicitly instead.
+
+#### The SDK's implicit HotReload reference broke the CI restore
+
+The first locked-mode CI run **failed**, and the reason was not visible in
+the project files at all:
+
+```
+error NU1004: The package references have changed for net10.0.
+Lock file's package references: ... Microsoft.NET.Sdk.WebAssembly.Pack:[10.0.15, ),
+project's package references: ... Microsoft.DotNet.HotReload.WebAssembly.Browser >= 10.0.115 ...
+```
+
+The .NET SDK adds an **implicit**
+`PackageReference` to `Microsoft.DotNet.HotReload.WebAssembly.Browser` when
+`Configuration == Debug`:
+
+```xml
+<!-- Sdks/Microsoft.NET.Sdk.WebAssembly/Sdk/Sdk.targets -->
+<_WasmEnableHotReload>$(WasmEnableHotReload)</_WasmEnableHotReload>
+<_WasmEnableHotReload Condition="'$(_WasmEnableHotReload)' == '' and '$(Configuration)' != 'Debug'">false</_WasmEnableHotReload>
+```
+
+So the dependency graph was **configuration-dependent**: Debug had one
+package more than Release. The committed lock file cannot express that —
+one file, one graph — and CI restores in Debug by default while the lock
+file had been generated in Release.
+
+The fix is to turn the implicit reference off, using the SDK's **public**
+property (`WasmEnableHotReload`; the private `_WasmEnableHotReload` is
+derived from it and cannot be set from the project):
+
+```xml
+<WasmEnableHotReload>false</WasmEnableHotReload>
+```
+
+The graph is now identical in every configuration, so one committed lock
+file is valid for all of them. The cost is losing browser-side hot reload
+for Blazor WASM — a developer convenience, not a capability the app
+depends on.
+
+Two facts pin it: `ProductionProject_DisablesTheSdkHotReloadPackage` and
+`LockFiles_ContainNoConfigurationDependentPackages`. Both were verified to
+fail with the property removed.
 
 ### 2. GitHub Actions pinned to commit SHAs
 
@@ -219,7 +262,7 @@ other. The bUnit bump in particular could have changed test behaviour — all
 `{"FluentAssertions: 6.12.1, 6.12.2"}` — the alignment had been applied to
 bUnit but not to FluentAssertions.
 
-## New tests (11 facts)
+## New tests (13 facts)
 
 `tests/CookingTime.UnitTests/BuildHardeningTests.cs` pins every property in
 this phase:
@@ -236,7 +279,11 @@ this phase:
 | `CI_VerifiesThePublishOutputHasNoTestAssemblies` | The publish check exists and looks for the right patterns |
 | `NuGetConfig_ClearsInheritedSourcesAndMapsPackages` | Sources are cleared and mapped |
 | `GlobalJson_PinsTheSdk` | The SDK is pinned |
+| `ProductionProject_DisablesTheSdkHotReloadPackage` | The SDK's implicit Debug-only package reference is off, so the lock file is configuration-independent |
+| `LockFiles_ContainNoConfigurationDependentPackages` | No package appears in one configuration only |
 | `TestProjects_UseTheSamePackageVersions` | No library at two versions in one solution |
+| `ProductionProject_DisablesTheSdkHotReloadPackage` | The SDK's implicit Debug-only package reference is off, so the lock file is configuration-independent |
+| `LockFiles_ContainNoConfigurationDependentPackages` | No package appears in one configuration only |
 
 Three were verified to **fail** on the pre-fix files (`CI_RestoresInLockedMode`,
 `CI_PinsEveryActionToACommitSha`, `NoProject_UsesAFloatingPackageVersion`).
