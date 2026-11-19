@@ -17,7 +17,7 @@ CI gate with line-coverage enforcement.
 
 ## Headline for the LinkedIn card
 
-**CookingTime — .NET Framework → .NET 10 · Clean architecture · 0-warning build · 118 automated tests · ≥75 % coverage gate**
+**CookingTime — .NET Framework → .NET 10 · Clean architecture · 0-warning build · 250 automated tests · 86 % coverage, gated at 75 %**
 
 ---
 
@@ -29,8 +29,8 @@ CI gate with line-coverage enforcement.
 | **Source** | In-repo (`github.com/andreak3779/CookingTime`), public |
 | **Stack** | C# · .NET 10 · Blazor WebAssembly · xUnit · bUnit · Moq · FluentAssertions · coverlet · GitHub Actions · Python |
 | **Legacy** | .NET Framework 2.0 WinForms (VS 2005 era, `msbuild` XML 2003 schema, `OutputType=WinExe`) |
-| **Tests** | 118 facts across unit, Razor component, and HTTP/integration tiers — all green |
-| **Coverage** | 80 % line on `CookingTime.UnitTests` production code; CI gate at 75 % |
+| **Tests** | 250 facts (193 unit, 23 component, 34 integration) — all green |
+| **Coverage** | 86.0 % line on `CookingTime.UnitTests` production code; CI gate at 75 % |
 | **Build** | `dotnet build -c Release` — **0 warnings**, 0 errors (`<TreatWarningsAsErrors>true</TreatWarningsAsErrors>`) |
 | **AI toolchain** | AI coding agent used end-to-end under disciplined branch / checkpoint / ADR workflow |
 
@@ -97,7 +97,7 @@ Three test projects, one source of truth for naming (`<Method>_<Scenario>_<Expec
 | `CookingTime.ComponentTests` | Razor components rendered with real DI | + bUnit 1.31 |
 | `CookingTime.IntegrationTests` | End-to-end via `WebApplicationFactory<Marker>` + in-process TestServer | + `Microsoft.AspNetCore.Mvc.Testing` |
 
-Totals at the end of Phase 7: **118 facts, 0 failed, 0 skipped**.
+Current total: **250 facts, 0 failed, 0 skipped** (118 at the end of Phase 7; later phases added the rest).
 
 Highlights:
 
@@ -117,17 +117,29 @@ Highlights:
 4. `python3 scripts/check-coverage.py … --threshold 75` — fails the build if `CookingTime.UnitTests` drops below 75 % line coverage on production code.
 5. Uploads the three Cobertura XMLs as the `coverage-cobertura` artifact (14-day retention).
 
-Triggers: `pull_request` to `upgrading-to-net-10`, `push` to `upgrading-to-net-10` and every `phase/*` branch.
+Triggers: `pull_request` to `main` and `upgrading-to-net-10`; `push` to `main`, `upgrading-to-net-10` and every `phase/*` branch.
 
-Measured baseline: UnitTests = **80.00 %** (gate 75 %), ComponentTests = 15.00 %, IntegrationTests = 63.07 % (both informational).
+Also blocking: a dependency-vulnerability audit of the production project, a check that `dotnet publish` leaks no test assemblies, `--locked-mode` restore against a committed `packages.lock.json`, and GitHub Actions pinned to commit SHAs.
 
-### 7. Documentation as code (ADRs + phase docs)
+Measured baseline: UnitTests = **86.01 %** (gate 75 %), ComponentTests = 16.62 %, IntegrationTests = 69.97 % (both informational).
+
+### 7. After the migration: UI, security and build hardening (Phases 12–18)
+
+- **UI theme:** a custom magenta-and-navy theme, dark-mode toggle, self-hosted fonts (fully offline) and accessibility fixes.
+- **A review of my own AI-built code found real bugs.** The browser client was receiving no configuration at all, so the meal catalog was empty in production. Every config-driven meal accepted any weight, so a 500 lb roast showed an inverted time range as a *success*. Reset left stale validation messages on screen. Each was fixed with a regression test that uses the real types, not mocks.
+- **Config trust boundary:** `appsettings.json` is served to every visitor, so it is validated at startup, the `ResumeUrl` is scheme-allowlisted, a Content-Security-Policy ships, and a guard test checks the served config for secret shapes.
+- **Build hardening:** exact package pins plus lock files, SHA-pinned Actions, a vulnerability gate, a publish-leak check and dependabot.
+- **Accepted risks written down**, each with the condition that would reopen it (ADR 0009).
+
+Not done yet: containerizing and deploying to a local Kubernetes cluster (planned as Phases 9–11 in `docs/plan-kubernetes.md`). Do not claim it.
+
+### 8. Documentation as code (ADRs + phase docs)
 
 Every meaningful decision is recorded where future readers look:
 
 - **`docs/plan.md`** — locked master plan.
-- **`docs/phases/phase-N-*.md`** — eight phase summaries (docs → host → domain → app+config → UI → integration → cleanup → CI). Each one lists the verification numbers.
-- **`docs/decisions/000N-*.md`** — append-only ADRs (target framework, branch model, docs-as-code, SOLID expectations, test-host naming, coverage tooling).
+- **`docs/phases/phase-N-*.md`** — one summary per shipped phase (docs → host → domain → app+config → UI → integration → cleanup → CI → UI theme → security and build hardening). Each one lists the verification numbers.
+- **`docs/decisions/000N-*.md`** — append-only ADRs (nine so far: target framework, branch model, docs-as-code, SOLID expectations, test-host naming, coverage tooling, design package as reference, no personal contact data, accepted security risks).
 - **`docs/onboarding.md`** — 30-minute newcomer orientation with a code-reading order.
 - **`AGENTS.md`** — standing rules for any AI agent (or human) entering the repo; mirrors `ADR 0004` with project-specific conventions.
 
@@ -160,10 +172,10 @@ End-to-end migration executed with a coding agent under a disciplined `branch �
 
 ## AI tools & models used
 
-> The migration was driven by **AI-assisted coding**. The interesting part is not "an AI wrote it" but the workflow that kept a working green build across 9 phases.
+> The migration was driven by **AI-assisted coding**. The interesting part is not "an AI wrote it" but the workflow that kept a working green build across 17 phases.
 
 - **Agent environment:** local coding agent following a `phase-execution` skill seeded with `docs/plan.md`.
-- **Model:** GitHub Copilot (the assistant you talk to in VS Code), powered by `minimax-m3:cloud`.
+- **Tools and models:** VS Code, Git and GitHub, with GitHub Copilot and Ollama. Models: MiniMax M3 (`minimax-m3:cloud`, the full model) and the Flash model.
 - **Workflow:** `git checkout -b phase/N-…` → execute phase → commit `checkpoint(phase-N): …` → tag `v0.N-…` → write `docs/phases/phase-N-*.md` → CI must be green → merge.
 - **Ground-truth files the agent had to honour on every task:** `AGENTS.md`, `docs/plan.md`, `docs/decisions/0004-solid-and-patterns.md`, the in-phase doc, the existing tests.
 - **Skills invoked:** `phase-execution` (drives one phase against the plan), `modernize-legacy-dotnet` (modernization patterns), plus ad-hoc reads of the ADRs to recover decision context.
@@ -189,19 +201,19 @@ dotnet run                              # boots the Blazor app
 
 ## Suggested resume bullet
 
-> Migrated a .NET Framework WinForms calculator to ASP.NET Core Blazor WebAssembly on .NET 10 across 9 disciplined phases: clean architecture (Domain / Application / Infrastructure / UI), SOLID + Strategy + Factory + Value-Object patterns, immutable `readonly record struct` value objects fixing two legacy VO bugs, 118 xUnit / bUnit / `WebApplicationFactory` tests shipping with code, a GitHub Actions CI gate with coverlet + Python coverage enforcement (≥ 75 % on production code), and full docs-as-code (master plan, append-only ADRs, per-phase docs, agent standing-rules). Result: 0-warning build, 80 % line coverage.
+> Migrated a .NET Framework WinForms calculator to ASP.NET Core Blazor WebAssembly on .NET 10 across 17 disciplined phases: clean architecture (Domain / Application / Infrastructure / UI), SOLID + Strategy + Factory + Value-Object patterns, immutable `readonly record struct` value objects fixing two legacy VO bugs, 250 xUnit / bUnit / `WebApplicationFactory` tests shipping with code, a GitHub Actions CI gate with coverlet + Python coverage enforcement (≥ 75 % on production code), and full docs-as-code (master plan, append-only ADRs, per-phase docs, agent standing-rules). Followed by a security and build-hardening pass: config validated at startup, a Content-Security-Policy, pinned and locked dependencies, and a CI vulnerability gate. Result: 0-warning build, 86 % line coverage.
 
 ---
 
 ## Suggested LinkedIn post copy
 
-> I've been modernizing a 20-year-old cooking-time calculator in my spare time — and the interesting part wasn't the .NET, it was the workflow.
+> I've been modernizing a legacy WinForms cooking-time calculator in my spare time — and the interesting part wasn't the .NET, it was the workflow.
 >
 > The legacy app was a single ~700-line `ComCookingTime.cs` WinForms file. It had a mutable value object whose setter wrote to the wrong field, a unit-conversion step that inverted kg → lb, and a `MealCreator` that required editing a string-based switch every time someone wanted to add a meal.
 >
 > The new version is Blazor WebAssembly on .NET 10, split into Domain / Application / Infrastructure / UI with a single composition root, immutable `readonly record struct` value objects, `Strategy + Factory + Registry` for meal kinds, and a result-with-validation DTO that never throws for expected input problems.
 >
-> 118 automated tests (xUnit + Moq + FluentAssertions for the domain, bUnit for Razor, `WebApplicationFactory<Marker>` for end-to-end). A GitHub Actions gate that blocks PRs below 75 % line coverage on production code. Eight append-only ADRs and a `docs/onboarding.md` that lets a new contributor (or a future AI agent) be productive in 30 minutes.
+> 250 automated tests (xUnit + Moq + FluentAssertions for the domain, bUnit for Razor, `WebApplicationFactory<Marker>` for end-to-end). A GitHub Actions gate that blocks PRs below 75 % line coverage on production code. Nine append-only ADRs and a `docs/onboarding.md` that lets a new contributor (or a future AI agent) be productive in 30 minutes.
 >
 > Bonus: the migration was driven end-to-end by an AI coding agent working inside a `branch → checkpoint → ADR → AGENTS.md` loop. The plan, the constraints, and the per-phase deliverables all live in the repo — not in the agent's hidden memory. That's what made it reproducible instead of magic.
 >

@@ -1,16 +1,18 @@
 name: CI
 
 # Phase 7: blocking CI gate.
-# - Builds + tests on every PR and every push to upgrading-to-net-10 and phase/*.
+# - Builds + tests on every PR to main or upgrading-to-net-10, and on every push to
+#   main, upgrading-to-net-10 and phase/*.
 # - Collects line coverage via coverlet.collector across all three test projects.
 # - Fails the run if CookingTime.UnitTests line coverage drops below 75%.
 # - Publishes the per-project Cobertura XMLs as a downloadable artifact.
 
 on:
   pull_request:
-    branches: [upgrading-to-net-10]
+    branches: [main, upgrading-to-net-10]
   push:
     branches:
+      - main
       - upgrading-to-net-10
       - 'phase/*'
 

@@ -1,5 +1,7 @@
 # CookingTime — Cover-Letter Paragraphs
 
+> **Status note (2026-11-19):** written when the migration had 118 tests, 80 % gated coverage and eight phases. The repo now has 250 tests, 86 % gated coverage, nine ADRs and phases 12–18 (UI theme, security and build hardening). Check numbers against the [README](../README.md) before quoting them.
+
 > Drop-in paragraphs for a cover letter when applying to a **senior / staff / principal
 > .NET role**, an **AI-assisted-engineering** role, or a **modernization /
 > platform-engineering** team. Each paragraph is calibrated to one persona. Pick the

@@ -19,7 +19,7 @@
 The **product** is a one-page form. The **engineering story** is what you'd put on a resume.
 
 1. **Inherited a ~700-line single-file WinForms app** with real bugs — a mutable value object whose setter wrote to the wrong field, an inverted kg/lb unit conversion, two `"Beef Roast Standing Rib — Rare"` entries where one of them was actually Medium, and three Range meals whose Max-minutes-per-pound was `0`.
-2. **Migrated to .NET 10 Blazor WebAssembly** across 8 disciplined phases, applying SOLID + clean architecture + Strategy/Factory/Registry/Value-Object patterns.
+2. **Migrated to .NET 10 Blazor WebAssembly** across a series of disciplined phases (0–8 for the migration itself), applying SOLID + clean architecture + Strategy/Factory/Registry/Value-Object patterns.
 3. **Wrote tests alongside the code** — 250 facts (xUnit for domain, bUnit for components, `WebApplicationFactory<Marker>` for end-to-end HTTP), all shipped with each phase.
 4. **Built a blocking CI gate** — GitHub Actions runs `dotnet build` → per-project `dotnet test` with coverlet → a Python script that fails the build if `UnitTests` drops below 75 % line coverage on production code.
 5. **Recorded every meaningful decision** as an append-only ADR; onboarding for a new contributor (or AI agent) is a 30-minute read of `docs/onboarding.md`.
@@ -53,7 +53,7 @@ OriginalSource/ → historical WinForms             reference only — never ref
 
 ---
 
-## Migration journey — 18 phases, 0 rollbacks
+## Migration journey — 17 shipped phases, 0 rollbacks
 
 | Phase | Branch | What shipped |
 | --- | --- | --- |
@@ -66,6 +66,7 @@ OriginalSource/ → historical WinForms             reference only — never ref
 | 6 | `phase/6-cleanup` | Legacy WinForms files deleted (kept under `OriginalSource/`); ADR 0005 |
 | 7 | `phase/7-ci` | Blocking CI gate, coverlet, Python coverage gate, ADR 0006 |
 | 7b | `phase/7b-blazor-boot-script` | One-line fix to the Blazor WASM boot `<script>` reference in `wwwroot/index.html` + 3 regression facts in `BlazorBootScriptTests` |
+| 8 | `phase/8-rename-original-source` | `Backup/` renamed to `OriginalSource/`; legacy code kept verbatim as read-only reference |
 | 12 | `phase/12-ui-theme` | `cookingtime-theme` design applied — stylesheet, restyled pages, icon set, self-hosted fonts, dark-mode toggle + WCAG fixes, and a fix for the **duplicate-route** bug the design package exposed (see [ADR 0007](docs/decisions/0007-design-package-as-reference-artifact.md)) |
 | 13 | `phase/13-remove-email-setting` | Personal contact data removed from config/UI/docs, and the **client configuration delivery** bug fixed — the WASM client had been receiving *no* configuration, leaving the production meal catalog empty (see [ADR 0008](docs/decisions/0008-no-personal-contact-data.md)) |
 | 14 | `phase/14-domain-validation` | **Domain input validation.** Every config-driven meal accepted *any* weight — a 500 lb pork roast produced an inverted cook range (`21h20m` min > `15h00m` max) and the app displayed it as a *success*. `RangeMeal` now enforces its own range; `CookingDuration` and `RangeCookingStrategy` reject inverted bounds; `Weight` learned to order itself |
@@ -73,6 +74,8 @@ OriginalSource/ → historical WinForms             reference only — never ref
 | 16 | `phase/16-build-hardening` | **Build and release hardening.** Package versions pinned exactly with committed `packages.lock.json` + `--locked-mode` restore, GitHub Actions pinned to commit SHAs, a dependency-vulnerability gate that fails CI, a check that the publish output contains **no test assemblies**, `NuGet.config` source mapping, `global.json`, and dependabot |
 | 17 | `phase/17-ui-cleanup` | **UI robustness & cleanup.** `Reset()` now replaces the view model so stale `EditForm` validation messages actually clear; the meal catalog is built once and looked up by name instead of rebuilt on every calculation; the calculator logs unknown-meal and out-of-range events; the never-called `TryCreate`/`RegisteredKinds` API was removed |
 | 18 | `phase/18-accepted-risks` | **Accepted risks.** A full-codebase OWASP review's remaining findings were either fixed (Phases 14–17) or recorded as deliberate decisions with the condition that would revisit each — see [ADR 0009](docs/decisions/0009-accepted-security-risks.md) |
+
+**Not yet done:** Phases 9–11 (containerize, deploy to a local Kubernetes cluster, document it) are *planned* in [`docs/plan-kubernetes.md`](docs/plan-kubernetes.md). There is no `Dockerfile` or `k8s/` folder in this repo yet.
 
 **Branch model:** one feature branch per phase; each ends with exactly one `checkpoint(phase-N): …` commit and a tag `v0.N-<slug>`.
 
@@ -96,10 +99,10 @@ OriginalSource/ → historical WinForms             reference only — never ref
 
 ## CI / quality gate
 
-Every PR and every push to `phase/*` runs:
+Every PR to `main` and every push to `main` or `phase/*` runs:
 
 ```bash
-dotnet restore
+dotnet restore --locked-mode              # packages.lock.json is binding
 dotnet build -c Release --no-restore       # 0 warnings, 0 errors or fail
 dotnet test --settings coverlet.runsettings.xml
 python3 scripts/check-coverage.py \
@@ -107,9 +110,11 @@ python3 scripts/check-coverage.py \
   --threshold 75                            # gate at 75% on UnitTests, fail if lower
 ```
 
+It then fails the run if the production project has a known-vulnerable dependency, or if `dotnet publish` leaks any test assembly into the publish output.
+
 The three Cobertura XMLs are uploaded as the `coverage-cobertura` artifact (14-day retention).
 
-Measured baseline: **UnitTests 86.01 %**, ComponentTests 16.98 %, IntegrationTests 63.40 % (the latter two are informational; only UnitTests drives the gate).
+Measured baseline: **UnitTests 86.01 %**, ComponentTests 16.62 %, IntegrationTests 69.97 % (the latter two are informational; only UnitTests drives the gate).
 
 ---
 
@@ -175,7 +180,8 @@ The AI tools and models used:
 | --- | --- |
 | **Agent environment** | Local coding agent following a `phase-execution` skill seeded with `docs/plan.md` |
 | **Coding assistant** | GitHub Copilot in VS Code, paired with Ollama for local-model coding |
-| **Model** | `minimax-m3:cloud` |
+| **Editor / hosting** | VS Code, Git and GitHub |
+| **Model** | MiniMax M3 through Ollama — `minimax-m3:cloud` (full model) and the Flash model |
 | **Skills used** | `phase-execution` (drives a single phase against the plan); `modernize-legacy-dotnet` (modernization patterns); ad-hoc reads of the ADRs to recover decision context |
 
 This is the **demonstrable, repeatable recipe** for using a coding agent on a non-trivial .NET codebase without producing tech debt.
