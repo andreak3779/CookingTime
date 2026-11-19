@@ -6,7 +6,7 @@
 
 Deploy the existing CookingTime Blazor WebAssembly app to a **local Kubernetes cluster**, using tooling already in daily use (Podman CLI, Docker CLI, Podman Desktop). This is a separate initiative from the .NET Framework → .NET 10 migration documented in [`plan.md`](plan.md) — that migration is complete (Phases 0–8, all ✅). This plan does not touch that history or reopen the locked master plan; it continues the same `branch → checkpoint → ADR → docs` workflow under a new version series.
 
-**Why this exists:** Kubernetes has come up repeatedly as a named gap across active job applications (BeyondTrust, Foci Solutions, Aequilibrium, AOT Technologies) despite three completed Pluralsight courses (Kubernetes for Software Development: Foundations, Deploying Your Code, and related). Coursework alone isn't converting into a credible claim — a real deployed project is. This plan is that project.
+**Why this exists:** Kubernetes is a common requirement in .NET roles, and coursework alone does not show it working. A real deployed project does. This plan is that project.
 
 ## Scope boundary
 

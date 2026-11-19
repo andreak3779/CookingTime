@@ -1,5 +1,7 @@
 # CookingTime — Interview Elevator Pitches
 
+> **Status note (2026-11-19):** written when the migration had 118 tests, 80 % gated coverage and eight phases. The repo now has 250 tests, 86 % gated coverage, nine ADRs and phases 12–18 (UI theme, security and build hardening). Check numbers against the [README](../README.md) before quoting them.
+
 > Three ready-to-deliver pitches for the moments that matter — a recruiter screen, a
 > senior-engineer panel, and an architecture deep-dive. Each fits in 60–90 seconds when
 > spoken, and on a single screen when read.
