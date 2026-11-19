@@ -53,7 +53,7 @@ OriginalSource/ → historical WinForms             reference only — never ref
 
 ---
 
-## Migration journey — 17 phases, 0 rollbacks
+## Migration journey — 18 phases, 0 rollbacks
 
 | Phase | Branch | What shipped |
 | --- | --- | --- |
@@ -72,6 +72,7 @@ OriginalSource/ → historical WinForms             reference only — never ref
 | 15 | `phase/15-config-trust` | **Config trust boundary.** `appsettings.json` is served to every visitor, so it is now validated at startup (`ValidateOnStart`), the `ResumeUrl` gets an http/https scheme allowlist, the app ships a Content-Security-Policy, and the served-config guard checks secret *shapes* rather than just `@` |
 | 16 | `phase/16-build-hardening` | **Build and release hardening.** Package versions pinned exactly with committed `packages.lock.json` + `--locked-mode` restore, GitHub Actions pinned to commit SHAs, a dependency-vulnerability gate that fails CI, a check that the publish output contains **no test assemblies**, `NuGet.config` source mapping, `global.json`, and dependabot |
 | 17 | `phase/17-ui-cleanup` | **UI robustness & cleanup.** `Reset()` now replaces the view model so stale `EditForm` validation messages actually clear; the meal catalog is built once and looked up by name instead of rebuilt on every calculation; the calculator logs unknown-meal and out-of-range events; the never-called `TryCreate`/`RegisteredKinds` API was removed |
+| 18 | `phase/18-accepted-risks` | **Accepted risks.** A full-codebase OWASP review's remaining findings were either fixed (Phases 14–17) or recorded as deliberate decisions with the condition that would revisit each — see [ADR 0009](docs/decisions/0009-accepted-security-risks.md) |
 
 **Branch model:** one feature branch per phase; each ends with exactly one `checkpoint(phase-N): …` commit and a tag `v0.N-<slug>`.
 
@@ -89,6 +90,7 @@ OriginalSource/ → historical WinForms             reference only — never ref
 | 6 | **Switch-on-string factory** — adding a meal meant editing `MealCreator.CreateMeal` | `OriginalSource/ComCookingTime.cs:444` | `MealTypeRegistry.Register` — OCP-friendly |
 | 7 | **The WASM client received no configuration at all** — `appsettings.json` sat at the repo root, but the Blazor WASM SDK only bundles `wwwroot/appsettings*.json`, so the browser fell back to defaults and the meal catalog was empty | Introduced in Phase 3 (`checkpoint(phase-3)`) | Config moved to `wwwroot/`, so the SDK bundles it; a guard test pins the location — see [ADR 0008](docs/decisions/0008-no-personal-contact-data.md) |
 | 8 | **Config-driven meals ignored their own weight range** — `RangeMeal` exposed `MinimumWeight`/`MaximumWeight` and never checked them, so all 10 catalog meals accepted any weight; a 500 lb roast produced an inverted range shown as a *success* | Introduced in Phase 3 (`checkpoint(phase-3)`) | `RangeMeal.Calculate` enforces the range; `CookingDuration` and `RangeCookingStrategy` reject inverted bounds; end-to-end tests use the **real** meal type, not a mock |
+| 9 | **Reset left stale validation messages on screen** — `EditForm`'s `EditContext` and the validator's message store are keyed to the model *instance*, so mutating it in place never cleared the cached messages | Introduced in Phase 4 (`checkpoint(phase-4)`) | `Reset()` assigns a fresh view-model instance; a bUnit test drives submit-then-reset and asserts the messages clear |
 
 ---
 
@@ -143,8 +145,9 @@ dotnet run                              # boots the Blazor app
 | Doc | Purpose |
 | --- | --- |
 | [`docs/plan.md`](docs/plan.md) | Locked master plan |
+| [`docs/plan-codebase-review.md`](docs/plan-codebase-review.md) | Full-codebase review + OWASP analysis (Phases 14–18) — findings, evidence, dispositions |
 | [`docs/phases/`](docs/phases/README.md) | Per-phase truth (one file per phase) |
-| [`docs/decisions/`](docs/decisions/README.md) | Append-only ADRs (0001–0006) |
+| [`docs/decisions/`](docs/decisions/README.md) | Append-only ADRs (0001–0009) |
 | [`docs/onboarding.md`](docs/onboarding.md) | 30-minute newcomer orientation |
 | [`docs/LINKEDIN.md`](docs/LINKEDIN.md) | LinkedIn / resume pitch + post copy |
 | [`docs/SLIDES.md`](docs/SLIDES.md) | Slide-deck outline for talks / interviews |
