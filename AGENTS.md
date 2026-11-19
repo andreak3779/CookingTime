@@ -1,6 +1,6 @@
 # AGENTS.md — Standing rules for AI agents working in this repo
 
-> Read this first. Every AI agent operating in `/home/<user>/src/CookingTime` must follow
+> Read this first. Every AI agent operating in this repository must follow
 > these rules on every task — no need to be reminded. Mirror of [ADR 0004](docs/decisions/0004-solid-and-patterns.md)
 > with project-specific implementation conventions layered on top.
 

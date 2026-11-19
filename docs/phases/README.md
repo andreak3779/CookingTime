@@ -18,6 +18,7 @@ One file per phase. Updated as phases ship.
 | 10 | Local Kubernetes deployment | `phase/10-k8s-deploy` | `checkpoint(phase-10): k8s manifests + deployed to local cluster + phase doc` | 🔜 Planned |
 | 11 | Expose, verify, document | `phase/11-k8s-docs` | `checkpoint(phase-11): app reachable in-cluster + README + phase doc` | 🔜 Planned |
 | 12 | CookingTime UI theme (design implementation) | `phase/12-ui-theme` | `checkpoint(phase-12): apply cookingtime-theme design + dark-mode toggle + phase doc` | ✅ Done |
+| 13 | Remove personal contact data + fix client config delivery | `phase/13-remove-email-setting` | `checkpoint(phase-13): remove personal contact data from config/UI + fix client config delivery + ADR 0008 + phase doc` | ✅ Done |
 
 ## Per-phase files
 
@@ -32,3 +33,4 @@ One file per phase. Updated as phases ship.
 - [Phase 7b — Blazor WASM boot script fix](phase-7b-blazor-boot-script.md) ✅
 - [Phase 8 — Rename `Backup/` → `OriginalSource/`](phase-8-rename-original-source.md) ✅
 - [Phase 12 — CookingTime UI theme](phase-12-ui-theme.md) ✅
+- [Phase 13 — Remove personal contact data + fix client config delivery](phase-13-remove-email-setting.md) ✅

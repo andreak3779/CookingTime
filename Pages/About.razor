@@ -17,10 +17,6 @@
     {
         <p><a href="@ProductInfo.ResumeUrl" target="_blank" rel="noopener">Resume</a></p>
     }
-    @if (!string.IsNullOrWhiteSpace(ProductInfo.Email))
-    {
-        <p><a href="mailto:@ProductInfo.Email">Email @ProductInfo.Email</a></p>
-    }
 </div>
 
 @code {

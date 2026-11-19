@@ -45,10 +45,12 @@
 
   <!-- The test host uses the same appsettings.json as the WASM client so
        IOptions<MealCatalogOptions> and IOptions<ProductInfoOptions> resolve
-       identically in both runtimes. The Link keeps the file physically
-       in the repo root to avoid duplication. -->
+       identically in both runtimes. Phase 13 moved the file into wwwroot/
+       (the Blazor WASM SDK only bundles config from wwwroot\appsettings*.json),
+       so the Link follows it there. The Link keeps the file physically in one
+       place to avoid duplication. -->
   <ItemGroup>
-    <None Include="..\..\appsettings.json"
+    <None Include="..\..\wwwroot\appsettings.json"
           Link="appsettings.json"
           CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>

@@ -13,5 +13,4 @@ public sealed class ProductInfoOptions
     public string Company { get; set; } = "";
     public string CopyrightYear { get; set; } = "";
     public string ResumeUrl { get; set; } = "";
-    public string Email { get; set; } = "";
 }

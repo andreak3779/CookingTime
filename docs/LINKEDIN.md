@@ -1,7 +1,7 @@
 # CookingTime — LinkedIn Project Summary
 
 > Drop-in copy for a LinkedIn post, a featured-project card, and a resume bullet. The
-> full repository lives at `/home/<user>/src/CookingTime`. The original WinForms code
+> full repository lives at `github.com/andreak3779/CookingTime`. The original WinForms code
 > is preserved untouched under `OriginalSource/` for historical reference.
 
 ---
@@ -26,7 +26,7 @@ CI gate with line-coverage enforcement.
 | | |
 | --- | --- |
 | **Type** | Personal / portfolio modernization project |
-| **Source** | In-repo (`/home/<user>/src/CookingTime`), private |
+| **Source** | In-repo (`github.com/andreak3779/CookingTime`), public |
 | **Stack** | C# · .NET 10 · Blazor WebAssembly · xUnit · bUnit · Moq · FluentAssertions · coverlet · GitHub Actions · Python |
 | **Legacy** | .NET Framework 2.0 WinForms (VS 2005 era, `msbuild` XML 2003 schema, `OutputType=WinExe`) |
 | **Tests** | 118 facts across unit, Razor component, and HTTP/integration tiers — all green |

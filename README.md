@@ -6,9 +6,9 @@
 | --- | --- |
 | **What it does** | Pick a meal (Whole Chicken, Beef Roast Standing Rib — Rare, Turkey, Pork, Ham …), enter a weight and a unit (lb or kg), get a cooking-time range + instructions. |
 | **Tech** | C# · .NET 10 · **Blazor WebAssembly** · xUnit · Moq · FluentAssertions · bUnit · `WebApplicationFactory` · coverlet · GitHub Actions · Python |
-| **Tests** | **151 automated facts** across unit, Razor component, and HTTP/integration tiers — all green |
+| **Tests** | **156 automated facts** across unit, Razor component, and HTTP/integration tiers — all green |
 | **Build** | `dotnet build -c Release` — **0 warnings, 0 errors** (`<TreatWarningsAsErrors>true</TreatWarningsAsErrors>`) |
-| **Coverage** | **80.8 % line** on `CookingTime.UnitTests` production code; CI gate at **75 %** |
+| **Coverage** | **80.0 % line** on `CookingTime.UnitTests` production code; CI gate at **75 %** |
 | **UI** | Custom `cookingtime-theme` (magenta + navy), responsive, dark mode, self-hosted fonts — fully offline |
 | **AI-assisted?** | **Yes** — end-to-end migration executed with an AI coding agent under the workflow documented below |
 
@@ -20,11 +20,11 @@ The **product** is a one-page form. The **engineering story** is what you'd put 
 
 1. **Inherited a ~700-line single-file WinForms app** with real bugs — a mutable value object whose setter wrote to the wrong field, an inverted kg/lb unit conversion, two `"Beef Roast Standing Rib — Rare"` entries where one of them was actually Medium, and three Range meals whose Max-minutes-per-pound was `0`.
 2. **Migrated to .NET 10 Blazor WebAssembly** across 8 disciplined phases, applying SOLID + clean architecture + Strategy/Factory/Registry/Value-Object patterns.
-3. **Wrote tests alongside the code** — 151 facts (xUnit for domain, bUnit for components, `WebApplicationFactory<Marker>` for end-to-end HTTP), all shipped with each phase.
+3. **Wrote tests alongside the code** — 156 facts (xUnit for domain, bUnit for components, `WebApplicationFactory<Marker>` for end-to-end HTTP), all shipped with each phase.
 4. **Built a blocking CI gate** — GitHub Actions runs `dotnet build` → per-project `dotnet test` with coverlet → a Python script that fails the build if `UnitTests` drops below 75 % line coverage on production code.
 5. **Recorded every meaningful decision** as an append-only ADR; onboarding for a new contributor (or AI agent) is a 30-minute read of `docs/onboarding.md`.
 
-The result is a working green build with **0 warnings, 151 tests, 80.8 % gated coverage**, and a documented, reproducible recipe for using an AI coding agent on a non-trivial .NET codebase.
+The result is a working green build with **0 warnings, 156 tests, 80.0 % gated coverage**, and a documented, reproducible recipe for using an AI coding agent on a non-trivial .NET codebase.
 
 ---
 
@@ -53,7 +53,7 @@ OriginalSource/ → historical WinForms             reference only — never ref
 
 ---
 
-## Migration journey — 11 phases, 0 rollbacks
+## Migration journey — 13 phases, 0 rollbacks
 
 | Phase | Branch | What shipped |
 | --- | --- | --- |
@@ -67,6 +67,7 @@ OriginalSource/ → historical WinForms             reference only — never ref
 | 7 | `phase/7-ci` | Blocking CI gate, coverlet, Python coverage gate, ADR 0006 |
 | 7b | `phase/7b-blazor-boot-script` | One-line fix to the Blazor WASM boot `<script>` reference in `wwwroot/index.html` + 3 regression facts in `BlazorBootScriptTests` |
 | 12 | `phase/12-ui-theme` | `cookingtime-theme` design applied — stylesheet, restyled pages, icon set, self-hosted fonts, dark-mode toggle + WCAG fixes, and a fix for the **duplicate-route** bug the design package exposed (see [ADR 0007](docs/decisions/0007-design-package-as-reference-artifact.md)) |
+| 13 | `phase/13-remove-email-setting` | Personal contact data removed from config/UI/docs, and the **client configuration delivery** bug fixed — the WASM client had been receiving *no* configuration, leaving the production meal catalog empty (see [ADR 0008](docs/decisions/0008-no-personal-contact-data.md)) |
 
 **Branch model:** one feature branch per phase; each ends with exactly one `checkpoint(phase-N): …` commit and a tag `v0.N-<slug>`.
 
@@ -82,6 +83,7 @@ OriginalSource/ → historical WinForms             reference only — never ref
 | 4 | **Half-built Range meals** — three entries with `aMax=0`, producing nonsense durations | `OriginalSource/ComCookingTime.cs:529+` | Every Range entry explicitly sets both min and max |
 | 5 | **Concrete deps in UI** — `new CT.MealCreator()` in form constructor | `OriginalSource/frmCookingTime.cs:69` | UI depends on `ICookingTimeCalculator`; DI wires concretes |
 | 6 | **Switch-on-string factory** — adding a meal meant editing `MealCreator.CreateMeal` | `OriginalSource/ComCookingTime.cs:444` | `MealTypeRegistry.Register` — OCP-friendly |
+| 7 | **The WASM client received no configuration at all** — `appsettings.json` sat at the repo root, but the Blazor WASM SDK only bundles `wwwroot/appsettings*.json`, so the browser fell back to defaults and the meal catalog was empty | Introduced in Phase 3 (`checkpoint(phase-3)`) | Config moved to `wwwroot/`, so the SDK bundles it; a guard test pins the location — see [ADR 0008](docs/decisions/0008-no-personal-contact-data.md) |
 
 ---
 
@@ -100,7 +102,7 @@ python3 scripts/check-coverage.py \
 
 The three Cobertura XMLs are uploaded as the `coverage-cobertura` artifact (14-day retention).
 
-Measured baseline: **UnitTests 80.82 %**, ComponentTests 15.41 %, IntegrationTests 66.67 % (the latter two are informational; only UnitTests drives the gate).
+Measured baseline: **UnitTests 80.00 %**, ComponentTests 16.98 %, IntegrationTests 63.40 % (the latter two are informational; only UnitTests drives the gate).
 
 ---
 
