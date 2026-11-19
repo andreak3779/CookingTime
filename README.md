@@ -180,7 +180,8 @@ The AI tools and models used:
 | --- | --- |
 | **Agent environment** | Local coding agent following a `phase-execution` skill seeded with `docs/plan.md` |
 | **Coding assistant** | GitHub Copilot in VS Code, paired with Ollama for local-model coding |
-| **Model** | `minimax-m3:cloud` |
+| **Editor / hosting** | VS Code, Git and GitHub |
+| **Model** | MiniMax M3 through Ollama — `minimax-m3:cloud` (full model) and the Flash model |
 | **Skills used** | `phase-execution` (drives a single phase against the plan); `modernize-legacy-dotnet` (modernization patterns); ad-hoc reads of the ADRs to recover decision context |
 
 This is the **demonstrable, repeatable recipe** for using a coding agent on a non-trivial .NET codebase without producing tech debt.

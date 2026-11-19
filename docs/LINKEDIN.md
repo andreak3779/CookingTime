@@ -175,7 +175,7 @@ End-to-end migration executed with a coding agent under a disciplined `branch �
 > The migration was driven by **AI-assisted coding**. The interesting part is not "an AI wrote it" but the workflow that kept a working green build across 17 phases.
 
 - **Agent environment:** local coding agent following a `phase-execution` skill seeded with `docs/plan.md`.
-- **Model:** GitHub Copilot (the assistant you talk to in VS Code), powered by `minimax-m3:cloud`.
+- **Tools and models:** VS Code, Git and GitHub, with GitHub Copilot and Ollama. Models: MiniMax M3 (`minimax-m3:cloud`, the full model) and the Flash model.
 - **Workflow:** `git checkout -b phase/N-…` → execute phase → commit `checkpoint(phase-N): …` → tag `v0.N-…` → write `docs/phases/phase-N-*.md` → CI must be green → merge.
 - **Ground-truth files the agent had to honour on every task:** `AGENTS.md`, `docs/plan.md`, `docs/decisions/0004-solid-and-patterns.md`, the in-phase doc, the existing tests.
 - **Skills invoked:** `phase-execution` (drives one phase against the plan), `modernize-legacy-dotnet` (modernization patterns), plus ad-hoc reads of the ADRs to recover decision context.
