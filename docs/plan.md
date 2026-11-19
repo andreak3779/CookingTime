@@ -1,6 +1,15 @@
 # CookingTime Upgrade — Master Plan
 
 > **Status:** ✅ Locked after [Phase 0](phases/phase-0-docs-scaffold.md). Per-phase evolution lives in `docs/phases/`.
+>
+> **This plan describes Phases 0–7.** Eight further phases have since shipped
+> (7b, 8, 12–18), so it is accurate for its scope but **not a live index**.
+> See the [**Master plan status note**](phases/master-plan-status-note.md) for
+> what landed after the lock and where the current truth lives — and
+> [`docs/phases/README.md`](phases/README.md) for the live phase index. This
+> file is deliberately left otherwise unedited: per
+> [ADR 0003](decisions/0003-docs-as-code.md) it is locked and evolves only via
+> superseding per-phase docs.
 
 ## Goal
 
