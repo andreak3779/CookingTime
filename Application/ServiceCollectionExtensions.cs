@@ -6,6 +6,7 @@ using CookingTime.Infrastructure.Configuration;
 using CookingTime.Infrastructure.Meals;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 
 namespace CookingTime.Application;
 
@@ -30,10 +31,30 @@ public static class ServiceCollectionExtensions
         ArgumentNullException.ThrowIfNull(services);
         ArgumentNullException.ThrowIfNull(configuration);
 
-        services.Configure<MealCatalogOptions>(
-            configuration.GetSection(MealCatalogOptions.SectionName));
-        services.Configure<ProductInfoOptions>(
-            configuration.GetSection(ProductInfoOptions.SectionName));
+        // Phase 15: bind the options AND validate them at startup.
+        //
+        // Previously both sections were bound with a plain Configure<T>, which
+        // validates nothing. A malformed catalog entry then failed late and
+        // in the wrong place: MealFactory throws from its constructor, the
+        // factory is resolved lazily when the UI first asks for the catalog,
+        // and the browser shows an unhandled component exception with no hint
+        // about which config line was wrong.
+        //
+        // ValidateOnStart moves that failure to startup, where the message can
+        // name the offending entry. The validators live in
+        // Infrastructure/Configuration/OptionsValidators.cs.
+        services
+            .AddOptions<MealCatalogOptions>()
+            .Bind(configuration.GetSection(MealCatalogOptions.SectionName))
+            .ValidateOnStart();
+
+        services
+            .AddOptions<ProductInfoOptions>()
+            .Bind(configuration.GetSection(ProductInfoOptions.SectionName))
+            .ValidateOnStart();
+
+        services.AddSingleton<IValidateOptions<MealCatalogOptions>, MealCatalogOptionsValidator>();
+        services.AddSingleton<IValidateOptions<ProductInfoOptions>, ProductInfoOptionsValidator>();
 
         // Stateless; WASM has no per-request scope and the test host
         // is a single-process integration fixture. Safe as Singleton.

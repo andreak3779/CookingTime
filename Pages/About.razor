@@ -13,9 +13,9 @@
     <p>@ProductInfo.Company</p>
     <p>@ProductInfo.CopyrightYear</p>
 
-    @if (!string.IsNullOrWhiteSpace(ProductInfo.ResumeUrl))
+    @if (ProductInfo.TryGetSafeResumeUrl(out var resumeUrl))
     {
-        <p><a href="@ProductInfo.ResumeUrl" target="_blank" rel="noopener">Resume</a></p>
+        <p><a href="@resumeUrl" target="_blank" rel="noopener noreferrer">Resume</a></p>
     }
 </div>
 

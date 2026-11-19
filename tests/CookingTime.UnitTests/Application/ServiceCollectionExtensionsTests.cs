@@ -71,4 +71,83 @@ public sealed class ServiceCollectionExtensionsTests
         var act = () => services.AddCookingTime(null!);
         act.Should().Throw<ArgumentNullException>().WithParameterName("configuration");
     }
+
+    [Fact]
+    public void AddCookingTime_InvalidCatalog_FailsAtStartup_NotAtFirstUse()
+    {
+        // Phase 15: the catalog used to be bound with a plain Configure<T>,
+        // which validated nothing. A malformed entry then failed lazily -
+        // MealFactory throws from its constructor, and the factory is
+        // resolved the first time the UI asks for the catalog, so the browser
+        // showed an unhandled component exception with no hint about which
+        // config line was wrong. ValidateOnStart moves that to startup.
+        var config = new ConfigurationBuilder()
+            .AddInMemoryCollection(new Dictionary<string, string?>
+            {
+                // MaxMinutesPerPound below MinMinutesPerPound - an inverted range.
+                ["Meals:Catalog:0:Kind"] = "Range",
+                ["Meals:Catalog:0:Name"] = "Bad Meal",
+                ["Meals:Catalog:0:Instructions"] = "Test",
+                ["Meals:Catalog:0:MinPounds"] = "1",
+                ["Meals:Catalog:0:MaxPounds"] = "10",
+                ["Meals:Catalog:0:MinMinutesPerPound"] = "45",
+                ["Meals:Catalog:0:MaxMinutesPerPound"] = "40",
+            })
+            .Build();
+
+        var services = new ServiceCollection();
+        services.AddCookingTime(config);
+        using var provider = services.BuildServiceProvider();
+
+        var act = () => provider.GetRequiredService<IOptions<MealCatalogOptions>>().Value;
+
+        act.Should().Throw<OptionsValidationException>()
+            .WithMessage("*less than MinMinutesPerPound*");
+    }
+
+    [Fact]
+    public void AddCookingTime_InvalidResumeUrl_FailsAtStartup()
+    {
+        // Phase 15: a javascript: ResumeUrl would be rendered into an href.
+        var config = new ConfigurationBuilder()
+            .AddInMemoryCollection(new Dictionary<string, string?>
+            {
+                ["ProductInfo:ResumeUrl"] = "javascript:alert(1)",
+            })
+            .Build();
+
+        var services = new ServiceCollection();
+        services.AddCookingTime(config);
+        using var provider = services.BuildServiceProvider();
+
+        var act = () => provider.GetRequiredService<IOptions<ProductInfoOptions>>().Value;
+
+        act.Should().Throw<OptionsValidationException>()
+            .WithMessage("*absolute http/https URI*");
+    }
+
+    [Fact]
+    public void AddCookingTime_ValidCatalog_PassesValidation()
+    {
+        var config = new ConfigurationBuilder()
+            .AddInMemoryCollection(new Dictionary<string, string?>
+            {
+                ["Meals:Catalog:0:Kind"] = "Range",
+                ["Meals:Catalog:0:Name"] = "Good Meal",
+                ["Meals:Catalog:0:Instructions"] = "Test",
+                ["Meals:Catalog:0:MinPounds"] = "1",
+                ["Meals:Catalog:0:MaxPounds"] = "10",
+                ["Meals:Catalog:0:MinMinutesPerPound"] = "40",
+                ["Meals:Catalog:0:MaxMinutesPerPound"] = "45",
+            })
+            .Build();
+
+        var services = new ServiceCollection();
+        services.AddCookingTime(config);
+        using var provider = services.BuildServiceProvider();
+
+        var act = () => provider.GetRequiredService<IOptions<MealCatalogOptions>>().Value;
+
+        act.Should().NotThrow();
+    }
 }

@@ -207,6 +207,36 @@ public sealed class ThemeAssetsTests : IClassFixture<CookingTimeAppFactory>
     /// leaked into the file catches a re-introduction of either problem.
     /// </summary>
     [Fact]
+    public async Task RootIndex_DeclaresContentSecurityPolicyAsync()
+    {
+        using var client = _factory.CreateClient();
+
+        var html = await client.GetStringAsync("/");
+
+        html.Should().Contain("Content-Security-Policy",
+            because: "Phase 15: the app has no server-side header configuration - it is served as " +
+                      "static files - so the policy must be declared in the document itself");
+
+        // The WASM runtime instantiates WebAssembly, which requires
+        // 'wasm-unsafe-eval' in script-src. Without it the app refuses to boot.
+        html.Should().Contain("script-src 'self' 'wasm-unsafe-eval'",
+            because: "the .NET WASM runtime needs wasm-unsafe-eval to compile the runtime module");
+
+        // Pages/Index.razor uses inline style attributes.
+        html.Should().Contain("style-src 'self' 'unsafe-inline'",
+            because: "Pages/Index.razor renders inline style=\"...\" attributes");
+
+        // The dangerous directions must be closed.
+        html.Should().Contain("object-src 'none'");
+        html.Should().Contain("base-uri 'self'");
+
+        // 'frame-ancestors' is ignored when a policy is delivered via <meta>,
+        // so including it would only produce a browser console warning.
+        // It belongs in an HTTP header - see docs/plan-kubernetes.md.
+        html.Should().NotContain("frame-ancestors");
+    }
+
+    [Fact]
     public async Task ThemeScript_IsSyntacticallyClean_AndExposesInteropApiAsync()
     {
         using var client = _factory.CreateClient();
