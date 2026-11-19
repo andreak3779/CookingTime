@@ -46,4 +46,14 @@ public sealed class RangeCookingStrategyTests
         var act = () => new RangeCookingStrategy(40, -5);
         act.Should().Throw<ArgumentOutOfRangeException>();
     }
+
+    [Fact]
+    public void Constructor_MaxBelowMin_Throws()
+    {
+        // Phase 14: an inverted per-pound range would produce a duration
+        // whose minimum exceeds its maximum.
+        var act = () => new RangeCookingStrategy(45, 40);
+        act.Should().Throw<ArgumentOutOfRangeException>()
+            .WithMessage("*greater than or equal to minMinutesPerPound*");
+    }
 }

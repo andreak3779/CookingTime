@@ -39,4 +39,22 @@ public sealed class CookingDurationFormatTests
         var act = () => new CookingDuration(TimeSpan.Zero, TimeSpan.FromMinutes(-1));
         act.Should().Throw<ArgumentOutOfRangeException>();
     }
+
+    [Fact]
+    public void Constructor_MaximumBelowMinimum_Throws()
+    {
+        // Phase 14: an inverted range is not a duration. The legacy code
+        // allowed it and Format() rendered "between of 5 hrs. and 0 mins. to
+        // 1 hrs. and 0 mins." to the user.
+        var act = () => new CookingDuration(TimeSpan.FromHours(5), TimeSpan.FromHours(1));
+        act.Should().Throw<ArgumentException>()
+            .WithMessage("*Maximum*must be greater than or equal to minimum*");
+    }
+
+    [Fact]
+    public void Constructor_MaximumEqualToMinimum_IsAllowed()
+    {
+        var d = new CookingDuration(TimeSpan.FromHours(2), TimeSpan.FromHours(2));
+        d.Minimum.Should().Be(d.Maximum);
+    }
 }

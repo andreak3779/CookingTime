@@ -86,6 +86,8 @@ A class in `Domain/` must never `using` from `Infrastructure/` or `Application/`
 | `<RazorComponent Remove="folder\**" />` as a build guard | Phase 12 | Does **not** work against the SDK's default items — they are added *inside* the `ResolveRazorComponentInputs` target, after evaluation-time `Remove` runs. Disable the default items instead. |
 | Stray closing tag in a `.js`/`.css` file | Phase 12 | A trailing `</content>` in `wwwroot/js/theme.js` made the browser reject the **whole** script (`Unexpected token '<'`), so `window.cookingTimeTheme` was never defined and the theme toggle threw `Could not find 'cookingTimeTheme.isDark'`. The build stays green. |
 | CSS-relative asset URLs resolved against the document | Phase 12 | A CSS `url()` resolves against the **stylesheet's** URL. From `css/cookingtime.css`, `url('fonts/x.woff2')` → `/css/fonts/x.woff2` (404); the fonts live at `/fonts`, so it needs `url('../fonts/x.woff2')`. Assert that the *referencing* document resolves to a served path — asserting only that the asset is served is not enough. |
+| A value object that holds a range it never enforces | Phase 14 | `RangeMeal` exposed `MinimumWeight`/`MaximumWeight` and ignored them, so every config-driven meal accepted any weight — a 500 lb roast produced an inverted cook range shown to the user as a *success*. A property that looks like a constraint but isn't one is worse than no property. Enforce it where the knowledge lives. |
+| A mock standing in for a domain invariant | Phase 14 | The suite had a test where a **mocked** meal threw `ArgumentOutOfRangeException` — proving the *calculator* handles a throw, never that a real meal throws. Domain invariants need the real type under test. |
 
 ## What you'll see in this repo
 

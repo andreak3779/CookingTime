@@ -19,6 +19,7 @@ One file per phase. Updated as phases ship.
 | 11 | Expose, verify, document | `phase/11-k8s-docs` | `checkpoint(phase-11): app reachable in-cluster + README + phase doc` | 🔜 Planned |
 | 12 | CookingTime UI theme (design implementation) | `phase/12-ui-theme` | `checkpoint(phase-12): apply cookingtime-theme design + dark-mode toggle + phase doc` | ✅ Done |
 | 13 | Remove personal contact data + fix client config delivery | `phase/13-remove-email-setting` | `checkpoint(phase-13): remove personal contact data from config/UI + fix client config delivery + ADR 0008 + phase doc` | ✅ Done |
+| 14 | Domain input validation | `phase/14-domain-validation` | `checkpoint(phase-14): enforce meal weight ranges + duration ordering invariants + phase doc` | ✅ Done |
 
 ## Per-phase files
 
@@ -34,3 +35,4 @@ One file per phase. Updated as phases ship.
 - [Phase 8 — Rename `Backup/` → `OriginalSource/`](phase-8-rename-original-source.md) ✅
 - [Phase 12 — CookingTime UI theme](phase-12-ui-theme.md) ✅
 - [Phase 13 — Remove personal contact data + fix client config delivery](phase-13-remove-email-setting.md) ✅
+- [Phase 14 — Domain input validation](phase-14-domain-validation.md) ✅
