@@ -144,9 +144,9 @@ dotnet run                              # boots the Blazor app
 
 | Doc | Purpose |
 | --- | --- |
-| [`docs/plan.md`](docs/plan.md) | Locked master plan |
+| [`docs/plan.md`](docs/plan.md) | Locked master plan (Phases 0–7 — see the [status note](docs/phases/master-plan-status-note.md) for what shipped after it) |
 | [`docs/plan-codebase-review.md`](docs/plan-codebase-review.md) | Full-codebase review + OWASP analysis (Phases 14–18) — findings, evidence, dispositions |
-| [`docs/phases/`](docs/phases/README.md) | Per-phase truth (one file per phase) |
+| [`docs/phases/`](docs/phases/README.md) | Per-phase truth (one file per phase) — **the live phase index** |
 | [`docs/decisions/`](docs/decisions/README.md) | Append-only ADRs (0001–0009) |
 | [`docs/onboarding.md`](docs/onboarding.md) | 30-minute newcomer orientation |
 | [`docs/LINKEDIN.md`](docs/LINKEDIN.md) | LinkedIn / resume pitch + post copy |

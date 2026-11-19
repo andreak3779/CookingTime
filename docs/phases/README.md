@@ -2,6 +2,12 @@
 
 One file per phase. Updated as phases ship.
 
+> **Reading this index?** The master plan ([`docs/plan.md`](../plan.md)) was
+> locked after Phase 7 and describes that original upgrade. This table is the
+> **current** index — every phase, its branch, its checkpoint commit, and
+> whether it shipped. For the gap between the two, see
+> [Master plan status note](master-plan-status-note.md).
+
 | # | Phase | Branch | Checkpoint | Status |
 | --- | --- | --- | --- | --- |
 | 0 | Docs scaffold | `phase/0-docs-scaffold` | `checkpoint(phase-0): docs scaffold and project plan` | ✅ Done |
@@ -44,3 +50,8 @@ One file per phase. Updated as phases ship.
 - [Phase 16 — Build and release hardening](phase-16-build-hardening.md) ✅
 - [Phase 17 — UI robustness and cleanup](phase-17-ui-cleanup.md) ✅
 - [Phase 18 — Accepted risks and review close-out](phase-18-accepted-risks.md) ✅
+
+## Cross-cutting notes
+
+- [Master plan status note](master-plan-status-note.md) — what shipped after
+  `docs/plan.md` was locked, and where the current truth lives.
