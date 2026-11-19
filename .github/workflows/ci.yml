@@ -26,15 +26,15 @@ jobs:
       COVERAGE_THRESHOLD: '75'
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
       - name: Setup .NET
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@67a3573c9a986a3f9c594539f4ab511d57bb3ce9 # v4.3.1
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
 
       - name: Cache NuGet
-        uses: actions/cache@v4
+        uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4.2.3
         with:
           path: ~/.nuget/packages
           key: nuget-${{ runner.os }}-${{ hashFiles('**/*.csproj') }}
@@ -42,7 +42,13 @@ jobs:
             nuget-${{ runner.os }}-
 
       - name: Restore
-        run: dotnet restore
+        # Phase 16: --locked-mode makes the committed packages.lock.json
+        # binding. Without it, a restore that would change the dependency
+        # graph silently regenerates the lock file and the drift is never
+        # noticed; with it, the restore FAILS (NU1004) and the dependency
+        # change has to be made deliberately with
+        # `dotnet restore --force-evaluate` and committed as a reviewable diff.
+        run: dotnet restore --locked-mode
 
       - name: Build
         run: dotnet build -c Release --no-restore
@@ -71,9 +77,40 @@ jobs:
             "$(ls -t tests/CookingTime.IntegrationTests/TestResults/*/coverage.cobertura.xml | head -1)" \
             --threshold "$COVERAGE_THRESHOLD"
 
+      # Phase 16: the production project must have no known-vulnerable
+      # dependency. The test projects deliberately suppress NU1902/NU1903 for
+      # a transitive bUnit/AngleSharp advisory, so they are excluded here -
+      # only the code that actually ships is gated.
+      - name: Audit production dependencies
+        run: |
+          dotnet list CookingTime.csproj package --vulnerable --include-transitive
+          if [ "$(dotnet list CookingTime.csproj package --vulnerable --include-transitive \
+                   | grep -c 'has the following vulnerable package')" -gt 0 ]; then
+            echo "::error::CookingTime.csproj has vulnerable packages (see output above)"
+            exit 1
+          fi
+
+      # Phase 16: publishing the SOLUTION copies every test assembly into the
+      # publish root - xunit, Moq, bUnit, coverlet and all three *Tests.dll
+      # files. Only the app project may ship. This asserts that the
+      # documented publish command produces a clean artifact, so the
+      # container work in Phase 9 cannot regress it.
+      - name: Verify publish output contains no test assemblies
+        run: |
+          dotnet publish CookingTime.csproj -c Release -o /tmp/publish-check
+          leaked=$(find /tmp/publish-check -maxdepth 1 \
+            \( -iname '*Tests*.dll' -o -iname 'xunit.*' -o -iname 'Moq.dll' \
+               -o -iname 'Bunit.*' -o -iname 'coverlet.*' -o -iname 'FluentAssertions.dll' \) \
+            | tr '\n' ' ')
+          if [ -n "$leaked" ]; then
+            echo "::error::test assemblies leaked into the publish output: $leaked"
+            exit 1
+          fi
+          echo "publish output is clean"
+
       - name: Upload coverage report
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: coverage-cobertura
           path: |

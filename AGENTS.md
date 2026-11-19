@@ -91,6 +91,9 @@ A class in `Domain/` must never `using` from `Infrastructure/` or `Application/`
 | Trusting HTML-encoding to neutralise a URL | Phase 15 | Razor encodes `<`, `>` and `"` in attributes — it does **not** encode a *scheme*. `javascript:alert(1)` contains no encodable character and reaches the browser verbatim as a script URI. Allowlist schemes (`http`/`https`) and render the link only when the value passes. |
 | Binding configuration without validating it | Phase 15 | `services.Configure<T>` binds; it does not check. A malformed catalog entry failed at *first render* (an unhandled component exception with no clue which config line was wrong). Use `AddOptions<T>().Bind(...).ValidateOnStart()` with an `IValidateOptions<T>`. |
 | Guarding a public file with one pattern | Phase 15 | The served-config test checked only for `@` — an API key or bearer token has no `@` and passed it. Deny secret *shapes* (`sk-`, `ghp_`, `AKIA`, `-----BEGIN`, `password`, …). |
+| Publishing the solution | Phase 16 | `dotnet publish` without a project argument copies xunit, Moq, bUnit, coverlet and all three `*Tests.dll` files into the publish root. Always publish `CookingTime.csproj` — and CI now asserts the artifact is clean. |
+| Relying on a committed lock file alone | Phase 16 | A `packages.lock.json` is only binding when the restore runs in **locked mode**. Without `--locked-mode`, a restore silently regenerates it and dependency drift is invisible. |
+| Setting a property only in the root `Directory.Build.props` | Phase 16 | MSBuild stops at the **nearest** props file, and `tests/Directory.Build.props` shadows the root one — so `RestorePackagesWithLockFile` reached the app project and silently not the three test projects. |
 
 ## What you'll see in this repo
 

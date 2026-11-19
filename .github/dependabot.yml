@@ -1,0 +1,68 @@
+# filepath: .github/dependabot.yml
+#
+# Phase 16: keep the pinned dependencies current.
+#
+# Every GitHub Action in ci.yml is pinned to a full commit SHA, and every
+# PackageReference is pinned to an exact version. That is what makes the
+# build reproducible - but it also means nothing upgrades itself. Dependabot
+# opens the pull request; a human reviews it and the pin is bumped.
+#
+# This is the counterpart to the pinning, not a replacement for it: without
+# this file, SHA-pinned actions would stay frozen forever.
+
+version: 2
+
+updates:
+  # GitHub Actions - updates the SHA pins in .github/workflows/*.yml.
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    labels:
+      - dependencies
+      - ci
+    commit-message:
+      prefix: "ci"
+
+  # NuGet - updates the PackageReference versions.
+  - package-ecosystem: nuget
+    directory: /
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    labels:
+      - dependencies
+    commit-message:
+      prefix: "build"
+
+  # NuGet for the test projects, which live outside the root directory.
+  - package-ecosystem: nuget
+    directory: /tests/CookingTime.UnitTests
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    labels:
+      - dependencies
+    commit-message:
+      prefix: "build"
+
+  - package-ecosystem: nuget
+    directory: /tests/CookingTime.ComponentTests
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    labels:
+      - dependencies
+    commit-message:
+      prefix: "build"
+
+  - package-ecosystem: nuget
+    directory: /tests/CookingTime.IntegrationTests
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    labels:
+      - dependencies
+    commit-message:
+      prefix: "build"
