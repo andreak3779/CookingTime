@@ -84,6 +84,8 @@ A class in `Domain/` must never `using` from `Infrastructure/` or `Application/`
 | `using` legacy `OriginalSource/` types | future risk | Backward dependency; defeats the upgrade. |
 | Reference `.razor` files under the project root | Phase 12 | The Razor SDK compiles **every** `.razor` under the project root unless `EnableDefaultRazorComponentItems=false`. A design/reference copy becomes a real component — and a duplicate route throws `InvalidOperationException` in the browser at router-boot time, while the build stays green and every server-side test passes. See [ADR 0007](docs/decisions/0007-design-package-as-reference-artifact.md). |
 | `<RazorComponent Remove="folder\**" />` as a build guard | Phase 12 | Does **not** work against the SDK's default items — they are added *inside* the `ResolveRazorComponentInputs` target, after evaluation-time `Remove` runs. Disable the default items instead. |
+| Stray closing tag in a `.js`/`.css` file | Phase 12 | A trailing `</content>` in `wwwroot/js/theme.js` made the browser reject the **whole** script (`Unexpected token '<'`), so `window.cookingTimeTheme` was never defined and the theme toggle threw `Could not find 'cookingTimeTheme.isDark'`. The build stays green. |
+| CSS-relative asset URLs resolved against the document | Phase 12 | A CSS `url()` resolves against the **stylesheet's** URL. From `css/cookingtime.css`, `url('fonts/x.woff2')` → `/css/fonts/x.woff2` (404); the fonts live at `/fonts`, so it needs `url('../fonts/x.woff2')`. Assert that the *referencing* document resolves to a served path — asserting only that the asset is served is not enough. |
 
 ## What you'll see in this repo
 

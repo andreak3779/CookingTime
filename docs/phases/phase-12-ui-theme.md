@@ -8,6 +8,7 @@
 | **Tag** | `v0.12-ui-theme` (after merge) |
 | **Production code** | `CookingTime.csproj` (`EnableDefaultRazorComponentItems=false`), `App.razor` (Router-only), `Layout/MainLayout.razor`, `Layout/ThemeToggle.razor` (new), `Pages/{Index,CookingTime,Help,About}.razor`, `wwwroot/index.html`, `wwwroot/css/cookingtime.css` (new), `wwwroot/js/theme.js` (new), `wwwroot/icons/` (new), `wwwroot/fonts/` (new) |
 | **Tests** | New `tests/CookingTime.UnitTests/RazorRouteTableTests.cs` (4 facts), new `tests/CookingTime.ComponentTests/ThemeToggleRazorTests.cs` (6 facts), new `tests/CookingTime.IntegrationTests/ThemeAssetsTests.cs` (16 facts). **Total: 151 facts** (was 125) |
+| **Follow-up** | Two browser-only defects fixed after merge (stray `</content>` tag in `js/theme.js`; CSS-relative font URLs resolving to an unserved directory). 2 new facts added to `ThemeAssetsTests.cs`. **Total: 158 facts** |
 | **Docs** | This file; updated `docs/phases/README.md`; new [ADR 0007](../decisions/0007-design-package-as-reference-artifact.md); updated `docs/decisions/README.md`; updated `README.md`; updated `AGENTS.md` |
 | **CI** | Unchanged. `dotnet build -c Release` → 0 warnings / 0 errors; `dotnet test` → 151 facts green; coverage gate at 75% → UnitTests **80.82%** |
 
@@ -253,13 +254,16 @@ A cross-check of every `ct-*` class used in the design's markup against every
 `ct-badge`, `ct-alert`, …) are design-system extras; they are kept — they cost
 ~1 KB and make the theme reusable.
 
-### 9. Tests (26 new facts)
+### 9. Tests (28 new facts)
 
 | Suite | File | Facts | Covers |
 | --- | --- | --- | --- |
 | Unit | `RazorRouteTableTests.cs` | 4 | One component per route template; expected routes; no design components |
 | Component | `ThemeToggleRazorTests.cs` | 6 | Renders with theme classes; reads state from JS; `aria-pressed` reflects it; click calls `toggle`; accessible label |
-| Integration | `ThemeAssetsTests.cs` | 16 | Served HTML links the stylesheet/icons/theme script; no external font CDN; no legacy `.ico` reference; script is blocking in `<head>`; all 9 assets serve 200 and are non-empty; CSS declares variable `@font-face` rules and the dark palette |
+| Integration | `ThemeAssetsTests.cs` | 18 | Served HTML links the stylesheet/icons/theme script; no external font CDN; no legacy `.ico` reference; script is blocking in `<head>`; all 9 assets serve 200 and are non-empty; CSS declares variable `@font-face` rules and the dark palette; **every font `url()` in the served CSS resolves to a served path**; **the served theme script is markup-free and exposes the `cookingTimeTheme` API** |
+
+The last two facts are the Phase 12 follow-up guards described in
+[Post-merge defect fixes](#post-merge-defect-fixes-phase-12-follow-up).
 
 ### 10. Docs
 
@@ -286,18 +290,100 @@ A cross-check of every `ct-*` class used in the design's markup against every
 | bUnit rejected a hand-rolled `IJSRuntime` fake | bUnit intercepts `IJSRuntime` itself and fails unconfigured calls | Used bUnit's `JSInterop.Setup<T>(identifier).SetResult(value)` API |
 | `Setup<bool>(id, _ => value)` did not compile | The matcher overload's result type is `bool`; the value overload is `Setup<T>(id, params object[])` | `Setup<bool>(id).SetResult(value)` |
 
+## Post-merge defect fixes (Phase 12 follow-up)
+
+Two defects shipped with Phase 12 and were found by running the app in a
+browser. Neither was visible to `dotnet build` or the existing test suite —
+both only surface in the browser console.
+
+### A. `js/theme.js` shipped with a stray `</content>` tag
+
+The file ended with:
+
+```js
+})();
+</content>
+```
+
+That trailing markup made the browser fail to parse the **entire** script:
+
+```
+Uncaught SyntaxError: Unexpected token '<'
+```
+
+Because the script never executed, `window.cookingTimeTheme` was never
+defined, and the `ThemeToggle` component's interop call threw on first
+render:
+
+```
+Unhandled exception rendering component: Could not find 'cookingTimeTheme.isDark'
+('cookingTimeTheme' was undefined).
+```
+
+The theme toggle rendered as a button with no state and threw on every page
+that includes the layout.
+
+**Fix:** remove the stray tag. `wwwroot/js/theme.js` now ends at `})();`.
+
+**Guard:** `ThemeScript_IsSyntacticallyClean_AndExposesInteropApiAsync` in
+`tests/CookingTime.IntegrationTests/ThemeAssetsTests.cs` asserts the *served*
+script contains no `</` sequence and still exposes the `cookingTimeTheme`
+API surface the component depends on.
+
+### B. The `@font-face` URLs resolved to a directory that is not served
+
+The stylesheet referenced the self-hosted fonts as:
+
+```css
+src: url('fonts/bricolage-latin.woff2') format('woff2');
+```
+
+A CSS `url()` resolves **relative to the stylesheet's own URL**, not to the
+document. `css/cookingtime.css` is served from `/css/`, so `fonts/…`
+resolved to `/css/fonts/bricolage-latin.woff2` — a directory that is not
+served. Every font 404'd:
+
+```
+bricolage-latin.woff2:1  Failed to load resource: the server responded with a status of 404
+figtree-latin.woff2:1    Failed to load resource: the server responded with a status of 404
+```
+
+The fonts live in `wwwroot/fonts/`, served at `/fonts/`, so the references
+must step up one directory.
+
+**Fix:** `url('../fonts/…')`.
+
+**Guard:** `ThemeStylesheet_ResolvesEveryFontUrlAsync` extracts every
+`url(….woff2)` from the *served* CSS, resolves it the way a browser does
+against `/css/cookingtime.css`, and asserts the resolved path is served.
+This is the general form of the check — it fails for any future font path
+regression, not just these four.
+
+### Why the existing tests missed both
+
+| Layer | Result | Why |
+| --- | --- | --- |
+| `dotnet build` | green | Neither defect is a compile error. |
+| `dotnet test` (156 facts) | green | The asset tests asserted that `/fonts/x.woff2` is *served* — true. They never asserted that the stylesheet *points at* that path. A script-content assertion was missing entirely. |
+| `GET /` | HTTP 200 | The server serves the SPA shell regardless of asset correctness. |
+| Browser | throws / 404s | The only place the defects are visible. |
+
+Both new tests were verified to **fail** on the pre-fix files and **pass**
+after the fix.
+
 ## Validation
 
 ```
 dotnet build -c Release   → 0 Warning(s), 0 Error(s)   (all 4 projects)
-dotnet test  -c Release   → UnitTests 108 · ComponentTests 15 · IntegrationTests 28
-                             = 151 facts, 0 failed, 0 skipped   (was 125)
-coverage gate             → UnitTests 514/636 lines = 80.82%  (gate 75%)  PASS
+dotnet test  -c Release   → UnitTests 112 · ComponentTests 16 · IntegrationTests 30
+                             = 158 facts, 0 failed, 0 skipped   (was 151)
+coverage gate             → UnitTests 512/650 lines = 78.77%  (gate 75%)  PASS
 ```
 
 The design-regression test was verified to **fail** when the defect is
 reintroduced and **pass** when it is fixed — it is a real guard, not a
-formality.
+formality. The same verification was done for both Phase 12 follow-up
+guards (the stray-tag test and the font-URL resolution test).
 
 ## Anti-patterns to avoid
 
@@ -315,6 +401,15 @@ formality.
 - **Don't load `js/theme.js` at the end of `<body>` or with `defer`.** The
   persisted theme must be applied before first paint or dark-mode users get a
   flash of the light theme on every load.
+- **Don't let a closing XML/HTML tag leak into a `.js` or `.css` file.** One
+  stray `</content>` makes the browser reject the whole file, and the build
+  stays green.
+- **Don't reference an asset from a stylesheet as if the document were the
+  base.** A CSS `url()` resolves against the *stylesheet's* URL. From
+  `css/cookingtime.css`, the fonts at `/fonts` need `../fonts/…`.
+- **Don't assert that an asset is *served* and call that sufficient.** Assert
+  that the *referencing* document resolves to a path that is served.
+
 
 ## Out of scope
 

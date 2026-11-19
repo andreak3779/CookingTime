@@ -68,4 +68,3 @@ window.cookingTimeTheme = (function () {
         toggle: toggle
     };
 })();
-</content>
