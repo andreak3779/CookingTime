@@ -17,6 +17,15 @@ public readonly record struct CookingDuration
             throw new ArgumentOutOfRangeException(nameof(minimum), minimum, "Must be non-negative.");
         if (maximum < TimeSpan.Zero)
             throw new ArgumentOutOfRangeException(nameof(maximum), maximum, "Must be non-negative.");
+        // Phase 14: a range whose maximum is below its minimum is not a
+        // duration - it is an inverted one. The legacy code could construct
+        // it, and Format() then rendered "between of 21 hrs. and 20 mins. to
+        // 15 hrs. and 0 mins." to the user. Reject it at construction so the
+        // invalid state is unrepresentable rather than merely unlikely.
+        if (maximum < minimum)
+            throw new ArgumentException(
+                $"Maximum ({maximum}) must be greater than or equal to minimum ({minimum}).",
+                nameof(maximum));
         Minimum = minimum;
         Maximum = maximum;
     }

@@ -52,4 +52,33 @@ public sealed class WeightTests
         var b = Weight.FromPounds(3.5M);
         a.Should().Be(b);
     }
+
+    [Fact]
+    public void ComparisonOperators_OrderByPounds()
+    {
+        // Phase 14: ordering lets a meal range-check a weight directly
+        // ("weight < MinimumWeight") instead of reaching into .Pounds.
+        var light = Weight.FromPounds(1.5M);
+        var heavy = Weight.FromPounds(6M);
+        var sameAsLight = Weight.FromPounds(1.5M);
+
+        (light < heavy).Should().BeTrue();
+        (heavy > light).Should().BeTrue();
+        (light <= heavy).Should().BeTrue();
+        (heavy >= light).Should().BeTrue();
+        (light > heavy).Should().BeFalse();
+        (light < sameAsLight).Should().BeFalse();
+        (light <= sameAsLight).Should().BeTrue();
+    }
+
+    [Fact]
+    public void CompareTo_OrdersByPounds()
+    {
+        var light = Weight.FromPounds(1.5M);
+        var heavy = Weight.FromPounds(6M);
+
+        light.CompareTo(heavy).Should().BeNegative();
+        heavy.CompareTo(light).Should().BePositive();
+        light.CompareTo(Weight.FromPounds(1.5M)).Should().Be(0);
+    }
 }

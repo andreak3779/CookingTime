@@ -3,6 +3,7 @@ using CookingTime.Application.Abstractions;
 using CookingTime.Application.Common;
 using CookingTime.Application.Services;
 using CookingTime.Domain.Abstractions;
+using CookingTime.Domain.Meals;
 using CookingTime.Domain.ValueObjects;
 using Moq;
 
@@ -226,5 +227,53 @@ public sealed class CookingTimeCalculatorTests
         result.IsSuccess.Should().BeFalse();
         result.ValidationErrors.Should().ContainSingle()
             .Which.Should().Contain("outside the supported range");
+    }
+
+    [Fact]
+    public async Task CalculateAsync_RealRangeMeal_AboveMaximumWeight_ReturnsValidationError()
+    {
+        // Phase 14 regression, end-to-end through the real domain type.
+        // Before the fix RangeMeal accepted any weight, so a 500 lb pork
+        // roast returned IsSuccess=true with an inverted duration
+        // ("between of 21 hrs. and 20 mins. to 15 hrs. and 0 mins.").
+        // ChickenMeal already rejected the same input, so the two meal
+        // kinds disagreed about what a valid weight is.
+        var meal = new RangeMeal("Pork Roast", "Cook it.", 40, 45, 1M, 24M);
+        var sut = new CookingTimeCalculator(FactoryWith(meal).Object);
+
+        var result = await sut.CalculateAsync("Pork Roast", 500M, WeightUnit.Pounds);
+
+        result.IsSuccess.Should().BeFalse();
+        result.FormattedDuration.Should().BeEmpty();
+        result.ValidationErrors.Should().ContainSingle()
+            .Which.Should().Contain("outside the supported range for Pork Roast");
+    }
+
+    [Fact]
+    public async Task CalculateAsync_RealRangeMeal_BelowMinimumWeight_ReturnsValidationError()
+    {
+        // Phase 14 regression: a 0.5 lb roast produced a 20-minute cook time
+        // and was reported as a success.
+        var meal = new RangeMeal("Pork Roast", "Cook it.", 40, 45, 1M, 24M);
+        var sut = new CookingTimeCalculator(FactoryWith(meal).Object);
+
+        var result = await sut.CalculateAsync("Pork Roast", 0.5M, WeightUnit.Pounds);
+
+        result.IsSuccess.Should().BeFalse();
+        result.ValidationErrors.Should().ContainSingle()
+            .Which.Should().Contain("outside the supported range for Pork Roast");
+    }
+
+    [Fact]
+    public async Task CalculateAsync_RealRangeMeal_WithinRange_Succeeds()
+    {
+        // The fix must not break the normal path.
+        var meal = new RangeMeal("Pork Roast", "Cook it.", 40, 45, 1M, 24M);
+        var sut = new CookingTimeCalculator(FactoryWith(meal).Object);
+
+        var result = await sut.CalculateAsync("Pork Roast", 5M, WeightUnit.Pounds);
+
+        result.IsSuccess.Should().BeTrue();
+        result.FormattedDuration.Should().Contain("3 hrs. and 20 mins.");
     }
 }
