@@ -101,9 +101,19 @@
 
     private void Reset()
     {
-        _model.Meal = "";
-        _model.Weight = 1M;
-        _model.Unit = WeightUnit.Pounds;
+        // Phase 17: assign a NEW model instance rather than mutating the
+        // existing one.
+        //
+        // EditForm holds an EditContext over the model instance, and
+        // DataAnnotationsValidator caches per-field messages in its
+        // ValidationMessageStore. Mutating the model does NOT clear that
+        // store, so after a failed submit the old validation messages stayed
+        // on screen after Reset - the form looked reset but still showed
+        // "Please select a meal."
+        //
+        // Replacing the instance makes EditForm bind a fresh model, and the
+        // stale messages go with it.
+        _model = new CookingTimeViewModel();
         _result = null;
     }
 

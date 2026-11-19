@@ -12,6 +12,13 @@ namespace CookingTime.Domain.Meals;
 /// call to <see cref="Register"/> adds to that kind's list rather than
 /// replacing it.
 /// </summary>
+/// <remarks>
+/// Phase 17: <c>TryCreate</c> and <c>RegisteredKinds</c> were removed. Both
+/// were public API used only by their own tests — never by production code —
+/// so they were maintenance surface for a feature nothing called. The
+/// registry's job is to produce the catalog, and <see cref="CreateAll"/> does
+/// that.
+/// </remarks>
 public sealed class MealTypeRegistry
 {
     private readonly Dictionary<MealKind, List<Func<IMeal>>> _factories = new();
@@ -25,25 +32,6 @@ public sealed class MealTypeRegistry
             _factories[kind] = factoriesForKind;
         }
         factoriesForKind.Add(factory);
-    }
-
-    /// <summary>
-    /// Materializes the first factory registered for <paramref name="kind"/>.
-    /// Intended for kinds with a single, canonical registration (e.g. Chicken,
-    /// Turkey). Kinds with multiple registrations (e.g. Range) should use
-    /// <see cref="CreateAll"/> instead.
-    /// </summary>
-    public bool TryCreate(MealKind kind, out IMeal meal)
-    {
-        if (_factories.TryGetValue(kind, out var factoriesForKind) && factoriesForKind.Count > 0)
-        {
-            var instance = factoriesForKind[0]()
-                ?? throw new InvalidOperationException($"Factory for {kind} returned null.");
-            meal = instance;
-            return true;
-        }
-        meal = null!;
-        return false;
     }
 
     /// <summary>
@@ -65,6 +53,4 @@ public sealed class MealTypeRegistry
         }
         return result;
     }
-
-    public IReadOnlyCollection<MealKind> RegisteredKinds => _factories.Keys;
 }

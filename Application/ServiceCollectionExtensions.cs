@@ -56,6 +56,17 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<IValidateOptions<MealCatalogOptions>, MealCatalogOptionsValidator>();
         services.AddSingleton<IValidateOptions<ProductInfoOptions>, ProductInfoOptionsValidator>();
 
+        // Phase 17: logging. The calculator logs an unknown-meal request
+        // (Warning) and an out-of-range weight (Debug) - the two failures a
+        // user can trigger that are not plain validation errors. Without
+        // this, a mis-configured catalog is indistinguishable from a user
+        // mistake.
+        //
+        // The logger is optional in the calculator's constructor, so this
+        // registration is an improvement, not a requirement - the existing
+        // unit tests construct the calculator directly.
+        services.AddLogging();
+
         // Stateless; WASM has no per-request scope and the test host
         // is a single-process integration fixture. Safe as Singleton.
         services.AddSingleton<IMealFactory, MealFactory>();
