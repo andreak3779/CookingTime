@@ -16,7 +16,6 @@ public sealed class AboutRazorTests : TestContext
             o.Company = "CookingTime Inc.";
             o.CopyrightYear = "2026";
             o.ResumeUrl = "https://github.com/example/CookingTime";
-            o.Email = "dev@example.com";
         });
 
         var ctx = RenderComponent<Pages.About>();
@@ -25,7 +24,6 @@ public sealed class AboutRazorTests : TestContext
         markup.Should().Contain("CookingTime 2.0.0");
         markup.Should().Contain("CookingTime Inc.");
         markup.Should().Contain("2026");
-        markup.Should().Contain("dev@example.com");
         markup.Should().Contain("https://github.com/example/CookingTime");
     }
 
@@ -40,11 +38,20 @@ public sealed class AboutRazorTests : TestContext
             o.Company = "";
             o.CopyrightYear = "";
             o.ResumeUrl = "";
-            o.Email = "";
         });
 
         var ctx = RenderComponent<Pages.About>();
-        // Should render without throwing, and the email link should not appear.
+        // Should render without throwing, and no contact link should appear.
         ctx.Markup.Should().NotContain("mailto:");
+    }
+
+    [Fact]
+    public void ProductInfoOptions_HasNoEmailProperty()
+    {
+        // The Email option was removed in Phase 13 so the app stops publishing
+        // a mailto: address. Guard against it being reintroduced.
+        typeof(ProductInfoOptions)
+            .GetProperties()
+            .Should().NotContain(p => p.Name == "Email");
     }
 }

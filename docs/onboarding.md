@@ -123,8 +123,10 @@ here.
 ### 6. Infrastructure (`Infrastructure/`)
 
 - [Configuration/MealCatalogOptions.cs](../Infrastructure/Configuration/MealCatalogOptions.cs) +
-  [appsettings.json](../appsettings.json) — the meal catalog POCO and the
-  config that drives `Range` meals (13 entries).
+  [appsettings.json](../wwwroot/appsettings.json) — the meal catalog POCO and the
+  config that drives `Range` meals (13 entries). The file lives under `wwwroot/`
+  because the Blazor WASM SDK only bundles configuration from there — a config
+  file anywhere else never reaches the browser.
 - [Configuration/ProductInfoOptions.cs](../Infrastructure/Configuration/ProductInfoOptions.cs) —
   the "About" page data.
 - [Meals/MealFactory.cs](../Infrastructure/Meals/MealFactory.cs) — the real
@@ -229,7 +231,7 @@ coverage ≥ 75%). See [phase-7-ci.md](phases/phase-7-ci.md).
 Pick the smallest thing that exercises the layering end-to-end. A new **Range
 meal** is a good first PR because it touches every layer.
 
-1. Add an entry to [`appsettings.json`](../appsettings.json) under `Meals.Catalog`.
+1. Add an entry to [`appsettings.json`](../wwwroot/appsettings.json) under `Meals.Catalog`.
 2. (Optional) Read [Infrastructure/Meals/MealFactory.cs](../Infrastructure/Meals/MealFactory.cs)
    to confirm your entry matches the `Range` contract.
 3. Add a unit test in

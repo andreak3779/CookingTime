@@ -68,4 +68,4 @@ This phase's checkpoint was committed as `b904e8f`. The follow-up commit (`70a11
 
 **Not applied in this branch (deferred):**
 
-- Skills (`modernize-legacy-dotnet`, `phase-execution`) live outside the repo at `/home/<user>/.agents/skills/` and are not part of any phase branch — they belong to the user's agent environment, not this project's git history.
+- Skills (`modernize-legacy-dotnet`, `phase-execution`) live outside the repo, under the user's own agent environment (`~/.agents/skills/`), and are not part of any phase branch — they belong to the user's agent environment, not this project's git history.

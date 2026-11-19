@@ -7,15 +7,15 @@
 
 <PageTitle>Cooking Time Calculator</PageTitle>
 
-<h1>Cooking Time Calculator</h1>
+<h1 class="ct-page-title">Cooking Time Calculator</h1>
 
-<EditForm Model="@_model" OnValidSubmit="@HandleSubmit" FormName="cooking-time">
+<EditForm Model="@_model" OnValidSubmit="@HandleSubmit" FormName="cooking-time" class="ct-card ct-form">
     <DataAnnotationsValidator />
     <ValidationSummary />
 
-    <div>
-        <label for="meal">Cooking Type:</label>
-        <InputSelect id="meal" @bind-Value="_model.Meal" TValue="string">
+    <div class="ct-field">
+        <label class="ct-label" for="meal">Cooking Type:</label>
+        <InputSelect id="meal" class="ct-select" @bind-Value="_model.Meal" TValue="string">
             <option value="">Select a meal...</option>
             @foreach (var meal in _meals)
             {
@@ -25,32 +25,40 @@
         <ValidationMessage For="() => _model.Meal" />
     </div>
 
-    <div>
-        <label for="weight">Cooking Weight:</label>
-        <InputNumber id="weight" @bind-Value="_model.Weight" TValue="decimal" />
+    <div class="ct-field">
+        <label class="ct-label" for="weight">Cooking Weight:</label>
+        <InputNumber id="weight" class="ct-input" @bind-Value="_model.Weight" TValue="decimal" />
         <ValidationMessage For="() => _model.Weight" />
     </div>
 
-    <div>
-        <label>Units:</label>
+    <div class="ct-field">
+        <label class="ct-label">Units:</label>
         <InputRadioGroup Name="unit" @bind-Value="_model.Unit">
-            <label><InputRadio Name="unit" Value="@WeightUnit.Pounds" /> Pounds</label>
-            <label><InputRadio Name="unit" Value="@WeightUnit.Kilograms" /> Kilograms</label>
+            <div class="ct-segmented">
+                <label><InputRadio Name="unit" Value="@WeightUnit.Pounds" /> Pounds</label>
+                <label><InputRadio Name="unit" Value="@WeightUnit.Kilograms" /> Kilograms</label>
+            </div>
         </InputRadioGroup>
     </div>
 
-    <button type="submit">Calculate</button>
-    <button type="button" @onclick="Reset">Reset</button>
+    <div class="ct-actions">
+        <button type="submit" class="ct-btn">Calculate</button>
+        <button type="button" class="ct-btn ct-btn--ghost" @onclick="Reset">Reset</button>
+    </div>
 </EditForm>
 
 @if (_result is not null)
 {
-    <section>
-        <h2>Cooking Time</h2>
-        <p>@_result.FormattedDuration</p>
+    <section class="ct-results">
+        <div class="ct-result">
+            <h2>Cooking Time</h2>
+            <p class="ct-result__time">@_result.FormattedDuration</p>
+        </div>
 
-        <h3>Cooking Instructions</h3>
-        <p>@_result.Instructions</p>
+        <div class="ct-card ct-card--flat">
+            <h3>Cooking Instructions</h3>
+            <p>@_result.Instructions</p>
+        </div>
 
         @if (!_result.IsSuccess)
         {

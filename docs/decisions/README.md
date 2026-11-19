@@ -12,6 +12,8 @@ Append-only. Never overwrite an old ADR — supersede with a new one that links 
 | 0004 | [SOLID + design-patterns expectations](0004-solid-and-patterns.md) | Phase 0 | Accepted |
 | 0005 | [Test host entry-point naming (`TestHost.Main`, not `Program.Main`)](0005-test-host-entry-point-naming.md) | Phase 5 | Accepted |
 | 0006 | [Coverage tooling (coverlet.collector + 75% threshold on UnitTests)](0006-coverage-tooling.md) | Phase 7 | Accepted |
+| 0007 | [Design packages are reference artifacts; the Razor compile glob is explicit](0007-design-package-as-reference-artifact.md) | Phase 12 | Accepted |
+| 0008 | [No personal contact data in shipped artifacts](0008-no-personal-contact-data.md) | Phase 13 | Accepted |
 
 ## Format
 

@@ -1,0 +1,19 @@
+@* filepath: Layout/MainLayout.razor *@
+
+@inherits LayoutComponentBase
+
+<div class="ct-shell">
+    <nav class="ct-nav" aria-label="Main">
+        <a class="ct-brand" href="/">
+            <img src="icons/icon.svg" width="36" height="36" alt="" />
+            <span>CookingTime</span>
+        </a>
+        <NavLink class="ct-nav__link" href="/" Match="NavLinkMatch.All">Home</NavLink>
+        <NavLink class="ct-nav__link" href="/cooking-time">Cooking Time</NavLink>
+        <NavLink class="ct-nav__link" href="/help">Help</NavLink>
+        <NavLink class="ct-nav__link" href="/about">About</NavLink>
+    </nav>
+    <main class="ct-main">
+        @Body
+    </main>
+</div>

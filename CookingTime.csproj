@@ -19,6 +19,23 @@
              (renamed from Backup/ in Phase 8) and is intentionally not
              built. -->
     <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <!-- Phase 12: the Razor SDK's default glob is Content Include="**\*.razor"
+         (Sdk.Razor.CurrentVersion.props). Without this, EVERY .razor file under
+         the project root is compiled into the app - including reference
+         material such as the design package under docs/design/. Two
+         components claiming the same route throws
+         "InvalidOperationException: The following routes are ambiguous"
+         in the browser at router-boot time, while the build stays green and
+         every server-side test still passes.
+         A static <RazorComponent Remove="docs\**" /> does NOT work: the
+         default items are added inside the ResolveRazorComponentInputs
+         target, after evaluation-time Remove has already run.
+         Setting this to false makes the component set explicit - every
+         .razor in the app is named in the <RazorComponent Include="..." />
+         items below. This completes the opt-out that EnableDefaultCompileItems
+         and EnableDefaultEmbeddedResourceItems already perform for .cs/.resx.
+         See docs/decisions/0007-design-package-as-reference-artifact.md. -->
+    <EnableDefaultRazorComponentItems>false</EnableDefaultRazorComponentItems>
     <EnableDefaultEmbeddedResourceItems>false</EnableDefaultEmbeddedResourceItems>
   </PropertyGroup>
 
@@ -49,8 +66,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <!-- Phase 12: Routes.razor was removed. Routing now lives in App.razor
+         (the .NET 10 template shape); a second Router over the same assembly
+         would build a second route table. -->
     <RazorComponent Include="App.razor" />
-    <RazorComponent Include="Routes.razor" />
     <RazorComponent Include="_Imports.razor" />
     <RazorComponent Include="Layout\**\*.razor" />
     <RazorComponent Include="Pages\**\*.razor" />
