@@ -12,7 +12,11 @@ One file per phase. Updated as phases ship.
 | 5 | Integration + feature tests | `phase/5-integration-and-feature-tests` | `checkpoint(phase-5): integration + feature tests + phase doc` | ✅ Done |
 | 6 | Cleanup | `phase/6-cleanup` | `checkpoint(phase-6): remove legacy WinForms files + ADR 0005 + phase doc` | ✅ Done |
 | 7 | CI gate | `phase/7-ci` | `checkpoint(phase-7): blocking CI gate + coverage + ADR 0006 + phase doc` | ✅ Done |
+| 7b | Blazor WASM boot script fix | `phase/7b-blazor-boot-script` | `checkpoint(phase-7b): fix Blazor WASM boot script reference + regression tests + phase doc` | ✅ Done |
 | 8 | Rename `Backup/` → `OriginalSource/` | `phase/8-rename-original-source` | `checkpoint(phase-8): rename Backup/ to OriginalSource/` | ✅ Done |
+| 9 | Containerize (see [plan-kubernetes.md](../plan-kubernetes.md)) | `phase/9-containerize` | `checkpoint(phase-9): dockerfile + podman/docker build verified + phase doc` | 🔜 Planned |
+| 10 | Local Kubernetes deployment | `phase/10-k8s-deploy` | `checkpoint(phase-10): k8s manifests + deployed to local cluster + phase doc` | 🔜 Planned |
+| 11 | Expose, verify, document | `phase/11-k8s-docs` | `checkpoint(phase-11): app reachable in-cluster + README + phase doc` | 🔜 Planned |
 
 ## Per-phase files
 
@@ -24,4 +28,5 @@ One file per phase. Updated as phases ship.
 - [Phase 5 — Integration + feature tests](phase-5-integration-and-feature-tests.md) ✅
 - [Phase 6 — Cleanup](phase-6-cleanup.md) ✅
 - [Phase 7 — CI gate](phase-7-ci.md) ✅
+- [Phase 7b — Blazor WASM boot script fix](phase-7b-blazor-boot-script.md) ✅
 - [Phase 8 — Rename `Backup/` → `OriginalSource/`](phase-8-rename-original-source.md) ✅

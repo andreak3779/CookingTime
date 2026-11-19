@@ -24,7 +24,12 @@
         <a href="" class="reload">Reload</a>
         <a class="dismiss">🗙</a>
     </div>
-    <script src="_framework/blazor.web.js"></script>
+    <!-- Phase 7b: the .NET 10 Blazor WebAssembly SDK only emits
+         _framework/blazor.webassembly.js. Referencing the older
+         _framework/blazor.web.js name (Blazor Server / .NET 6
+         templates) returns 404 and the WASM payload never bootstraps.
+         See docs/phases/phase-7b-blazor-boot-script.md for context. -->
+    <script src="_framework/blazor.webassembly.js"></script>
 </body>
 
 </html>
