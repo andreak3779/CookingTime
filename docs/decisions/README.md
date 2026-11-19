@@ -14,6 +14,7 @@ Append-only. Never overwrite an old ADR — supersede with a new one that links 
 | 0006 | [Coverage tooling (coverlet.collector + 75% threshold on UnitTests)](0006-coverage-tooling.md) | Phase 7 | Accepted |
 | 0007 | [Design packages are reference artifacts; the Razor compile glob is explicit](0007-design-package-as-reference-artifact.md) | Phase 12 | Accepted |
 | 0008 | [No personal contact data in shipped artifacts](0008-no-personal-contact-data.md) | Phase 13 | Accepted |
+| 0009 | [Accepted security risks for a client-side-only application](0009-accepted-security-risks.md) | Phase 18 | Accepted |
 
 ## Format
 

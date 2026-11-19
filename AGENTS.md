@@ -10,6 +10,7 @@
 - **App type:** ASP.NET Core Blazor WebAssembly.
 - **Branch + commit model:** see [ADR 0002](docs/decisions/0002-branch-per-phase.md). One feature branch per phase; checkpoint commit at the end.
 - **Docs live in-repo:** see [ADR 0003](docs/decisions/0003-docs-as-code.md). Master plan is `docs/plan.md`; per-phase truth is `docs/phases/phase-N-*.md`; ADRs are append-only.
+- **Accepted risks are documented:** see [ADR 0009](docs/decisions/0009-accepted-security-risks.md) — no auth, no crypto, no SSRF surface, public client config, no raw-HTML sink. These are decisions, not gaps; do not "fix" them without the revisit condition.
 - **Active phase:** see `docs/phases/README.md` (status table).
 
 ## Architecture layering (must respect)
