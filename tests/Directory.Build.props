@@ -25,4 +25,19 @@
     <DefaultItemExcludes>$(DefaultItemExcludes);OriginalSource\**;tests\**\*.csproj</DefaultItemExcludes>
   </PropertyGroup>
 
+  <!-- Phase 16: reproducible restores.
+       This file SHADOWS the root Directory.Build.props (MSBuild stops at the
+       nearest one), so the root's RestorePackagesWithLockFile setting does
+       not reach the test projects. It is repeated here so each test project
+       also commits a packages.lock.json.
+
+       LockedMode is deliberately not enabled: the test projects reference
+       each other, and their dependency graph differs between the Debug and
+       Release configurations, which would make a legitimate build fail. The
+       committed lock file plus the exact PackageReference versions is the
+       guarantee that matters. -->
+  <PropertyGroup>
+    <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
+  </PropertyGroup>
+
 </Project>

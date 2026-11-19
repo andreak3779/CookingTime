@@ -6,7 +6,7 @@
 | --- | --- |
 | **What it does** | Pick a meal (Whole Chicken, Beef Roast Standing Rib — Rare, Turkey, Pork, Ham …), enter a weight and a unit (lb or kg), get a cooking-time range + instructions. |
 | **Tech** | C# · .NET 10 · **Blazor WebAssembly** · xUnit · Moq · FluentAssertions · bUnit · `WebApplicationFactory` · coverlet · GitHub Actions · Python |
-| **Tests** | **230 automated facts** across unit, Razor component, and HTTP/integration tiers — all green |
+| **Tests** | **241 automated facts** across unit, Razor component, and HTTP/integration tiers — all green |
 | **Build** | `dotnet build -c Release` — **0 warnings, 0 errors** (`<TreatWarningsAsErrors>true</TreatWarningsAsErrors>`) |
 | **Coverage** | **85.2 % line** on `CookingTime.UnitTests` production code; CI gate at **75 %** |
 | **UI** | Custom `cookingtime-theme` (magenta + navy), responsive, dark mode, self-hosted fonts — fully offline |
@@ -20,11 +20,11 @@ The **product** is a one-page form. The **engineering story** is what you'd put 
 
 1. **Inherited a ~700-line single-file WinForms app** with real bugs — a mutable value object whose setter wrote to the wrong field, an inverted kg/lb unit conversion, two `"Beef Roast Standing Rib — Rare"` entries where one of them was actually Medium, and three Range meals whose Max-minutes-per-pound was `0`.
 2. **Migrated to .NET 10 Blazor WebAssembly** across 8 disciplined phases, applying SOLID + clean architecture + Strategy/Factory/Registry/Value-Object patterns.
-3. **Wrote tests alongside the code** — 230 facts (xUnit for domain, bUnit for components, `WebApplicationFactory<Marker>` for end-to-end HTTP), all shipped with each phase.
+3. **Wrote tests alongside the code** — 241 facts (xUnit for domain, bUnit for components, `WebApplicationFactory<Marker>` for end-to-end HTTP), all shipped with each phase.
 4. **Built a blocking CI gate** — GitHub Actions runs `dotnet build` → per-project `dotnet test` with coverlet → a Python script that fails the build if `UnitTests` drops below 75 % line coverage on production code.
 5. **Recorded every meaningful decision** as an append-only ADR; onboarding for a new contributor (or AI agent) is a 30-minute read of `docs/onboarding.md`.
 
-The result is a working green build with **0 warnings, 230 tests, 85.2 % gated coverage**, and a documented, reproducible recipe for using an AI coding agent on a non-trivial .NET codebase.
+The result is a working green build with **0 warnings, 241 tests, 85.2 % gated coverage**, and a documented, reproducible recipe for using an AI coding agent on a non-trivial .NET codebase.
 
 ---
 
@@ -53,7 +53,7 @@ OriginalSource/ → historical WinForms             reference only — never ref
 
 ---
 
-## Migration journey — 14 phases, 0 rollbacks
+## Migration journey — 16 phases, 0 rollbacks
 
 | Phase | Branch | What shipped |
 | --- | --- | --- |
@@ -70,6 +70,7 @@ OriginalSource/ → historical WinForms             reference only — never ref
 | 13 | `phase/13-remove-email-setting` | Personal contact data removed from config/UI/docs, and the **client configuration delivery** bug fixed — the WASM client had been receiving *no* configuration, leaving the production meal catalog empty (see [ADR 0008](docs/decisions/0008-no-personal-contact-data.md)) |
 | 14 | `phase/14-domain-validation` | **Domain input validation.** Every config-driven meal accepted *any* weight — a 500 lb pork roast produced an inverted cook range (`21h20m` min > `15h00m` max) and the app displayed it as a *success*. `RangeMeal` now enforces its own range; `CookingDuration` and `RangeCookingStrategy` reject inverted bounds; `Weight` learned to order itself |
 | 15 | `phase/15-config-trust` | **Config trust boundary.** `appsettings.json` is served to every visitor, so it is now validated at startup (`ValidateOnStart`), the `ResumeUrl` gets an http/https scheme allowlist, the app ships a Content-Security-Policy, and the served-config guard checks secret *shapes* rather than just `@` |
+| 16 | `phase/16-build-hardening` | **Build and release hardening.** Package versions pinned exactly with committed `packages.lock.json` + `--locked-mode` restore, GitHub Actions pinned to commit SHAs, a dependency-vulnerability gate that fails CI, a check that the publish output contains **no test assemblies**, `NuGet.config` source mapping, `global.json`, and dependabot |
 
 **Branch model:** one feature branch per phase; each ends with exactly one `checkpoint(phase-N): …` commit and a tag `v0.N-<slug>`.
 

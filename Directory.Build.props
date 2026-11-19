@@ -23,4 +23,24 @@
     <DefaultItemExcludes>$(DefaultItemExcludes);OriginalSource\**;tests\**</DefaultItemExcludes>
   </PropertyGroup>
 
+  <!-- Phase 16: reproducible restores.
+       RestorePackagesWithLockFile makes `dotnet restore` write (and then
+       honour) a packages.lock.json per project. Combined with exact
+       PackageReference versions, the whole transitive dependency graph is
+       pinned: the same commit restores the same packages on every machine
+       and every CI run.
+
+       The lock files are committed. A restore that would change the graph
+       fails with NU1004 unless the lock file is regenerated deliberately
+       (`dotnet restore -force-evaluate`), which makes a dependency change
+       an explicit, reviewable diff rather than a side effect of a restore.
+
+       LockedMode is deliberately NOT set: the test projects reference each
+       other and their graph differs between Debug and Release, which would
+       otherwise make the build fail on a legitimate change. The committed
+       lock file plus exact versions is the guarantee that matters here. -->
+  <PropertyGroup>
+    <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
+  </PropertyGroup>
+
 </Project>

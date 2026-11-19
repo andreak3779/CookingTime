@@ -21,10 +21,17 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="bunit" Version="1.31.3" />
+    <!-- Phase 16: bUnit and FluentAssertions aligned with the other two test
+         projects (ComponentTests used bunit 1.40.0 / FluentAssertions 6.12.1;
+         UnitTests used FluentAssertions 6.12.1). Two versions of the same
+         library in one solution is a bug source - APIs drift, and a fix
+         verified in one project silently does not apply in the other. -->
+    <PackageReference Include="bunit" Version="1.40.0" />
     <PackageReference Include="FluentAssertions" Version="6.12.2" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="10.0.0-*" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="10.0.0-*" />
+    <!-- Phase 16: exact versions instead of the floating "10.0.0-*", which
+         resolved to the highest 10.0.x patch at restore time. -->
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="10.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="10.0.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.11.1" />
     <PackageReference Include="xunit" Version="2.9.2" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.8.2" />
