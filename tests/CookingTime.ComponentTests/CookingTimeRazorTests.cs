@@ -5,6 +5,7 @@ using CookingTime.ComponentTests.Support;
 using CookingTime.Domain.Abstractions;
 using CookingTime.Domain.ValueObjects;
 using CookingTime.Infrastructure.Configuration;
+using Microsoft.AspNetCore.Components.Web;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
 
@@ -122,5 +123,67 @@ public sealed class CookingTimeRazorTests : TestContext
         _calculator.Verify(
             c => c.CalculateAsync(It.IsAny<string>(), It.IsAny<decimal>(), It.IsAny<WeightUnit>(), It.IsAny<CancellationToken>()),
             Times.Never);
+    }
+
+    [Fact]
+    public async Task Reset_AfterFailedSubmit_ClearsValidationMessages()
+    {
+        // Phase 17 regression. Reset() used to mutate the model in place:
+        //
+        //     _model.Meal = ""; _model.Weight = 1M; ...
+        //
+        // EditForm holds an EditContext over the model instance, and
+        // DataAnnotationsValidator caches per-field messages in its
+        // ValidationMessageStore. Mutating the model does NOT clear that
+        // store, so the old messages stayed on screen after Reset - the form
+        // looked reset but still said "Please select a meal."
+        //
+        // Reset now assigns a fresh model instance, which makes EditForm
+        // bind a new model and the stale messages go with it.
+        ConfigureServices(BuildFactory(
+            new TestMeal("Chicken", "x", MealKind.Chicken, Weight.FromPounds(1), Weight.FromPounds(10))));
+
+        var ctx = RenderComponent<Pages.CookingTime>();
+
+        // Submit with an empty meal -> DataAnnotations validation fails.
+        ctx.Find("form").Submit();
+        await ctx.InvokeAsync(() => Task.CompletedTask);
+
+        ctx.FindAll(".validation-message").Should().NotBeEmpty(
+            because: "the failed submit must produce a validation message to begin with");
+
+        // Now click Reset.
+        var resetButton = ctx.FindAll("button")[1];
+        await ctx.InvokeAsync(() => resetButton.ClickAsync(new MouseEventArgs()));
+        await ctx.InvokeAsync(() => Task.CompletedTask);
+
+        ctx.FindAll(".validation-message").Should().BeEmpty(
+            because: "Reset must clear the validation state, not just the field values");
+        ctx.FindAll(".validation-errors li").Should().BeEmpty(
+            because: "Reset must clear the validation summary too");
+    }
+
+    [Fact]
+    public async Task Reset_RestoresTheDefaultModelValues()
+    {
+        ConfigureServices(BuildFactory(
+            new TestMeal("Chicken", "x", MealKind.Chicken, Weight.FromPounds(1), Weight.FromPounds(10))));
+
+        var ctx = RenderComponent<Pages.CookingTime>(parameters => parameters
+            .Add(p => p.InitialModel, new Pages.CookingTime.CookingTimeViewModel
+            {
+                Meal = "Chicken",
+                Weight = 7M,
+                Unit = WeightUnit.Kilograms,
+            }));
+
+        var resetButton = ctx.FindAll("button")[1];
+        await ctx.InvokeAsync(() => resetButton.ClickAsync(new MouseEventArgs()));
+        await ctx.InvokeAsync(() => Task.CompletedTask);
+
+        // A fresh model means the defaults are back.
+        ctx.FindAll(".validation-message").Should().BeEmpty();
+        ctx.Markup.Should().Contain("value=\"1\"",
+            because: "the weight input falls back to the default of 1");
     }
 }

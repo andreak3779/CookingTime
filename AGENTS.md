@@ -94,6 +94,8 @@ A class in `Domain/` must never `using` from `Infrastructure/` or `Application/`
 | Publishing the solution | Phase 16 | `dotnet publish` without a project argument copies xunit, Moq, bUnit, coverlet and all three `*Tests.dll` files into the publish root. Always publish `CookingTime.csproj` — and CI now asserts the artifact is clean. |
 | Relying on a committed lock file alone | Phase 16 | A `packages.lock.json` is only binding when the restore runs in **locked mode**. Without `--locked-mode`, a restore silently regenerates it and dependency drift is invisible. |
 | Setting a property only in the root `Directory.Build.props` | Phase 16 | MSBuild stops at the **nearest** props file, and `tests/Directory.Build.props` shadows the root one — so `RestorePackagesWithLockFile` reached the app project and silently not the three test projects. |
+| Mutating a bound model to "reset" a Blazor form | Phase 17 | `EditForm` holds an `EditContext` over the model instance and `DataAnnotationsValidator` caches messages in its `ValidationMessageStore`. Mutating the model does **not** clear that store, so the old messages stayed on screen after Reset. Assign a **fresh** model instance instead. |
+| Rebuilding a collection to look one item up | Phase 17 | `CreateAll().FirstOrDefault(...)` re-invoked every factory delegate on **every** calculation. If the factory already holds the collection, give it a lookup method. |
 
 ## What you'll see in this repo
 

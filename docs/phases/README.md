@@ -22,6 +22,7 @@ One file per phase. Updated as phases ship.
 | 14 | Domain input validation | `phase/14-domain-validation` | `checkpoint(phase-14): enforce meal weight ranges + duration ordering invariants + phase doc` | ✅ Done |
 | 15 | Config trust boundary | `phase/15-config-trust` | `checkpoint(phase-15): validate config at startup + allowlist ResumeUrl scheme + add CSP + harden served-config guard + phase doc` | ✅ Done |
 | 16 | Build and release hardening | `phase/16-build-hardening` | `checkpoint(phase-16): pin package versions + lock files + SHA-pinned actions + publish-leak check + dependabot + phase doc` | ✅ Done |
+| 17 | UI robustness and cleanup | `phase/17-ui-cleanup` | `checkpoint(phase-17): fix Reset stale validation state + name-keyed meal lookup + add logging + remove dead API + phase doc` | ✅ Done |
 
 ## Per-phase files
 
@@ -40,3 +41,4 @@ One file per phase. Updated as phases ship.
 - [Phase 14 — Domain input validation](phase-14-domain-validation.md) ✅
 - [Phase 15 — Config trust boundary](phase-15-config-trust.md) ✅
 - [Phase 16 — Build and release hardening](phase-16-build-hardening.md) ✅
+- [Phase 17 — UI robustness and cleanup](phase-17-ui-cleanup.md) ✅

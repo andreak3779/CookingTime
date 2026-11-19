@@ -15,6 +15,16 @@ public sealed class CookingTimeCalculatorTests
     {
         var mock = new Mock<IMealFactory>();
         mock.Setup(f => f.CreateAll()).Returns(meals);
+        // Phase 17: the calculator asks the factory for a meal by name
+        // instead of rebuilding the catalog. Mirror the real factory's
+        // case-insensitive name index so the mock behaves like the real thing.
+        mock.Setup(f => f.TryGetByName(It.IsAny<string>(), out It.Ref<IMeal?>.IsAny))
+            .Returns((string name, out IMeal? meal) =>
+            {
+                meal = meals.FirstOrDefault(m =>
+                    string.Equals(m.Name, name?.Trim(), StringComparison.OrdinalIgnoreCase));
+                return meal is not null;
+            });
         return mock;
     }
 
@@ -142,20 +152,29 @@ public sealed class CookingTimeCalculatorTests
     }
 
     [Fact]
-    public async Task CalculateAsync_VerifiesCreateAllCalledExactlyOnce()
+    public async Task CalculateAsync_DoesNotRebuildTheCatalog_PerCalculation()
     {
+        // Phase 17: the calculator used to call CreateAll() - which
+        // re-invoked every factory delegate - on every single calculation.
+        // It now asks the factory for the meal by name, so the catalog is
+        // not rebuilt per calculation.
         var factory = new Mock<IMealFactory>();
-        factory.Setup(f => f.CreateAll())
-               .Returns(new IMeal[]
-               {
-                   new TestMeal("Chicken", "x", MealKind.Chicken,
-                                Weight.FromPounds(1), Weight.FromPounds(10))
-               });
+        var chicken = new TestMeal("Chicken", "x", MealKind.Chicken,
+            Weight.FromPounds(1), Weight.FromPounds(10));
+        factory.Setup(f => f.CreateAll()).Returns(new IMeal[] { chicken });
+        factory.Setup(f => f.TryGetByName(It.IsAny<string>(), out It.Ref<IMeal?>.IsAny))
+            .Returns((string name, out IMeal? meal) =>
+            {
+                meal = chicken;
+                return true;
+            });
 
         var sut = new CookingTimeCalculator(factory.Object);
         await sut.CalculateAsync("Chicken", 2M, WeightUnit.Pounds);
+        await sut.CalculateAsync("Chicken", 3M, WeightUnit.Pounds);
 
-        factory.Verify(f => f.CreateAll(), Times.Once);
+        factory.Verify(f => f.CreateAll(), Times.Never);
+        factory.Verify(f => f.TryGetByName("Chicken", out It.Ref<IMeal?>.IsAny), Times.Exactly(2));
     }
 
     [Fact]
