@@ -54,4 +54,34 @@ public sealed class AboutRazorTests : TestContext
             .GetProperties()
             .Should().NotContain(p => p.Name == "Email");
     }
+
+    [Theory]
+    [InlineData("javascript:alert(1)")]
+    [InlineData("JavaScript:alert(document.cookie)")]
+    [InlineData("data:text/html,<script>alert(1)</script>")]
+    [InlineData("vbscript:msgbox(1)")]
+    public void DoesNotRenderResumeLink_ForUnsafeUrlScheme(string unsafeUrl)
+    {
+        // Phase 15: Razor HTML-encodes attribute values but does not
+        // neutralise a scheme, so "javascript:..." reaches the browser as a
+        // script URI. The link must not be rendered at all.
+        Services.Configure<ProductInfoOptions>(o => o.ResumeUrl = unsafeUrl);
+
+        var ctx = RenderComponent<Pages.About>();
+
+        ctx.Markup.Should().NotContain("href=",
+            because: "an unsafe ResumeUrl must not reach an href attribute");
+        ctx.Markup.Should().NotContain("Resume</a>");
+    }
+
+    [Fact]
+    public void RendersResumeLink_ForHttpsUrl()
+    {
+        Services.Configure<ProductInfoOptions>(o =>
+            o.ResumeUrl = "https://github.com/example/CookingTime");
+
+        var ctx = RenderComponent<Pages.About>();
+
+        ctx.Markup.Should().Contain("href=\"https://github.com/example/CookingTime\"");
+    }
 }

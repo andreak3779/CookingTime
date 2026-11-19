@@ -4,6 +4,34 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Phase 15: Content-Security-Policy as defence in depth.
+         Two directives are NOT optional for this app:
+           - script-src 'wasm-unsafe-eval' - the .NET WASM runtime instantiates
+             the Mono runtime via WebAssembly.compile; without it the app
+             refuses to boot.
+           - style-src 'unsafe-inline' - Pages/Index.razor uses inline
+             style="..." attributes.
+         'unsafe-inline' is deliberately scoped to style-src only; script-src
+         gets no inline allowance. A meta tag is used rather than a server
+         header because this app is served as static files (see
+         docs/plan-kubernetes.md for the nginx layer that can also send it).
+         Add 'self' to connect-src so the WASM payload can fetch its own
+         framework files.
+
+         NOTE: the clickjacking directive is deliberately NOT here. A
+         meta-delivered policy ignores it (the browser logs a warning), so it
+         must come from an HTTP header instead - add it to the nginx layer
+         when the container work lands. -->
+    <meta http-equiv="Content-Security-Policy"
+          content="default-src 'self';
+                   script-src 'self' 'wasm-unsafe-eval';
+                   style-src 'self' 'unsafe-inline';
+                   img-src 'self' data:;
+                   font-src 'self';
+                   connect-src 'self';
+                   object-src 'none';
+                   base-uri 'self';
+                   form-action 'self'" />
     <title>CookingTime</title>
     <base href="/" />
     <!-- Phase 12: icon set from the cookingtime-theme design package.

@@ -92,6 +92,60 @@ public sealed class ClientConfigurationDeliveryTests
             because: "the served configuration file must not contain any email address");
     }
 
+    /// <summary>
+    /// Phase 15: the previous guard only looked for <c>@</c>, so a secret
+    /// without an email-shaped payload — an API key, a bearer token, a
+    /// private-key header — would have passed it. This widens the denylist to
+    /// the shapes that actually matter in a *publicly served* file.
+    /// </summary>
+    [Theory]
+    [InlineData("api_key", "api_key")]
+    [InlineData("apiKey", "apikey")]
+    [InlineData("apikey", "apikey")]
+    [InlineData("password", "password")]
+    [InlineData("passwd", "passwd")]
+    [InlineData("secret", "secret")]
+    [InlineData("bearer", "bearer")]
+    [InlineData("-----BEGIN", "-----begin")]
+    [InlineData("sk-", "sk-")]
+    [InlineData("ghp_", "ghp_")]
+    [InlineData("AKIA", "akia")]
+    [InlineData("Authorization", "authorization")]
+    [InlineData("client_secret", "client_secret")]
+    public void Appsettings_ContainsNoSecretShapedValues(string pattern, string needle)
+    {
+        // Arrange
+        var root = RepositoryRoot();
+        var path = Path.Combine(root, "wwwroot", "appsettings.json");
+        var content = File.ReadAllText(path);
+
+        // Act / Assert
+        content.ToLowerInvariant().Should().NotContain(needle,
+            because: $"'{pattern}' is secret-shaped; the file is served to every visitor now that " +
+                     "it lives in wwwroot/ and must never contain secrets - " +
+                     "see docs/decisions/0008-no-personal-contact-data.md");
+    }
+
+    [Fact]
+    public void Appsettings_IsStrictJson()
+    {
+        // Arrange
+        var root = RepositoryRoot();
+        var path = Path.Combine(root, "wwwroot", "appsettings.json");
+        var content = File.ReadAllText(path);
+
+        // Act / Assert
+        content.Should().StartWith("{",
+            because: "Phase 15: the file carried a leading '// filepath:' comment, which the .NET " +
+                     "JSON provider tolerates but which is not valid JSON - it hides the file from " +
+                     "any strict parser and from schema validation");
+        content.TrimEnd().Should().EndWith("}",
+            because: "the served configuration file must be a complete JSON document");
+
+        var act = () => System.Text.Json.JsonDocument.Parse(content);
+        act.Should().NotThrow("the served configuration file must be valid strict JSON");
+    }
+
     [Fact]
     public void ProductionProject_HasNoRootLevelConfigCopy()
     {

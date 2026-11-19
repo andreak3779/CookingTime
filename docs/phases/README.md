@@ -20,6 +20,7 @@ One file per phase. Updated as phases ship.
 | 12 | CookingTime UI theme (design implementation) | `phase/12-ui-theme` | `checkpoint(phase-12): apply cookingtime-theme design + dark-mode toggle + phase doc` | ✅ Done |
 | 13 | Remove personal contact data + fix client config delivery | `phase/13-remove-email-setting` | `checkpoint(phase-13): remove personal contact data from config/UI + fix client config delivery + ADR 0008 + phase doc` | ✅ Done |
 | 14 | Domain input validation | `phase/14-domain-validation` | `checkpoint(phase-14): enforce meal weight ranges + duration ordering invariants + phase doc` | ✅ Done |
+| 15 | Config trust boundary | `phase/15-config-trust` | `checkpoint(phase-15): validate config at startup + allowlist ResumeUrl scheme + add CSP + harden served-config guard + phase doc` | ✅ Done |
 
 ## Per-phase files
 
@@ -36,3 +37,4 @@ One file per phase. Updated as phases ship.
 - [Phase 12 — CookingTime UI theme](phase-12-ui-theme.md) ✅
 - [Phase 13 — Remove personal contact data + fix client config delivery](phase-13-remove-email-setting.md) ✅
 - [Phase 14 — Domain input validation](phase-14-domain-validation.md) ✅
+- [Phase 15 — Config trust boundary](phase-15-config-trust.md) ✅
