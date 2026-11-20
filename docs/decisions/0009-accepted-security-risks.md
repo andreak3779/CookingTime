@@ -91,6 +91,13 @@ sanitisation decision.
 
 ### 6. `OriginalSource/` retains a third party's contact address (OWASP A02)
 
+> **Resolved in Phase 19.** This risk is **no longer accepted**. The contact
+> strings in `OriginalSource/` are redacted and the binary `.suo` artifact that
+> carried a Windows user-profile path is deleted — see
+> [ADR 0010](0010-redact-pii-in-original-source.md), which supersedes this
+> section and ADR 0008 decision 7 in part. The text below is kept as the
+> historical record of the finding.
+
 `OriginalSource/frmAbout.cs` contains a `mailto:` address that is neither
 the owner's nor the application's. ADR 0008 decision 7 requires that folder
 to stay verbatim; acting on it means deleting the folder wholesale under a

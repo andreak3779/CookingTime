@@ -155,4 +155,7 @@ dotnet test  -c Release   →  UnitTests 112, ComponentTests 16, IntegrationTest
 - **Third-party address** in `OriginalSource/frmAbout.cs` — left verbatim per
   the Phase 8 rule; acting on it means deleting the folder wholesale under a new
   ADR.
+  **Superseded by [ADR 0010](../decisions/0010-redact-pii-in-original-source.md)
+  (Phase 19):** the contact strings are now redacted in place and the binary
+  `.suo` artifact is deleted.
 - **Git identity on existing commits** — only future commits are affected.
