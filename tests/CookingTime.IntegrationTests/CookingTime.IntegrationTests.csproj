@@ -26,7 +26,7 @@
          UnitTests used FluentAssertions 6.12.1). Two versions of the same
          library in one solution is a bug source - APIs drift, and a fix
          verified in one project silently does not apply in the other. -->
-    <PackageReference Include="bunit" Version="1.40.0" />
+    <PackageReference Include="bunit" Version="2.15.2" />
     <PackageReference Include="FluentAssertions" Version="6.12.2" />
     <!-- Phase 16: exact versions instead of the floating "10.0.0-*", which
          resolved to the highest 10.0.x patch at restore time. -->
