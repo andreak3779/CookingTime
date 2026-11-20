@@ -21,6 +21,9 @@
 #     coverlet 10, or FluentAssertions 8, which changed its licence terms),
 #     not something to merge from a bot. Raise it by hand when wanted.
 #   - At most 3 open pull requests per ecosystem.
+#   - A 7-day cooldown: a version is not proposed until it has been published for a week. A
+#     brand-new release can be yanked or found to be compromised; waiting gives the ecosystem
+#     time to notice. Security updates are not delayed by it.
 
 version: 2
 
@@ -31,6 +34,8 @@ updates:
     schedule:
       interval: weekly
     open-pull-requests-limit: 3
+    cooldown:
+      default-days: 7
     groups:
       actions:
         patterns:
@@ -54,6 +59,8 @@ updates:
     schedule:
       interval: weekly
     open-pull-requests-limit: 3
+    cooldown:
+      default-days: 7
     groups:
       nuget-minor-patch:
         patterns:
