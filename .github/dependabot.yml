@@ -9,6 +9,18 @@
 #
 # This is the counterpart to the pinning, not a replacement for it: without
 # this file, SHA-pinned actions would stay frozen forever.
+#
+# Noise control (added after the repository was republished and Dependabot
+# opened 21 pull requests at once, most of them duplicates):
+#   - One NuGet block covers the root project and all three test projects
+#     (`directories`), so a package used in several projects is ONE pull
+#     request, not one per project.
+#   - Minor and patch updates are grouped into a single pull request.
+#   - Major NuGet updates are ignored. With exact pins and committed lock
+#     files, a major bump is a deliberate migration (for example bUnit 2,
+#     coverlet 10, or FluentAssertions 8, which changed its licence terms),
+#     not something to merge from a bot. Raise it by hand when wanted.
+#   - At most 3 open pull requests per ecosystem.
 
 version: 2
 
@@ -18,50 +30,41 @@ updates:
     directory: /
     schedule:
       interval: weekly
-    open-pull-requests-limit: 5
+    open-pull-requests-limit: 3
+    groups:
+      actions:
+        patterns:
+          - "*"
+        update-types:
+          - minor
+          - patch
     labels:
       - dependencies
       - ci
     commit-message:
       prefix: "ci"
 
-  # NuGet - updates the PackageReference versions.
+  # NuGet - the root project and the three test projects in one block.
   - package-ecosystem: nuget
-    directory: /
+    directories:
+      - /
+      - /tests/CookingTime.UnitTests
+      - /tests/CookingTime.ComponentTests
+      - /tests/CookingTime.IntegrationTests
     schedule:
       interval: weekly
-    open-pull-requests-limit: 5
-    labels:
-      - dependencies
-    commit-message:
-      prefix: "build"
-
-  # NuGet for the test projects, which live outside the root directory.
-  - package-ecosystem: nuget
-    directory: /tests/CookingTime.UnitTests
-    schedule:
-      interval: weekly
-    open-pull-requests-limit: 5
-    labels:
-      - dependencies
-    commit-message:
-      prefix: "build"
-
-  - package-ecosystem: nuget
-    directory: /tests/CookingTime.ComponentTests
-    schedule:
-      interval: weekly
-    open-pull-requests-limit: 5
-    labels:
-      - dependencies
-    commit-message:
-      prefix: "build"
-
-  - package-ecosystem: nuget
-    directory: /tests/CookingTime.IntegrationTests
-    schedule:
-      interval: weekly
-    open-pull-requests-limit: 5
+    open-pull-requests-limit: 3
+    groups:
+      nuget-minor-patch:
+        patterns:
+          - "*"
+        update-types:
+          - minor
+          - patch
+    ignore:
+      - dependency-name: "*"
+        update-types:
+          - version-update:semver-major
     labels:
       - dependencies
     commit-message:
