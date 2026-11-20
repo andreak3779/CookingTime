@@ -17,7 +17,7 @@ CI gate with line-coverage enforcement.
 
 ## Headline for the LinkedIn card
 
-**CookingTime — .NET Framework → .NET 10 · Clean architecture · 0-warning build · 250 automated tests · 86 % coverage, gated at 75 %**
+**CookingTime — .NET Framework → .NET 10 · Clean architecture · 0-warning build · 256 automated tests · 86 % coverage, gated at 75 %**
 
 ---
 
@@ -29,7 +29,7 @@ CI gate with line-coverage enforcement.
 | **Source** | In-repo (`github.com/andreak3779/CookingTime`), public |
 | **Stack** | C# · .NET 10 · Blazor WebAssembly · xUnit · bUnit · Moq · FluentAssertions · coverlet · GitHub Actions · Python |
 | **Legacy** | .NET Framework 2.0 WinForms (VS 2005 era, `msbuild` XML 2003 schema, `OutputType=WinExe`) |
-| **Tests** | 250 facts (193 unit, 23 component, 34 integration) — all green |
+| **Tests** | 256 facts (199 unit, 23 component, 34 integration) — all green |
 | **Coverage** | 86.0 % line on `CookingTime.UnitTests` production code; CI gate at 75 % |
 | **Build** | `dotnet build -c Release` — **0 warnings**, 0 errors (`<TreatWarningsAsErrors>true</TreatWarningsAsErrors>`) |
 | **AI toolchain** | AI coding agent used end-to-end under disciplined branch / checkpoint / ADR workflow |
@@ -97,7 +97,7 @@ Three test projects, one source of truth for naming (`<Method>_<Scenario>_<Expec
 | `CookingTime.ComponentTests` | Razor components rendered with real DI | + bUnit 1.31 |
 | `CookingTime.IntegrationTests` | End-to-end via `WebApplicationFactory<Marker>` + in-process TestServer | + `Microsoft.AspNetCore.Mvc.Testing` |
 
-Current total: **250 facts, 0 failed, 0 skipped** (118 at the end of Phase 7; later phases added the rest).
+Current total: **256 facts, 0 failed, 0 skipped** (118 at the end of Phase 7; later phases added the rest).
 
 Highlights:
 
@@ -201,7 +201,7 @@ dotnet run                              # boots the Blazor app
 
 ## Suggested resume bullet
 
-> Migrated a .NET Framework WinForms calculator to ASP.NET Core Blazor WebAssembly on .NET 10 across 17 disciplined phases: clean architecture (Domain / Application / Infrastructure / UI), SOLID + Strategy + Factory + Value-Object patterns, immutable `readonly record struct` value objects fixing two legacy VO bugs, 250 xUnit / bUnit / `WebApplicationFactory` tests shipping with code, a GitHub Actions CI gate with coverlet + Python coverage enforcement (≥ 75 % on production code), and full docs-as-code (master plan, append-only ADRs, per-phase docs, agent standing-rules). Followed by a security and build-hardening pass: config validated at startup, a Content-Security-Policy, pinned and locked dependencies, and a CI vulnerability gate. Result: 0-warning build, 86 % line coverage.
+> Migrated a .NET Framework WinForms calculator to ASP.NET Core Blazor WebAssembly on .NET 10 across 17 disciplined phases: clean architecture (Domain / Application / Infrastructure / UI), SOLID + Strategy + Factory + Value-Object patterns, immutable `readonly record struct` value objects fixing two legacy VO bugs, 256 xUnit / bUnit / `WebApplicationFactory` tests shipping with code, a GitHub Actions CI gate with coverlet + Python coverage enforcement (≥ 75 % on production code), and full docs-as-code (master plan, append-only ADRs, per-phase docs, agent standing-rules). Followed by a security and build-hardening pass: config validated at startup, a Content-Security-Policy, pinned and locked dependencies, and a CI vulnerability gate. Result: 0-warning build, 86 % line coverage.
 
 ---
 
@@ -213,7 +213,7 @@ dotnet run                              # boots the Blazor app
 >
 > The new version is Blazor WebAssembly on .NET 10, split into Domain / Application / Infrastructure / UI with a single composition root, immutable `readonly record struct` value objects, `Strategy + Factory + Registry` for meal kinds, and a result-with-validation DTO that never throws for expected input problems.
 >
-> 250 automated tests (xUnit + Moq + FluentAssertions for the domain, bUnit for Razor, `WebApplicationFactory<Marker>` for end-to-end). A GitHub Actions gate that blocks PRs below 75 % line coverage on production code. Nine append-only ADRs and a `docs/onboarding.md` that lets a new contributor (or a future AI agent) be productive in 30 minutes.
+> 256 automated tests (xUnit + Moq + FluentAssertions for the domain, bUnit for Razor, `WebApplicationFactory<Marker>` for end-to-end). A GitHub Actions gate that blocks PRs below 75 % line coverage on production code. Nine append-only ADRs and a `docs/onboarding.md` that lets a new contributor (or a future AI agent) be productive in 30 minutes.
 >
 > Bonus: the migration was driven end-to-end by an AI coding agent working inside a `branch → checkpoint → ADR → AGENTS.md` loop. The plan, the constraints, and the per-phase deliverables all live in the repo — not in the agent's hidden memory. That's what made it reproducible instead of magic.
 >
