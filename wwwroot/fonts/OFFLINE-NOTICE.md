@@ -2,7 +2,7 @@
 
 Phase 12 replaced the theme's Google Fonts `@import` with locally served
 `woff2` files so the app renders its intended typography with **no external
-network dependency** (the app ships as a container and may be used offline).
+network dependency** (the app is static files and may be used offline; a container image is planned, not built).
 
 Both families are licensed under the **SIL Open Font License 1.1**, which
 permits redistribution and self-hosting.

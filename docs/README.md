@@ -1,20 +1,27 @@
 # CookingTime — Documentation
 
-This directory is the canonical home for project documentation. Code lives in the repo root (and will move into `src/` in Phase 1); tests live under `tests/`; design docs live here.
+This directory is the canonical home for project documentation. Code lives in the repo root; tests live under `tests/`; design docs live here.
+
+**New here?** Follow the [`WALKTHROUGH.md`](WALKTHROUGH.md) (about 40 minutes, hands on), or read [`architecture.md`](architecture.md) for the structure and diagrams, then [`HOW_THIS_WAS_BUILT.md`](HOW_THIS_WAS_BUILT.md) for the workflow, then the [decision records](decisions/README.md).
 
 ## Contents
 
 | File / Folder | What's inside |
 | --- | --- |
+| [`WALKTHROUGH.md`](WALKTHROUGH.md) | A hands-on tour: build, test, use the app, trace a request, break the guards on purpose, read the decision trail. |
+| [`architecture.md`](architecture.md) | System context, layers, domain model, request flow, config trust boundary, test tiers and CI gate, as Mermaid diagrams. |
+| [`HOW_THIS_WAS_BUILT.md`](HOW_THIS_WAS_BUILT.md) | The AI-assisted workflow, the tools, and the defects that got through and how they were caught. |
+| [`quality-attributes.md`](quality-attributes.md) | What the project optimises for: correctness, security, supply chain, testing, privacy, accessibility. |
+| [`SCOPE-AND-LIMITS.md`](SCOPE-AND-LIMITS.md) | What it is sized for, what it does not do, and where its checks stop. |
 | [`plan.md`](plan.md) | Master upgrade plan. Locked after Phase 0. The single source of truth for *what we're doing*. |
-| [`phases/`](phases/README.md) | One file per phase (Phase 0 → Phase 7). Tracks what each phase shipped and how to verify it. Updated every phase. |
+| [`phases/`](phases/README.md) | One file per phase (Phase 0 → Phase 20). Tracks what each phase shipped and how to verify it. Updated every phase. |
 | [`decisions/`](decisions/README.md) | Architecture Decision Records (ADRs). One file per material decision. Append-only. |
 | [`onboarding.md`](onboarding.md) | New-developer guide. Reading order, code tour, conventions, anti-patterns, and "how to make your first change." |
 | [`LINKEDIN.md`](LINKEDIN.md) | LinkedIn pitch + featured-card copy + resume bullet + post copy with hashtags. |
 | [`ELEVATOR-PITCH.md`](ELEVATOR-PITCH.md) | Three ready-to-deliver pitches (recruiter / senior engineer / architect) + follow-up Q&A. |
 | [`COVER-LETTER.md`](COVER-LETTER.md) | Four cover-letter paragraphs calibrated to role type (senior / AI-first / modernization / mid-level) + closing CTA + anti-patterns. |
 | [`SLIDES.md`](SLIDES.md) | 18-slide deck outline for conference talks / lunch-and-learns / portfolio reviews, with speaker script + props. |
-| [`DIAGRAMS.md`](DIAGRAMS.md) | Five Mermaid diagrams (architecture layering, domain class graph, request-flow sequence, branch + checkpoint gitGraph, CI pipeline, AI-assisted workflow) with ASCII fallbacks. |
+| [`DIAGRAMS.md`](DIAGRAMS.md) | Six Mermaid diagrams (architecture layering, domain class graph, request-flow sequence, branch + checkpoint gitGraph, CI pipeline, AI-assisted workflow) with ASCII fallbacks. |
 | [`diagrams/`](diagrams/) | Pre-rendered PNGs of the six diagrams above — sized for LinkedIn articles and slide decks. |
 
 ## Workflow
