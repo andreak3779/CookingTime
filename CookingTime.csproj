@@ -75,8 +75,8 @@
          patch would be picked up silently. packages.lock.json (committed,
          enabled by RestorePackagesWithLockFile in Directory.Build.props)
          pins the whole transitive graph on top of this. -->
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="10.0.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="10.0.0" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="10.0.15" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="10.0.15" PrivateAssets="all" />
   </ItemGroup>
 
   <!-- Make the generated Program type visible to the test assembly so
