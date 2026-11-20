@@ -10,7 +10,7 @@
 
 ## 0. Background you should commit to memory (so you can answer *anything*)
 
-CookingTime is a personal project that takes a 20-year-old .NET Framework 2.0 WinForms
+CookingTime is a personal project that takes a legacy .NET Framework 2.0 WinForms
 calculator and rebuilds it as a .NET 10 Blazor WebAssembly application on ASP.NET Core.
 
 | Stat | Number |
@@ -35,7 +35,7 @@ calculator and rebuilds it as a .NET 10 Blazor WebAssembly application on ASP.NE
 
 ## Pitch 1 — Recruiter screen (45–60 s)
 
-> "I've spent the last few months modernizing a 20-year-old WinForms cooking-time
+> "I've spent the last few months modernizing a legacy WinForms cooking-time
 > calculator I had lying around. The product itself is one form, but the engineering
 > story was interesting: I migrated a ~700-line single file into a layered
 > .NET 10 Blazor WebAssembly application across eight disciplined phases — clean
@@ -109,7 +109,7 @@ care about*. No buzzwords; concrete numbers; ready for follow-up technical quest
 
 > "CookingTime isn't a product story, it's a workflow story. I wanted a non-trivial
 > exercise in **using an AI coding agent on a real .NET codebase without producing
-> tech debt**. So I picked a 20-year-old WinForms app I had — ~700 lines in one
+> tech debt**. So I picked a legacy WinForms app I had — ~700 lines in one
 > file, six real bugs still in production code — and laid down a contract with myself
 > before I started.
 >

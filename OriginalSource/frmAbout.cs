@@ -34,7 +34,7 @@ namespace CookingTime
 			//
       lblAboutLine1.Text = Application.ProductName + " " + Application.ProductVersion.ToString();
       lblAboutLine2.Text = Application.CompanyName;
-      lblAboutLine3.Text = "2005";
+      lblAboutLine3.Text = "";
 
       linkAboutResume.Links.Add(0,linkAboutResume.Text.Length,
         "");

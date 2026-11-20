@@ -46,7 +46,7 @@ or emptied.
    is what makes it reference material — and loses only the contact data.
    This replaces ADR 0008 decision 7's blanket verbatim rule with a narrower
    one: **`OriginalSource/` stays verbatim except for personal data.**
-2. **Delete `OriginalSource/CookingTime.suo`.** It is a Visual Studio 2005
+2. **Delete `OriginalSource/CookingTime.suo`.** It is a Visual Studio
    solution-user file: machine-specific IDE state, not source. The
    repository's own `.gitignore` already excludes `*.suo` by rule (the file was
    committed before the rule existed, and a tracked file is unaffected by an
@@ -85,7 +85,7 @@ or emptied.
 
 **Harder**
 
-- `OriginalSource/` is no longer byte-for-byte identical to the 2005 source.
+- `OriginalSource/` is no longer byte-for-byte identical to the original source.
   That is the cost of the owner's instruction, and it is scoped as narrowly as
   possible: contact data only.
 - The guard scans the working tree, so it reads files a contributor may not

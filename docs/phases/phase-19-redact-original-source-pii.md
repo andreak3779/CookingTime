@@ -73,7 +73,7 @@ reference material.
 
 ### 4. Why `CookingTime.suo` is deleted rather than edited
 
-It is a **Visual Studio 2005 solution-user file**: machine-specific IDE state,
+It is a **Visual Studio solution-user file**: machine-specific IDE state,
 not source. Concretely:
 
 - The repository's own `.gitignore` already excludes `*.suo` **by rule**
@@ -83,7 +83,7 @@ not source. Concretely:
   matches.
 - No project references it; it is not compiled (`EnableDefaultCompileItems=false`,
   `DefaultItemExcludes`) and not served (it lives outside `wwwroot/`).
-- It is **regenerable**: VS 2005 recreates it when the solution is opened.
+- It is **regenerable**: Visual Studio recreates it when the solution is opened.
 
 Editing a binary IDE artifact in place would leave a corrupt file that no tool
 can read; deleting it is both cleaner and honest about what it is.

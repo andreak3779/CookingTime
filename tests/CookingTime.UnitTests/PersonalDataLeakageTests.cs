@@ -273,7 +273,7 @@ public sealed class PersonalDataLeakageTests
 
         // Act / Assert
         File.Exists(suoPath).Should().BeFalse(
-            because: "CookingTime.suo is a Visual Studio 2005 solution-user file: it is " +
+            because: "CookingTime.suo is a Visual Studio solution-user file: it is " +
                      "excluded by the repository's own *.suo ignore rule, no project " +
                      "references it, and it carried a Windows user-profile path. It is " +
                      "regenerable IDE state, not source - see " +
