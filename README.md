@@ -162,6 +162,7 @@ dotnet run                              # boots the Blazor app
 | [`docs/COVER-LETTER.md`](docs/COVER-LETTER.md) | Cover-letter paragraphs tailored to role type |
 | [`docs/DIAGRAMS.md`](docs/DIAGRAMS.md) | Mermaid sources + rendered PNGs (architecture, domain, sequence, branches, AI workflow, CI) |
 | [`AGENTS.md`](AGENTS.md) | Standing rules for any AI agent (or human) working in this repo |
+| [`SECURITY.md`](SECURITY.md) | How to report a vulnerability privately, what is in scope, and the risks accepted by design |
 | [`README.md`](README.md) | This file |
 
 ---
