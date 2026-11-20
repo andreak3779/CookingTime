@@ -76,6 +76,13 @@
          enabled by RestorePackagesWithLockFile in Directory.Build.props)
          pins the whole transitive graph on top of this. -->
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="10.0.15" />
+    <!-- The SDK adds this package on its own, at the version of the runtime it
+         ships with, so the lock file recorded whatever SDK ran the restore.
+         Dependabot's SDK is older than CI's, so its lock files failed the
+         locked restore (NU1004), and a new .NET patch on CI would do the same.
+         Pinning it here makes the lock independent of the SDK patch level, and
+         Dependabot bumps it like any other package. -->
+    <PackageReference Include="Microsoft.NET.ILLink.Tasks" Version="10.0.15" PrivateAssets="all" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="10.0.15" PrivateAssets="all" />
   </ItemGroup>
 
