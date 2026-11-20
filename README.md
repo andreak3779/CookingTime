@@ -16,6 +16,8 @@
 
 ## Why this repo is interesting
 
+**Reviewing this project?** Start with the [architecture](docs/architecture.md) (diagrams), [how it was built](docs/HOW_THIS_WAS_BUILT.md), the [decision records](docs/decisions/README.md), then [what it does not do](docs/SCOPE-AND-LIMITS.md).
+
 The **product** is a one-page form. The **engineering story** is what you'd put on a resume.
 
 1. **Inherited a ~700-line single-file WinForms app** with real bugs — a mutable value object whose setter wrote to the wrong field, an inverted kg/lb unit conversion, two `"Beef Roast Standing Rib — Rare"` entries where one of them was actually Medium, and three Range meals whose Max-minutes-per-pound was `0`.
@@ -151,6 +153,10 @@ dotnet run                              # boots the Blazor app
 
 | Doc | Purpose |
 | --- | --- |
+| [`docs/architecture.md`](docs/architecture.md) | Layers, domain model, request flow, config trust boundary, test tiers and CI gate, as diagrams |
+| [`docs/HOW_THIS_WAS_BUILT.md`](docs/HOW_THIS_WAS_BUILT.md) | The AI-assisted workflow, tools, and the defects that got through |
+| [`docs/quality-attributes.md`](docs/quality-attributes.md) | What the project optimises for |
+| [`docs/SCOPE-AND-LIMITS.md`](docs/SCOPE-AND-LIMITS.md) | What it does not do and where its checks stop |
 | [`docs/plan.md`](docs/plan.md) | Locked master plan (Phases 0–7 — see the [status note](docs/phases/master-plan-status-note.md) for what shipped after it) |
 | [`docs/plan-codebase-review.md`](docs/plan-codebase-review.md) | Full-codebase review + OWASP analysis (Phases 14–18) — findings, evidence, dispositions |
 | [`docs/phases/`](docs/phases/README.md) | Per-phase truth (one file per phase) — **the live phase index** |
