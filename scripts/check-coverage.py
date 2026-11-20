@@ -90,6 +90,7 @@ def main() -> int:
     print()
 
     failures: list[str] = []
+    gated_seen: set[str] = set()
     for report in args.reports:
         if not report.exists():
             print(f"  [skip] {report} (not found)")
@@ -101,6 +102,8 @@ def main() -> int:
         else:
             rate = covered / total * 100.0
         gated = project in args.gated_projects
+        if gated:
+            gated_seen.add(project)
         marker = "GATE " if gated else "info "
         status = "PASS" if (not gated or rate >= args.threshold) else "FAIL"
         print(f"  [{status}] {marker}{project:<30s} "
@@ -108,6 +111,16 @@ def main() -> int:
               f"{report}")
         if gated and rate < args.threshold:
             failures.append(f"{project}: {rate:.2f}% < {args.threshold:.2f}%")
+
+    # Fail closed. A project's name is read from a `TestResults` folder in the
+    # report's path, so a report under any other path is treated as
+    # informational. Without this check the gate would then pass silently
+    # without having gated anything.
+    for missing in sorted(set(args.gated_projects) - gated_seen):
+        failures.append(
+            f"{missing}: no report was recognised for this project "
+            f"(its report path must contain a '<project>/TestResults/' folder)"
+        )
 
     print()
     if failures:
