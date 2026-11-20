@@ -82,9 +82,10 @@ removed ([plan-remove-pii.md](plan-remove-pii.md)).
 
 ## Reading order
 
-1. [README](../README.md): what it does and the phase table.
-2. [architecture.md](architecture.md): the layers, the domain, the diagrams.
-3. [decisions/](decisions/README.md): why, one decision at a time.
-4. [quality-attributes.md](quality-attributes.md) and [SCOPE-AND-LIMITS.md](SCOPE-AND-LIMITS.md):
+1. [WALKTHROUGH.md](WALKTHROUGH.md): run it, test it and break it, hands on.
+2. [README](../README.md): what it does and the phase table.
+3. [architecture.md](architecture.md): the layers, the domain, the diagrams.
+4. [decisions/](decisions/README.md): why, one decision at a time.
+5. [quality-attributes.md](quality-attributes.md) and [SCOPE-AND-LIMITS.md](SCOPE-AND-LIMITS.md):
    what it optimises for and where it stops.
-5. [onboarding.md](onboarding.md): a guided code tour.
+6. [onboarding.md](onboarding.md): a guided code tour.

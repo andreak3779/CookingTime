@@ -2,12 +2,13 @@
 
 This directory is the canonical home for project documentation. Code lives in the repo root; tests live under `tests/`; design docs live here.
 
-**New here?** Read [`architecture.md`](architecture.md) for the structure and diagrams, then [`HOW_THIS_WAS_BUILT.md`](HOW_THIS_WAS_BUILT.md) for the workflow, then the [decision records](decisions/README.md).
+**New here?** Follow the [`WALKTHROUGH.md`](WALKTHROUGH.md) (about 40 minutes, hands on), or read [`architecture.md`](architecture.md) for the structure and diagrams, then [`HOW_THIS_WAS_BUILT.md`](HOW_THIS_WAS_BUILT.md) for the workflow, then the [decision records](decisions/README.md).
 
 ## Contents
 
 | File / Folder | What's inside |
 | --- | --- |
+| [`WALKTHROUGH.md`](WALKTHROUGH.md) | A hands-on tour: build, test, use the app, trace a request, break the guards on purpose, read the decision trail. |
 | [`architecture.md`](architecture.md) | System context, layers, domain model, request flow, config trust boundary, test tiers and CI gate, as Mermaid diagrams. |
 | [`HOW_THIS_WAS_BUILT.md`](HOW_THIS_WAS_BUILT.md) | The AI-assisted workflow, the tools, and the defects that got through and how they were caught. |
 | [`quality-attributes.md`](quality-attributes.md) | What the project optimises for: correctness, security, supply chain, testing, privacy, accessibility. |

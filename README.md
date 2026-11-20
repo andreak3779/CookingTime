@@ -16,7 +16,7 @@
 
 ## Why this repo is interesting
 
-**Reviewing this project?** Start with the [architecture](docs/architecture.md) (diagrams), [how it was built](docs/HOW_THIS_WAS_BUILT.md), the [decision records](docs/decisions/README.md), then [what it does not do](docs/SCOPE-AND-LIMITS.md).
+**Reviewing this project?** Start with the [walkthrough](docs/WALKTHROUGH.md) (40 minutes, hands on), the [architecture](docs/architecture.md) (diagrams), [how it was built](docs/HOW_THIS_WAS_BUILT.md), the [decision records](docs/decisions/README.md), then [what it does not do](docs/SCOPE-AND-LIMITS.md).
 
 The **product** is a one-page form. The **engineering story** is what you'd put on a resume.
 
@@ -153,6 +153,7 @@ dotnet run                              # boots the Blazor app
 
 | Doc | Purpose |
 | --- | --- |
+| [`docs/WALKTHROUGH.md`](docs/WALKTHROUGH.md) | A hands-on tour: build, test, use the app, trace a request, break the guards on purpose |
 | [`docs/architecture.md`](docs/architecture.md) | Layers, domain model, request flow, config trust boundary, test tiers and CI gate, as diagrams |
 | [`docs/HOW_THIS_WAS_BUILT.md`](docs/HOW_THIS_WAS_BUILT.md) | The AI-assisted workflow, tools, and the defects that got through |
 | [`docs/quality-attributes.md`](docs/quality-attributes.md) | What the project optimises for |
