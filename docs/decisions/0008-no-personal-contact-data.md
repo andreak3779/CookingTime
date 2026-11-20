@@ -1,7 +1,8 @@
 # ADR 0008 — No personal contact data in shipped artifacts
 
 - **Status:** Accepted (Phase 13) — decision 7 superseded in part by
-  [ADR 0010](0010-redact-pii-in-original-source.md)
+  [ADR 0010](0010-redact-pii-in-original-source.md); decision 5 superseded by
+  [ADR 0011](0011-rewrite-history-into-a-new-repository.md)
 - **Phase:** Phase 13
 - **Deciders:** Project owner
 

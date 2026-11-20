@@ -3,7 +3,8 @@
 - **Status:** Accepted (Phase 19)
 - **Phase:** Phase 19
 - **Deciders:** Project owner
-- **Supersedes:** [ADR 0008](0008-no-personal-contact-data.md) decision 7 (in part) and [ADR 0009](0009-accepted-security-risks.md) §6 (in part). **Superseded by:** nothing.
+- **Supersedes:** [ADR 0008](0008-no-personal-contact-data.md) decision 7 (in part) and [ADR 0009](0009-accepted-security-risks.md) §6 (in part).
+  **Superseded by:** decision 5 only, by [ADR 0011](0011-rewrite-history-into-a-new-repository.md).
 
 ## Context
 
