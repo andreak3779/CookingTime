@@ -190,6 +190,14 @@ This is the **demonstrable, repeatable recipe** for using a coding agent on a no
 
 ---
 
+## License
+
+[MIT](LICENSE) © 2026 Andrea K.
+
+The license covers the code and documentation written for this project. [`OriginalSource/`](OriginalSource/) is the historical WinForms code this project was migrated from; it is kept as reference material and was not written for this project, so the MIT grant does not extend to it.
+
+---
+
 ## Contributing / forking
 
 See [`docs/plan.md`](docs/plan.md) for the original upgrade plan. ADRs are append-only; supersede with a new entry that links back. Branch convention per [`ADR 0002`](docs/decisions/0002-branch-per-phase.md). Anti-patterns enforced in [`AGENTS.md`](AGENTS.md) — read it before your first commit.
