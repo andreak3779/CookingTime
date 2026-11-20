@@ -8,21 +8,21 @@
 ## Context
 
 The README, pitch, cover-letter and slides text described the starting point
-as "a 20-year-old WinForms calculator". `OriginalSource/` also carried the year
-2005 in three places: the assembly copyright, the About form's third label, and
-the solution file's "Visual C# Express 2005" comment. A reviewer should judge
-the engineering, and the age of the original app says nothing about it.
+by how old it was, and `OriginalSource/` carried a year string in three
+places: the assembly copyright, the About form's third label, and a comment in
+the solution file. A reviewer should judge the engineering, and the age of the
+original app says nothing about it.
 
 ## Decision
 
-1. **Docs say "legacy".** "A legacy WinForms calculator" replaces the age
+1. **Docs say "legacy".** "A legacy WinForms calculator" replaces any age
    claim. The technology facts stay: .NET Framework 2.0, WinForms, about 700
    lines in one file, six defects.
 2. **Three year strings in `OriginalSource/` are emptied:**
    `AssemblyCopyright`, the About form's third label, and the solution file's
-   `# Visual C# Express 2005` comment. No logic changes.
-3. **The phase 19 doc, ADR 0010 and one test message** say "Visual Studio"
-   instead of "Visual Studio 2005". The meaning is unchanged.
+   edition comment. No logic changes.
+3. **The phase 19 doc, ADR 0010 and one test message** name "Visual Studio"
+   without a version year. The meaning is unchanged.
 
 ## Consequences
 
