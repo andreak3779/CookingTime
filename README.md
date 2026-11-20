@@ -53,7 +53,7 @@ OriginalSource/ → historical WinForms             reference only — never ref
 
 ---
 
-## Migration journey — 17 shipped phases, 0 rollbacks
+## Migration journey — 19 shipped phases, 0 rollbacks
 
 | Phase | Branch | What shipped |
 | --- | --- | --- |

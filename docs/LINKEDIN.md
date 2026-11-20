@@ -123,13 +123,14 @@ Also blocking: a dependency-vulnerability audit of the production project, a che
 
 Measured baseline: UnitTests = **86.01 %** (gate 75 %), ComponentTests = 16.62 %, IntegrationTests = 69.97 % (both informational).
 
-### 7. After the migration: UI, security and build hardening (Phases 12–18)
+### 7. After the migration: UI, security, build hardening and a personal-data purge (Phases 12–20)
 
 - **UI theme:** a custom magenta-and-navy theme, dark-mode toggle, self-hosted fonts (fully offline) and accessibility fixes.
 - **A review of my own AI-built code found real bugs.** The browser client was receiving no configuration at all, so the meal catalog was empty in production. Every config-driven meal accepted any weight, so a 500 lb roast showed an inverted time range as a *success*. Reset left stale validation messages on screen. Each was fixed with a regression test that uses the real types, not mocks.
 - **Config trust boundary:** `appsettings.json` is served to every visitor, so it is validated at startup, the `ResumeUrl` is scheme-allowlisted, a Content-Security-Policy ships, and a guard test checks the served config for secret shapes.
 - **Build hardening:** exact package pins plus lock files, SHA-pinned Actions, a vulnerability gate, a publish-leak check and dependabot.
 - **Accepted risks written down**, each with the condition that would reopen it (ADR 0009).
+- **Personal data purged, including from history (Phases 19–20):** the legacy source was redacted, a guard test scans every publishable file so a reintroduced leak fails CI, and history was rewritten into a new repository with the old one kept private as an archive.
 
 Not done yet: containerizing and deploying to a local Kubernetes cluster (planned as Phases 9–11 in `docs/plan-kubernetes.md`). Do not claim it.
 
@@ -139,7 +140,7 @@ Every meaningful decision is recorded where future readers look:
 
 - **`docs/plan.md`** — locked master plan.
 - **`docs/phases/phase-N-*.md`** — one summary per shipped phase (docs → host → domain → app+config → UI → integration → cleanup → CI → UI theme → security and build hardening). Each one lists the verification numbers.
-- **`docs/decisions/000N-*.md`** — append-only ADRs (nine so far: target framework, branch model, docs-as-code, SOLID expectations, test-host naming, coverage tooling, design package as reference, no personal contact data, accepted security risks).
+- **`docs/decisions/000N-*.md`** — append-only ADRs (eleven so far: target framework, branch model, docs-as-code, SOLID expectations, test-host naming, coverage tooling, design package as reference, no personal contact data, accepted security risks, redacting personal data from the legacy source, rewriting history into a new repository).
 - **`docs/onboarding.md`** — 30-minute newcomer orientation with a code-reading order.
 - **`AGENTS.md`** — standing rules for any AI agent (or human) entering the repo; mirrors `ADR 0004` with project-specific conventions.
 
@@ -172,7 +173,7 @@ End-to-end migration executed with a coding agent under a disciplined `branch �
 
 ## AI tools & models used
 
-> The migration was driven by **AI-assisted coding**. The interesting part is not "an AI wrote it" but the workflow that kept a working green build across 17 phases.
+> The migration was driven by **AI-assisted coding**. The interesting part is not "an AI wrote it" but the workflow that kept a working green build across 19 phases.
 
 - **Agent environment:** local coding agent following a `phase-execution` skill seeded with `docs/plan.md`.
 - **Tools and models:** VS Code, Git and GitHub, with GitHub Copilot and Ollama. Models: MiniMax M3 (`minimax-m3:cloud`, the full model) and the Flash model.
@@ -201,7 +202,7 @@ dotnet run                              # boots the Blazor app
 
 ## Suggested resume bullet
 
-> Migrated a .NET Framework WinForms calculator to ASP.NET Core Blazor WebAssembly on .NET 10 across 17 disciplined phases: clean architecture (Domain / Application / Infrastructure / UI), SOLID + Strategy + Factory + Value-Object patterns, immutable `readonly record struct` value objects fixing two legacy VO bugs, 256 xUnit / bUnit / `WebApplicationFactory` tests shipping with code, a GitHub Actions CI gate with coverlet + Python coverage enforcement (≥ 75 % on production code), and full docs-as-code (master plan, append-only ADRs, per-phase docs, agent standing-rules). Followed by a security and build-hardening pass: config validated at startup, a Content-Security-Policy, pinned and locked dependencies, and a CI vulnerability gate. Result: 0-warning build, 86 % line coverage.
+> Migrated a .NET Framework WinForms calculator to ASP.NET Core Blazor WebAssembly on .NET 10 across 19 disciplined phases: clean architecture (Domain / Application / Infrastructure / UI), SOLID + Strategy + Factory + Value-Object patterns, immutable `readonly record struct` value objects fixing two legacy VO bugs, 256 xUnit / bUnit / `WebApplicationFactory` tests shipping with code, a GitHub Actions CI gate with coverlet + Python coverage enforcement (≥ 75 % on production code), and full docs-as-code (master plan, append-only ADRs, per-phase docs, agent standing-rules). Followed by a security and build-hardening pass: config validated at startup, a Content-Security-Policy, pinned and locked dependencies, and a CI vulnerability gate. Result: 0-warning build, 86 % line coverage.
 
 ---
 
@@ -213,7 +214,7 @@ dotnet run                              # boots the Blazor app
 >
 > The new version is Blazor WebAssembly on .NET 10, split into Domain / Application / Infrastructure / UI with a single composition root, immutable `readonly record struct` value objects, `Strategy + Factory + Registry` for meal kinds, and a result-with-validation DTO that never throws for expected input problems.
 >
-> 256 automated tests (xUnit + Moq + FluentAssertions for the domain, bUnit for Razor, `WebApplicationFactory<Marker>` for end-to-end). A GitHub Actions gate that blocks PRs below 75 % line coverage on production code. Nine append-only ADRs and a `docs/onboarding.md` that lets a new contributor (or a future AI agent) be productive in 30 minutes.
+> 256 automated tests (xUnit + Moq + FluentAssertions for the domain, bUnit for Razor, `WebApplicationFactory<Marker>` for end-to-end). A GitHub Actions gate that blocks PRs below 75 % line coverage on production code. Eleven append-only ADRs and a `docs/onboarding.md` that lets a new contributor (or a future AI agent) be productive in 30 minutes.
 >
 > Bonus: the migration was driven end-to-end by an AI coding agent working inside a `branch → checkpoint → ADR → AGENTS.md` loop. The plan, the constraints, and the per-phase deliverables all live in the repo — not in the agent's hidden memory. That's what made it reproducible instead of magic.
 >
