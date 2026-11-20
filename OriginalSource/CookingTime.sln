@@ -1,5 +1,4 @@
 Microsoft Visual Studio Solution File, Format Version 9.00
-# Visual C# Express 2005
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CookingTime", "CookingTime.csproj", "{748210C7-4C9D-4716-BE64-CDFC6066081A}"
 EndProject
 Global

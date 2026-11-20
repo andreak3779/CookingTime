@@ -17,6 +17,7 @@ Append-only. Never overwrite an old ADR — supersede with a new one that links 
 | 0009 | [Accepted security risks for a client-side-only application](0009-accepted-security-risks.md) | Phase 18 | Accepted (§6 superseded by 0010) |
 | 0010 | [Redact personal data in `OriginalSource/` instead of keeping it verbatim](0010-redact-pii-in-original-source.md) | Phase 19 | Accepted (decision 5 superseded by 0011) |
 | 0011 | [Purge personal data from history by publishing a rewritten copy as a new repository](0011-rewrite-history-into-a-new-repository.md) | Phase 20 | Accepted |
+| 0012 | [Describe the legacy app by its technology, not its age](0012-neutral-age-wording.md) | n/a | Accepted (amends 0010 decision 1) |
 
 ## Format
 

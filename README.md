@@ -1,6 +1,6 @@
 # CookingTime
 
-> **A 20-year-old WinForms cooking calculator, refactored into a modern .NET 10 Blazor WebAssembly app under a disciplined `branch → checkpoint → ADR → docs` workflow.**
+> **A legacy WinForms cooking calculator, refactored into a modern .NET 10 Blazor WebAssembly app under a disciplined `branch → checkpoint → ADR → docs` workflow.**
 
 | | |
 | --- | --- |
@@ -161,7 +161,7 @@ dotnet run                              # boots the Blazor app
 | [`docs/plan.md`](docs/plan.md) | Locked master plan (Phases 0–7 — see the [status note](docs/phases/master-plan-status-note.md) for what shipped after it) |
 | [`docs/plan-codebase-review.md`](docs/plan-codebase-review.md) | Full-codebase review + OWASP analysis (Phases 14–18) — findings, evidence, dispositions |
 | [`docs/phases/`](docs/phases/README.md) | Per-phase truth (one file per phase) — **the live phase index** |
-| [`docs/decisions/`](docs/decisions/README.md) | Append-only ADRs (0001–0011) |
+| [`docs/decisions/`](docs/decisions/README.md) | Append-only ADRs (0001–0012) |
 | [`docs/onboarding.md`](docs/onboarding.md) | 30-minute newcomer orientation |
 | [`docs/LINKEDIN.md`](docs/LINKEDIN.md) | LinkedIn / resume pitch + post copy |
 | [`docs/SLIDES.md`](docs/SLIDES.md) | Slide-deck outline for talks / interviews |

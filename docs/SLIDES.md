@@ -27,7 +27,7 @@ in ~1 second with `dotnet run`.
 
 ## Pre-talk one-liner (use in the abstract)
 
-> A 20-year-old WinForms calculator, refactored into a modern .NET 10 Blazor
+> A legacy WinForms calculator, refactored into a modern .NET 10 Blazor
 > WebAssembly app across eight disciplined phases — with tests, an ADR for every
 > decision, and a CI gate that blocks any coverage drop. Built end-to-end with an
 > AI coding agent under a `branch → checkpoint → ADR → docs` workflow.

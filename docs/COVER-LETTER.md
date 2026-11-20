@@ -17,7 +17,7 @@
 
 ## Opening line — pick or adapt
 
-> "Last quarter, I modernized a twenty-year-old WinForms calculator I had lying around
+> "Last quarter, I modernized a legacy WinForms calculator I had lying around
 > — a ~700-line single file with six real bugs still in production — into a .NET 10
 > Blazor WebAssembly application across eight disciplined phases: layered architecture
 > (Domain / Application / Infrastructure / UI), `readonly record struct` value objects,
@@ -32,7 +32,7 @@ quarter" to fit your timeline.**
 ## Variant A — Senior .NET / platform engineering role
 
 > "To demonstrate how I work on a real codebase — not just talk about it — I spent the
-> last several months modernizing a side project I owned: a 20-year-old WinForms
+> last several months modernizing a side project I owned: a legacy WinForms
 > calculator rebuilt on ASP.NET Core Blazor WebAssembly targeting `net10.0`. I shipped
 > the migration in eight phases, each one its own branch, one `checkpoint` commit,
 > one tag, and one per-phase doc that records what landed and how it was verified.
@@ -65,7 +65,7 @@ quarter" to fit your timeline.**
 
 > "I've spent the last several months testing one hypothesis: **can an AI coding agent
 > ship a non-trivial .NET codebase without producing tech debt?** I picked a real
-> artifact — a 20-year-old WinForms cooking calculator, ~700 lines in one file, six
+> artifact — a legacy WinForms cooking calculator, ~700 lines in one file, six
 > known bugs still in production — and laid down a contract with myself before
 > starting. The contract was that **the durable artifact lives in the repo, not in
 > the model's hidden memory.** So `AGENTS.md` is read first; six append-only ADRs
@@ -96,7 +96,7 @@ teams. The role explicitly cares about *process*, not product.**
 
 ## Variant C — Modernization / legacy migration role
 
-> "When you inherit a 20-year-old WinForms codebase, you have two options: keep it
+> "When you inherit a legacy WinForms codebase, you have two options: keep it
 > alive or rewrite it. I picked a small, owned codebase of mine — a single ~700-line
 > `ComCookingTime.cs` with six real bugs still shipping to users — and rewrote it on
 > ASP.NET Core Blazor WebAssembly targeting `net10.0`. The migration is documented,

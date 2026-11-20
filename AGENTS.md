@@ -106,6 +106,6 @@ A class in `Domain/` must never `using` from `Infrastructure/` or `Application/`
 - `docs/plan.md` — locked master plan.
 - `docs/phases/phase-N-*.md` — what each phase shipped.
 - `docs/decisions/000N-*.md` — ADRs.
-- `OriginalSource/` — historical WinForms code, do not reference. **Verbatim except for personal data**: contact strings are redacted (Phase 19, [ADR 0010](docs/decisions/0010-redact-pii-in-original-source.md)).
+- `OriginalSource/` — historical WinForms code, do not reference. **Verbatim except for personal data and three year strings**: contact strings are redacted (Phase 19, [ADR 0010](docs/decisions/0010-redact-pii-in-original-source.md)); the year strings are emptied ([ADR 0012](docs/decisions/0012-neutral-age-wording.md)).
 - `docs/design/` — reference design packages (Phase 12+). **Snapshot, not a live source**: the app is updated by copying files out of here, so a change here does not change the app until someone re-applies it. Safe to keep `.razor` files here **only** because `EnableDefaultRazorComponentItems` is `false` — see [ADR 0007](docs/decisions/0007-design-package-as-reference-artifact.md).
 - `obj/`, `bin/`, `*.csproj.user`, `.vs/` — gitignored build artifacts.

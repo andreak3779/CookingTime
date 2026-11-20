@@ -28,7 +28,7 @@ CI gate with line-coverage enforcement.
 | **Type** | Personal / portfolio modernization project |
 | **Source** | In-repo (`github.com/andreak3779/CookingTime`), public |
 | **Stack** | C# · .NET 10 · Blazor WebAssembly · xUnit · bUnit · Moq · FluentAssertions · coverlet · GitHub Actions · Python |
-| **Legacy** | .NET Framework 2.0 WinForms (VS 2005 era, `msbuild` XML 2003 schema, `OutputType=WinExe`) |
+| **Legacy** | .NET Framework 2.0 WinForms (Visual Studio solution, `msbuild` XML schema, `OutputType=WinExe`) |
 | **Tests** | 256 facts (199 unit, 23 component, 34 integration) — all green |
 | **Coverage** | 86.0 % line on `CookingTime.UnitTests` production code; CI gate at 75 % |
 | **Build** | `dotnet build -c Release` — **0 warnings**, 0 errors (`<TreatWarningsAsErrors>true</TreatWarningsAsErrors>`) |
@@ -140,7 +140,7 @@ Every meaningful decision is recorded where future readers look:
 
 - **`docs/plan.md`** — locked master plan.
 - **`docs/phases/phase-N-*.md`** — one summary per shipped phase (docs → host → domain → app+config → UI → integration → cleanup → CI → UI theme → security and build hardening). Each one lists the verification numbers.
-- **`docs/decisions/000N-*.md`** — append-only ADRs (eleven so far: target framework, branch model, docs-as-code, SOLID expectations, test-host naming, coverage tooling, design package as reference, no personal contact data, accepted security risks, redacting personal data from the legacy source, rewriting history into a new repository).
+- **`docs/decisions/000N-*.md`** — append-only ADRs (twelve so far: target framework, branch model, docs-as-code, SOLID expectations, test-host naming, coverage tooling, design package as reference, no personal contact data, accepted security risks, redacting personal data from the legacy source, rewriting history into a new repository, neutral age wording).
 - **`docs/onboarding.md`** — 30-minute newcomer orientation with a code-reading order.
 - **`AGENTS.md`** — standing rules for any AI agent (or human) entering the repo; mirrors `ADR 0004` with project-specific conventions.
 
