@@ -23,7 +23,7 @@
          Cobertura XML per test project. The shared include/exclude
          filter rules live in coverlet.runsettings.xml at the repo root. -->
     <PackageReference Include="coverlet.collector" Version="6.0.2" />
-    <PackageReference Include="coverlet.msbuild" Version="6.0.2">
+    <PackageReference Include="coverlet.msbuild" Version="10.1.1">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
