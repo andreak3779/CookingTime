@@ -53,6 +53,7 @@ A class in `Domain/` must never `using` from `Infrastructure/` or `Application/`
 - `nameof()` over string literals.
 - No `*.designer.cs`, no `*.resx` for WinForms (this is a Blazor project).
 - No `using` legacy types from `OriginalSource/` in new code — `OriginalSource/` is reference only.
+- No personal data in any committed file — see [ADR 0010](docs/decisions/0010-redact-pii-in-original-source.md). `PersonalDataLeakageTests` enforces it (emails, Windows user-profile paths, personal home paths; binary files included).
 
 ## Testing
 
@@ -97,12 +98,13 @@ A class in `Domain/` must never `using` from `Infrastructure/` or `Application/`
 | Setting a property only in the root `Directory.Build.props` | Phase 16 | MSBuild stops at the **nearest** props file, and `tests/Directory.Build.props` shadows the root one — so `RestorePackagesWithLockFile` reached the app project and silently not the three test projects. |
 | Mutating a bound model to "reset" a Blazor form | Phase 17 | `EditForm` holds an `EditContext` over the model instance and `DataAnnotationsValidator` caches messages in its `ValidationMessageStore`. Mutating the model does **not** clear that store, so the old messages stayed on screen after Reset. Assign a **fresh** model instance instead. |
 | Rebuilding a collection to look one item up | Phase 17 | `CreateAll().FirstOrDefault(...)` re-invoked every factory delegate on **every** calculation. If the factory already holds the collection, give it a lookup method. |
+| A sweep filtered to the shape you expect | Phase 19 | The PII sweep checked `strings` output for **email** patterns and reported `CookingTime.suo` clean. The file contained no address — it contained a **Windows user-profile path**, which the filter never looked for. It survived two audits, a security review, and a full OWASP pass. A sweep that checks one shape proves only that shape is absent — and it must read **binary** files as bytes, not skip them for having no source-like extension. |
 
 ## What you'll see in this repo
 
 - `docs/plan.md` — locked master plan.
 - `docs/phases/phase-N-*.md` — what each phase shipped.
 - `docs/decisions/000N-*.md` — ADRs.
-- `OriginalSource/` — historical WinForms code, do not reference.
+- `OriginalSource/` — historical WinForms code, do not reference. **Verbatim except for personal data**: contact strings are redacted (Phase 19, [ADR 0010](docs/decisions/0010-redact-pii-in-original-source.md)).
 - `docs/design/` — reference design packages (Phase 12+). **Snapshot, not a live source**: the app is updated by copying files out of here, so a change here does not change the app until someone re-applies it. Safe to keep `.razor` files here **only** because `EnableDefaultRazorComponentItems` is `false` — see [ADR 0007](docs/decisions/0007-design-package-as-reference-artifact.md).
 - `obj/`, `bin/`, `*.csproj.user`, `.vs/` — gitignored build artifacts.

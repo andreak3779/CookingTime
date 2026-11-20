@@ -34,15 +34,22 @@ distinct email-shaped strings. Ground truth per string:
 | --- | --- | --- | --- | --- |
 | 1 | `ADDRESS` (owner's personal Gmail) | `appsettings.json` under `ProductInfo:Email` — the only *tracked* occurrence; 6 more in `bin/`/`obj/` build copies (gitignored, gone after a rebuild) | **Yes** — since 2026-07-29 | **Remove end-to-end (§5)** |
 | 2 | `Andrea K` / `andrea` / `Andrea K.` (given name) | Git **author *and* committer identity** on every commit: 25/25 commits on `origin/main`, same on `upgrading-to-net-10`. Also tagger on 7 local annotated tags (`v0.0`…`v0.2`, `v0.3`–`v0.8`) | **Yes** — every published commit | **Decision (§7, B)** — switch to noreply going forward; rewrite optional |
-| 3 | `/home/<user>/...` (OS username, local paths) | [AGENTS.md:3](../AGENTS.md), [docs/LINKEDIN.md:4,29](../docs/LINKEDIN.md), [docs/phases/phase-0-docs-scaffold.md:71](../docs/phases/phase-0-docs-scaffold.md) | **Yes** — all three are on `origin/main` | **Fix in §6** — trivial doc edits |
-| 4 | `REDACTED` + `REDACTED` (third party — the legacy WinForms author) | [OriginalSource/frmAbout.cs:40,42](../OriginalSource/frmAbout.cs) | **Yes** — on `origin/main` (via `446989d`, 2025-08-03) | **Decision (§7, C)** — repo rule says `OriginalSource/` stays verbatim |
+| 3 | `/home/<user>/...` (OS username, local paths) | [AGENTS.md:3](../AGENTS.md), [docs/LINKEDIN.md:4,29](../docs/LINKEDIN.md), [docs/phases/phase-0-docs-scaffold.md:71](../docs/phases/phase-0-docs-scaffold.md) | **Yes** — all three are on `origin/main` | **Fixed in Phase 13** — trivial doc edits |
+| 4 | `THIRD-PARTY-ADDRESS` (third party — the legacy WinForms author) + a personal homepage URL on the same ISP domain | [OriginalSource/frmAbout.cs:40,42](../OriginalSource/frmAbout.cs) | **Yes** — on `origin/main` (via `446989d`, 2025-08-03) | **Redacted in Phase 19** — see [ADR 0010](decisions/0010-redact-pii-in-original-source.md) |
 | 5 | `dev@example.com` | Test fixture ([AboutRazorTests.cs](../tests/CookingTime.ComponentTests/AboutRazorTests.cs)) | Yes | **Keep** — RFC 2606 reserved example domain, not a real address |
 
 Non-findings (verified clean): `wwwroot/`, `Layout/`, `Program.cs`, CI workflow,
-`scripts/check-coverage.py`, all `.resx` files, `CookingTime.suo` (binary `strings`
-sweep), `docs/diagrams/`, `tests/*/bin`. No secrets, tokens, phones, or street
-addresses anywhere tracked. `.github/CODEOWNERS` uses the GitHub handle
-`@andreak3779` — that is a repo-ops reference, not contact PII, and stays.
+`scripts/check-coverage.py`, all `.resx` files, `docs/diagrams/`, `tests/*/bin`.
+No secrets, tokens, phones, or street addresses anywhere tracked.
+`.github/CODEOWNERS` uses the GitHub handle `@andreak3779` — that is a repo-ops
+reference, not contact PII, and stays.
+
+> **Corrected in Phase 19:** `CookingTime.suo` was originally listed here as a
+> non-finding on the strength of a binary `strings` sweep. That sweep was
+> **filtered on the email pattern**, and the file contains no address — it
+> contains a Windows user-profile path (the original developer's home
+> directory). An unfiltered sweep found it, and the file was deleted. See
+> §7-C and [ADR 0010](decisions/0010-redact-pii-in-original-source.md).
 
 **Corrected during implementation:** an earlier draft of this plan listed the
 CI-published coverage XML as a PII surface, because a *local* run embeds
@@ -118,9 +125,9 @@ verification. Corrections (all empirically re-verified):
 | Claim in draft | Verified reality |
 | --- | --- |
 | The email appears in **4 commits** | **6** touches total, but **5 are local-only agent-checkpoint refs** (`agents/…`, never pushed). On real branches it was introduced **once** (`d574e18`) and never removed — so a single `--replace-text` blob rewrite covers all real-branch history |
-| "`contributor@cookingtime.local` lives in `OriginalSource/`" | **False** — searched every commit ever made (`-S` across `--all`, `--pickaxe-all`): the string has only ever existed inside the draft plan doc itself. `OriginalSource/` is clean of it |
+| "a placeholder address lives in `OriginalSource/`" | **False** — searched every commit ever made (`-S` across `--all`, `--pickaxe-all`): the string has only ever existed inside the draft plan doc itself. `OriginalSource/` is clean of it |
 | Deleting `BinderProbe.cs` was blocked by the permission system | **No longer true** — sandbox now allows `rm` inside the repo (verified). Step 0 can complete normally |
-| `OriginalSource/` carries 4 email-shaped strings | Carries **2** (`REDACTED`, `REDACTED`) in `frmAbout.cs`, plus `AssemblyCompany("Andrea")` in [OriginalSource/AssemblyInfo.cs:12](../OriginalSource/AssemblyInfo.cs) — a bare first name, borderline, keep-verbatim |
+| `OriginalSource/` carries 4 email-shaped strings | Carries **2** (a third-party address and a homepage URL on the same domain) in `frmAbout.cs`, plus `AssemblyCompany("Andrea")` in [OriginalSource/AssemblyInfo.cs:12](../OriginalSource/AssemblyInfo.cs) — a bare first name. **All three redacted in Phase 19** — see [ADR 0010](decisions/0010-redact-pii-in-original-source.md) |
 | Test totals: "152 facts / 151 after / +1 guard" | Keep the **relative** math: −1 (BinderProbe deleted) +1 (new guard) = **net 0**. Absolute totals change as other phases land; do not hard-code them |
 
 Also factual: [docs/LINKEDIN.md:29](../docs/LINKEDIN.md) calls the source repo
@@ -135,7 +142,7 @@ PRs). Fix while editing docs (§6).
 | --- | --- | --- | --- |
 | A | Remove `ProductInfo.Email` end-to-end (property + UI + config + tests) vs config-line-only | A: full removal / B: JSON line only | **A — full removal.** The request is to remove the email; a dormant code path that can still render it does not achieve that (same reasoning as the superseded draft, retained) |
 | B | Purge address + name/email identity from **git history** (force-push, ref-tag rewrite) | Rewrite vs accept-and-go-noreply | **Accept + go noreply.** Low benefit (§2 framing), real cost: rewrites all commit SHAs from mid-2026 onward, invalidates the 8 existing PR references, requires collaborator re-clones. If wanted anyway, the exact procedure is §7-B — do it as its own task |
-| C | Third-party address `REDACTED` in `OriginalSource/frmAbout.cs` | Leave verbatim / remove `OriginalSource/` via ADR | **Leave verbatim** for now. It is legacy reference material per repo rules; if the owner later decides the third party's address must go, deleting the folder wholesale (not editing files) is the only compliant path — that deserves its own ADR |
+| C | Third-party address in `OriginalSource/frmAbout.cs` | Leave verbatim / remove `OriginalSource/` via ADR | **Redacted in place (Phase 19)** — the owner approved removing or emptying the PII. The third-party address and homepage URL are now empty strings, and the binary `.suo` (which carried a Windows user-profile path) is deleted. Recorded in [ADR 0010](decisions/0010-redact-pii-in-original-source.md), which supersedes ADR 0008 decision 7 |
 | D | **Move `appsettings.json` into `wwwroot/`** so the WASM client actually receives configuration | Move / leave broken | **Move — owner decision, 2026-11-19.** Fixes the functional bug in §2 #3 (empty production meal catalog) and makes the config delivery path explicit. Consequence: the file becomes served to every visitor, so decisions A and D must land together |
 | E | Container document root for Phase 9 | `wwwroot/` only / publish root | **`wwwroot/` only.** The publish root contains `appsettings.json`; serving it would re-expose configuration to every visitor. Pinned in ADR 0008 decision 3 |
 
@@ -312,9 +319,18 @@ cd ../CookingTime-rewrite
 
 cat > /tmp/replacements.txt <<'EOF'
 ADDRESS==>REDACTED
-REDACTED==>REDACTED        # only if Decision C changes
-REDACTED==>REDACTED
+<third-party-address>==>REDACTED        # see note below
+<third-party-homepage-url>==>REDACTED
 EOF
+
+# The two third-party strings are NOT written out in this document - a doc
+# that quotes the address it plans to remove republishes it. Recover them
+# from the historical blob instead, then paste them into the placeholders:
+#
+#   git show 446989d:Backup/frmAbout.cs
+#
+# Phase 19 already removed them from the working tree, so the only place
+# they survive is the history this procedure scrubs.
 
 git filter-repo \
   --replace-text /tmp/replacements.txt \
@@ -348,12 +364,25 @@ Caveats recorded so nobody is surprised:
 ### C — Third-party PII in `OriginalSource/`
 
 Repo rules (AGENTS.md, [Phase 8 doc](phases/phase-8-rename-original-source.md))
-require `OriginalSource/` to stay verbatim. Editing `frmAbout.cs` to redact
-`REDACTED` would violate that. The two compliant options: leave it (the
-address is the legacy author's public-era contact from a 2005 app), or delete the
-`OriginalSource/` folder wholesale in its own ADR + phase (that also drops the
-`AssemblyCompany("Andrea")` first name). Recommend **leave** unless the owner has
-a reason to act on the third party's behalf.
+required `OriginalSource/` to stay verbatim, and editing `frmAbout.cs` to redact
+the third-party address would have violated that rule.
+
+**Resolved in Phase 19.** The owner approved removing the PII, so the folder no
+longer needs to be untouched: the third-party address and homepage URL are now
+empty strings, the `AssemblyCompany` first name is empty, and the binary
+`.suo` IDE artifact — which carried a Windows user-profile path that no text
+sweep had caught — is deleted. The rule change is recorded in
+[ADR 0010](decisions/0010-redact-pii-in-original-source.md), which supersedes
+ADR 0008 decision 7 and ADR 0009 §6.
+
+> **Correction to this plan's earlier sweep.** §1 listed `CookingTime.suo` as a
+> "non-finding" on the strength of a binary `strings` sweep. That sweep did
+> read the file, but it was filtered on the *email* pattern, and the file
+> contains no address — it contains a **Windows user-profile path** (the
+> original developer's home directory under a legacy Windows profile
+> location), which the filtered sweep did not look for. A later unfiltered
+> sweep found it. The lesson matches the repo's own anti-pattern table: a
+> guard that checks one *shape* proves only that shape is absent.
 
 ---
 

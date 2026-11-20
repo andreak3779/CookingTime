@@ -37,9 +37,9 @@ namespace CookingTime
       lblAboutLine3.Text = "2005";
 
       linkAboutResume.Links.Add(0,linkAboutResume.Text.Length,
-        "REDACTED");
+        "");
       linkAboutEmail.Links.Add(0,linkAboutEmail.Text.Length,
-      "mailto:REDACTED");
+      "");
     }
 
 		/// <summary>

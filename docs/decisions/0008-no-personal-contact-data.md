@@ -1,6 +1,7 @@
 # ADR 0008 — No personal contact data in shipped artifacts
 
-- **Status:** Accepted (Phase 13)
+- **Status:** Accepted (Phase 13) — decision 7 superseded in part by
+  [ADR 0010](0010-redact-pii-in-original-source.md)
 - **Phase:** Phase 13
 - **Deciders:** Project owner
 
@@ -70,6 +71,10 @@ AGENTS.md).
 7. **`OriginalSource/` stays verbatim**, third-party contact strings included.
    Acting on them means deleting the folder wholesale under a new ADR — never
    in-place edits (Phase 8 rule).
+   **Superseded in part by [ADR 0010](0010-redact-pii-in-original-source.md):**
+   the folder now stays verbatim *except for personal data*, which is redacted
+   in place, and the binary `.suo` IDE artifact — which carried a Windows
+   user-profile path — is deleted.
 8. **Redaction convention:** documents committed to this public repo refer to
    removed personal data descriptively ("the personal address"), never as the
    literal string.

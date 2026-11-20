@@ -222,7 +222,7 @@ Phase 9 (containerisation) so the publish step never ships test assemblies.
 | S-08 | `appsettings.json` was not strict JSON | 15 | The `// filepath:` comment removed; a test asserts the file parses strictly |
 | S-09 | No CSP in `index.html` | 15 | Same as S-02 |
 | F-12 | DevServer in the publish output | — | **Verified not shipped.** `PrivateAssets="all"` and absent from the published artifact. No action |
-| F-14 | Third-party address in `OriginalSource/` | 18 | **Deliberate** — ADR 0008 §7 requires the folder to stay verbatim. Recorded in ADR 0009 §6 |
+| F-14 | Third-party address in `OriginalSource/` | 19 | **Fixed** — the contact strings are redacted in place and the binary `.suo` (which carried a Windows user-profile path missed by two audits) is deleted. Recorded in [ADR 0010](decisions/0010-redact-pii-in-original-source.md), which supersedes ADR 0008 §7 and ADR 0009 §6 in part |
 | F-15 | Stale README statistics | 14–17 | Updated in every phase; now 248 facts / 86.01 % |
 | F-16 | Dead public API (`TryCreate`, `RegisteredKinds`) | 17 | Removed, with their five tests; replaced by one fact covering the same ground |
 | B-01 | Test assemblies in the publish root | 16 | CI now publishes `CookingTime.csproj` explicitly and **fails** if a test assembly appears |

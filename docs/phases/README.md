@@ -30,6 +30,7 @@ One file per phase. Updated as phases ship.
 | 16 | Build and release hardening | `phase/16-build-hardening` | `checkpoint(phase-16): pin package versions + lock files + SHA-pinned actions + publish-leak check + dependabot + phase doc` | ✅ Done |
 | 17 | UI robustness and cleanup | `phase/17-ui-cleanup` | `checkpoint(phase-17): fix Reset stale validation state + name-keyed meal lookup + add logging + remove dead API + phase doc` | ✅ Done |
 | 18 | Accepted risks and review close-out | `phase/18-accepted-risks` | `checkpoint(phase-18): record accepted security risks in ADR 0009 + close out the review + phase doc` | ✅ Done |
+| 19 | Redact personal data from `OriginalSource/` | `phase/19-redact-original-source-pii` | `checkpoint(phase-19): redact personal data from OriginalSource + delete the binary .suo + ADR 0010 + guard test + phase doc` | ✅ Done |
 
 ## Per-phase files
 
@@ -50,6 +51,7 @@ One file per phase. Updated as phases ship.
 - [Phase 16 — Build and release hardening](phase-16-build-hardening.md) ✅
 - [Phase 17 — UI robustness and cleanup](phase-17-ui-cleanup.md) ✅
 - [Phase 18 — Accepted risks and review close-out](phase-18-accepted-risks.md) ✅
+- [Phase 19 — Redact personal data from `OriginalSource/`](phase-19-redact-original-source-pii.md) ✅
 
 ## Cross-cutting notes
 
