@@ -54,6 +54,7 @@ A class in `Domain/` must never `using` from `Infrastructure/` or `Application/`
 - No `*.designer.cs`, no `*.resx` for WinForms (this is a Blazor project).
 - No `using` legacy types from `OriginalSource/` in new code — `OriginalSource/` is reference only.
 - No personal data in any committed file — see [ADR 0010](docs/decisions/0010-redact-pii-in-original-source.md). `PersonalDataLeakageTests` enforces it (emails, Windows user-profile paths, personal home paths; binary files included).
+- History was rewritten into this repository ([ADR 0011](docs/decisions/0011-rewrite-history-into-a-new-repository.md)). **Never push, merge or cherry-pick refs from `CookingTime-private-archive`** (or any clone made before the rewrite) — that reintroduces the purged history.
 
 ## Testing
 

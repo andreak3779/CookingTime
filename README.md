@@ -75,6 +75,7 @@ OriginalSource/ → historical WinForms             reference only — never ref
 | 17 | `phase/17-ui-cleanup` | **UI robustness & cleanup.** `Reset()` now replaces the view model so stale `EditForm` validation messages actually clear; the meal catalog is built once and looked up by name instead of rebuilt on every calculation; the calculator logs unknown-meal and out-of-range events; the never-called `TryCreate`/`RegisteredKinds` API was removed |
 | 18 | `phase/18-accepted-risks` | **Accepted risks.** A full-codebase OWASP review's remaining findings were either fixed (Phases 14–17) or recorded as deliberate decisions with the condition that would revisit each — see [ADR 0009](docs/decisions/0009-accepted-security-risks.md) |
 | 19 | `phase/19-redact-original-source-pii` | **Personal data redacted from `OriginalSource/`.** The third party's contact strings and a personal first name are emptied, the binary `.suo` IDE artifact (which carried a Windows user-profile path and had slipped past two audits) is deleted, and a guard test now scans every publishable file — binaries included — so a reintroduced leak fails CI instead of publishing (see [ADR 0010](docs/decisions/0010-redact-pii-in-original-source.md)) |
+| 20 | `phase/20-history-rewrite` | **Personal data purged from git history.** The working-tree cleanups of Phases 13 and 19 left history untouched; a byte-level sweep (ASCII **and** UTF-16) then found the data still in old commits, legacy binaries and commit identities. History was rewritten and published as a **new repository** — the old one is kept private as an archive — with every identity re-stamped to the GitHub noreply address (see [ADR 0011](docs/decisions/0011-rewrite-history-into-a-new-repository.md)) |
 
 **Not yet done:** Phases 9–11 (containerize, deploy to a local Kubernetes cluster, document it) are *planned* in [`docs/plan-kubernetes.md`](docs/plan-kubernetes.md). There is no `Dockerfile` or `k8s/` folder in this repo yet.
 
@@ -153,7 +154,7 @@ dotnet run                              # boots the Blazor app
 | [`docs/plan.md`](docs/plan.md) | Locked master plan (Phases 0–7 — see the [status note](docs/phases/master-plan-status-note.md) for what shipped after it) |
 | [`docs/plan-codebase-review.md`](docs/plan-codebase-review.md) | Full-codebase review + OWASP analysis (Phases 14–18) — findings, evidence, dispositions |
 | [`docs/phases/`](docs/phases/README.md) | Per-phase truth (one file per phase) — **the live phase index** |
-| [`docs/decisions/`](docs/decisions/README.md) | Append-only ADRs (0001–0009) |
+| [`docs/decisions/`](docs/decisions/README.md) | Append-only ADRs (0001–0011) |
 | [`docs/onboarding.md`](docs/onboarding.md) | 30-minute newcomer orientation |
 | [`docs/LINKEDIN.md`](docs/LINKEDIN.md) | LinkedIn / resume pitch + post copy |
 | [`docs/SLIDES.md`](docs/SLIDES.md) | Slide-deck outline for talks / interviews |
